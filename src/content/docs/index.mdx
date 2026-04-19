@@ -1,0 +1,42 @@
+---
+title: Evonic LLM Evaluator
+description: Evaluate LLMs across multiple domains and serve production agents with multi-channel support.
+template: splash
+hero:
+  tagline: A web-based platform to evaluate Large Language Models and serve production AI agents with multi-channel integration.
+  actions:
+    - text: Get Started
+      link: /getting-started/installation/
+      icon: right-arrow
+      variant: primary
+    - text: Agent Platform
+      link: /agents/overview/
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Features
+
+<CardGrid stagger>
+  <Card title="Multi-Domain Evaluation" icon="list-format">
+    Test LLMs across conversation, math, SQL, tool calling, reasoning, health, and more — each with 5 complexity levels.
+  </Card>
+  <Card title="Pluggable Evaluators" icon="setting">
+    Keyword matching, regex, two-pass extraction, SQL execution, tool call validation, LLM-as-judge, and custom hybrid evaluators.
+  </Card>
+  <Card title="Agent Platform" icon="rocket">
+    Create production-ready AI agents with system prompts, knowledge bases, and tool integrations.
+  </Card>
+  <Card title="Multi-Channel" icon="comment-alt">
+    Connect agents to Telegram, WhatsApp, Discord, and more through a modular channel abstraction.
+  </Card>
+  <Card title="Real-Time Dashboard" icon="laptop">
+    Live progress matrix with color-coded results, per-test details, and historical tracking.
+  </Card>
+  <Card title="Skills System" icon="puzzle">
+    Install skill packages that bundle tool definitions with Python backends. Upload via web UI or CLI.
+  </Card>
+  <Card title="OpenAI-Compatible" icon="open-book">
+    Works with any OpenAI-compatible API — llama.cpp, Ollama, vLLM, OpenRouter, and more.
+  </Card>
+</CardGrid>

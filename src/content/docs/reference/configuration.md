@@ -1,0 +1,78 @@
+---
+title: Configuration Reference
+description: Complete reference for all environment variables and configuration options.
+sidebar:
+  order: 5
+---
+
+All configuration is done via environment variables in a `.env` file.
+
+## LLM Endpoint
+
+| Variable | Default | Description |
+|---|---|---|
+| `LLM_BASE_URL` | `https://openrouter.ai/api/v1` | OpenAI-compatible API base URL |
+| `LLM_API_KEY` | *(empty)* | API key. Leave empty for local servers that don't require auth |
+| `LLM_MODEL` | `moonshotai/kimi-k2-thinking` | Model identifier sent in API requests |
+| `LLM_TIMEOUT` | `120` | Request timeout in seconds |
+| `LLM_TIMEOUT_RETRIES` | `1` | Number of times to retry the LLM call if it times out. On timeout, the runtime sends a continue prompt to resume generation |
+
+### Compatible Endpoints
+
+| Provider | Base URL |
+|---|---|
+| llama.cpp | `http://localhost:8080/v1` |
+| Ollama | `http://localhost:11434/v1` |
+| vLLM | `http://localhost:8000/v1` |
+| OpenRouter | `https://openrouter.ai/api/v1` |
+| OpenAI | `https://api.openai.com/v1` |
+
+## Two-Pass Extraction
+
+| Variable | Default | Description |
+|---|---|---|
+| `TWO_PASS_ENABLED` | `1` | Enable two-pass answer extraction (`1` or `0`) |
+| `TWO_PASS_TEMPERATURE` | `0.0` | Temperature for the extraction pass. Low values improve consistency |
+
+## Flask Server
+
+| Variable | Default | Description |
+|---|---|---|
+| `HOST` | `0.0.0.0` | Server bind address |
+| `PORT` | `8080` | Server port |
+| `DEBUG` | `1` | Enable Flask debug mode (`1` or `0`) |
+| `SECRET_KEY` | `dev-secret-key-...` | Flask session secret. Change in production |
+
+## Logging
+
+| Variable | Default | Description |
+|---|---|---|
+| `LOG_FULL_THINKING` | `0` | Include full LLM thinking content in live log output |
+| `LOG_FULL_RESPONSE` | `0` | Include full LLM response in live log output |
+
+## Optional Services
+
+| Variable | Default | Description |
+|---|---|---|
+| `ANTHROPIC_API_KEY` | *(empty)* | Anthropic API key for the improver module |
+
+## Evaluator Overrides
+
+Override the default evaluator strategy for specific domains:
+
+```env
+EVALUATOR_MATH=keyword
+EVALUATOR_CONVERSATION=two_pass
+EVALUATOR_SQL=sql_executor
+```
+
+The environment variable format is `EVALUATOR_<DOMAIN_UPPERCASE>`. Available types: `two_pass`, `keyword`, `sql_executor`, `tool_call`.
+
+## Database Paths
+
+These are configured in `config.py` (not via `.env`):
+
+| Setting | Default | Description |
+|---|---|---|
+| `DB_PATH` | `evonic.db` | Main SQLite database |
+| `TEST_DB_PATH` | `seed/test_db.sqlite` | SQLite database used for SQL evaluation tests |
