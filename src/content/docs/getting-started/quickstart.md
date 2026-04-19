@@ -5,18 +5,8 @@ description: Create your first AI agent in minutes.
 
 ## Start the Server
 
-You can start the server using either method:
-
-### Using the CLI (Recommended)
-
 ```bash
 ./evonic start
-```
-
-### Using the Startup Script
-
-```bash
-./start.sh
 ```
 
 Open `http://localhost:8080` in your browser.
