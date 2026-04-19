@@ -1,6 +1,6 @@
 ---
 title: Configuration
-description: All configuration options for the Evonic LLM Evaluator.
+description: All configuration options for the Evonic AI Platform.
 ---
 
 All configuration is done via environment variables in a `.env` file at the project root.
@@ -15,9 +15,14 @@ cp .env.example .env
 
 ```env
 # For local LLM (llama.cpp, Ollama)
-LLM_BASE_URL=http://localhost:8080/v1
+LLM_BASE_URL=http://localhost:11434/v1
 LLM_API_KEY=
-LLM_MODEL=default
+LLM_MODEL=llama3.2
+
+# For vLLM
+LLM_BASE_URL=http://localhost:8000/v1
+LLM_API_KEY=
+LLM_MODEL=meta-llama/Llama-3-8b-Instruct
 
 # For OpenRouter / cloud providers
 LLM_BASE_URL=https://openrouter.ai/api/v1
@@ -31,6 +36,22 @@ LLM_MODEL=moonshotai/kimi-k2-thinking
 | `LLM_API_KEY` | *(empty)* | API key (leave empty for local servers) |
 | `LLM_MODEL` | `moonshotai/kimi-k2-thinking` | Model identifier |
 | `LLM_TIMEOUT` | `120` | Request timeout in seconds |
+
+## Agent Configuration
+
+| Variable | Default | Description |
+|---|---|---|
+| `AGENT_DEFAULT_MODEL` | *(same as LLM_MODEL)* | Default model for new agents |
+| `AGENT_MAX_CONTEXT` | `4096` | Maximum context length for agents |
+| `AGENT_WORKSPACE_DIR` | `./agent_workspaces` | Directory for isolated agent workspaces |
+
+## Local Model Settings
+
+| Variable | Default | Description |
+|---|---|---|
+| `LOCAL_MODEL_RUNNER` | `ollama` | Default local model runner (ollama, llama-cpp, vllm) |
+| `LOCAL_MODEL_ENDPOINT` | `http://localhost:11434` | Local model API endpoint |
+| `LOCAL_MODEL_QUANTIZATION` | `auto` | Preferred quantization level |
 
 ## Two-Pass Extraction
 
@@ -63,7 +84,7 @@ The two-pass system first asks the LLM to reason about a problem, then makes a s
 |---|---|---|
 | `ANTHROPIC_API_KEY` | *(empty)* | For the improver module (analysis & training data generation) |
 
-## Evaluator Overrides
+## Model Explorer Overrides
 
 Override the default evaluator for specific domains via environment variables:
 

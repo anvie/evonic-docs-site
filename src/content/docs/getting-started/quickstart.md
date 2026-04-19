@@ -1,53 +1,61 @@
 ---
 title: Quick Start
-description: Run your first LLM evaluation in minutes.
+description: Create your first AI agent in minutes.
 ---
 
 ## Start the Server
 
+You can start the server using either method:
+
+### Using the CLI (Recommended)
+
 ```bash
-python3 app.py
+./evonic start
+```
+
+### Using the Startup Script
+
+```bash
+./start.sh
 ```
 
 Open `http://localhost:8080` in your browser.
 
-## Run an Evaluation
+## Create Your First Agent
 
-1. Click **Start Evaluation** on the dashboard
-2. Watch the real-time progress matrix fill in as each domain/level is tested
-3. Results are color-coded: green (passed), red (failed), yellow (partial)
-4. Click any cell to see the full prompt, response, and scoring details
+1. Navigate to the **Agent Platform** section
+2. Click **Create Agent**
+3. Configure your agent:
+   - Name and description
+   - System prompt
+   - Model endpoint (local or remote)
+   - Knowledge base (optional)
+4. Click **Save** to create your agent
 
-## What Gets Tested
+## Connect to a Channel
 
-The evaluator runs through all enabled domains and their 5 complexity levels:
+Choose a channel to deploy your agent:
 
-| Domain | What it Tests |
-|---|---|
-| `conversation` | Indonesian language fluency, keyword understanding |
-| `math` | Arithmetic to multi-step word problems |
-| `sql` | SQL generation against a real SQLite database |
-| `tool_calling` | Function calling with OpenAI tool format |
-| `reasoning` | Logical deduction and problem solving |
-| `health` | Medical/health knowledge questions |
-| `needle_in_haystack` | Finding specific info in long contexts |
+- **Telegram** — Set up a Telegram bot and connect it
+- **WhatsApp** — Connect via WhatsApp Business API
+- **Discord** — Add your agent to a Discord server
 
-Each domain has up to 5 levels of increasing difficulty. Tests are defined as JSON files in `test_definitions/`.
+## Test Your Agent
 
-## Headless Mode (CLI)
+Send a message through your connected channel or use the web interface to test your agent's responses.
 
-Run evaluations without the web UI:
+## What You Can Do
 
-```bash
-python3 run_headless.py --endpoint http://localhost:8080/v1 --model default
-```
+With your agent, you can:
 
-## View History
-
-All evaluation runs are saved automatically. Visit `/history` to browse past results, compare runs, and review per-test details.
+- Answer questions using your knowledge base
+- Execute tools (calculator, file operations, API calls)
+- Perform multi-step reasoning tasks
+- Handle conversations across multiple channels
 
 ## Next Steps
 
-- [Understand the evaluation workflow](/guides/evaluation-workflow)
-- [Create custom test definitions](/guides/test-definitions)
-- [Set up an agent for production serving](/agents/overview)
+- [Install and configure local models](/local-models/overview)
+- [Create more agents](/agents/creating-agents)
+- [Add custom skills](/skills/skills)
+- [Explore model evaluation](/model-exploration/overview)

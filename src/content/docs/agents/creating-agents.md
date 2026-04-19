@@ -5,6 +5,10 @@ sidebar:
   order: 2
 ---
 
+# Creating Agents
+
+Agents are the core building blocks of the Evonic AI Platform. Each agent is an independently configured LLM-powered assistant that can reason, plan, and take actions.
+
 ## Creating an Agent
 
 ### Via the Web UI
@@ -55,6 +59,22 @@ Always respond in English. Be friendly and professional.
 | Title | Author | Price |
 | The Great Gatsby | F. Scott Fitzgerald | $12.99 |
 | To Kill a Mockingbird | Harper Lee | $14.99 |
+```
+
+### Model Selection
+
+You can override the default model for a specific agent. This is useful when you want different agents to use different models based on their requirements:
+
+```env
+# In the Model Override field:
+llama3.2:3b
+```
+
+Or use a remote model:
+
+```env
+# For cloud models:
+meta-llama/Llama-3-8b-Instruct
 ```
 
 ### Workspace Directory

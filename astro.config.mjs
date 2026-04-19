@@ -7,8 +7,8 @@ export default defineConfig({
 	},
   integrations: [
     starlight({
-      title: 'Evonic LLM Evaluator',
-      description: 'Documentation for the Evonic LLM Evaluation & Agentic Platform',
+      title: 'Evonic AI Platform',
+      description: 'Documentation for the Evonic AI Platform — Local-first agentic AI for open models',
       customCss: ['./src/styles/custom.css'],
       sidebar: [
         {
@@ -20,15 +20,31 @@ export default defineConfig({
           ],
         },
         {
-          label: 'Guides',
-          autogenerate: { directory: 'guides' },
+          label: 'Local Models',
+          autogenerate: { directory: 'local-models' },
         },
         {
           label: 'Agents',
           autogenerate: { directory: 'agents' },
         },
         {
-          label: 'API Reference',
+          label: 'Skills & Tools',
+          autogenerate: { directory: 'skills' },
+        },
+        {
+          label: 'Model Explorer',
+          autogenerate: { directory: 'model-exploration' },
+        },
+        {
+          label: 'Guides',
+          autogenerate: { directory: 'guides' },
+        },
+        {
+          label: 'CLI',
+          autogenerate: { directory: 'cli' },
+        },
+        {
+          label: 'Reference',
           autogenerate: { directory: 'reference' },
         },
         {

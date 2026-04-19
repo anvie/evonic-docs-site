@@ -1,9 +1,9 @@
 ---
-title: Evonic LLM Evaluator
-description: Evaluate LLMs across multiple domains and serve production agents with multi-channel support.
+title: Evonic AI Platform
+description: Local-first agentic AI platform for open models. Build, deploy, and evaluate AI agents from hobby to industry.
 template: splash
 hero:
-  tagline: A web-based platform to evaluate Large Language Models and serve production AI agents with multi-channel integration.
+  tagline: Local agent for all, from hobby to industry.
   actions:
     - text: Get Started
       link: /getting-started/installation/
@@ -11,6 +11,7 @@ hero:
       variant: primary
     - text: Agent Platform
       link: /agents/overview/
+      icon: right-arrow
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
@@ -18,25 +19,19 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 ## Features
 
 <CardGrid stagger>
-  <Card title="Multi-Domain Evaluation" icon="list-format">
-    Test LLMs across conversation, math, SQL, tool calling, reasoning, health, and more — each with 5 complexity levels.
+  <Card title="Open Model Optimized Agentic Engine" icon="rocket">
+    Agent runtime optimized for open/local models (Ollama, llama.cpp, vLLM). Session management, LLM orchestration, and event-driven architecture.
   </Card>
-  <Card title="Pluggable Evaluators" icon="setting">
-    Keyword matching, regex, two-pass extraction, SQL execution, tool call validation, LLM-as-judge, and custom hybrid evaluators.
+  <Card title="Secure by Default" icon="shield-check">
+    Isolated agent workspaces, heuristic safety on tool execution, and strict context management. Plan/Execute mode for full control.
   </Card>
-  <Card title="Agent Platform" icon="rocket">
-    Create production-ready AI agents with system prompts, knowledge bases, and tool integrations.
+  <Card title="Evaluator Battery Included" icon="list-format">
+    Multi-domain evaluation (conversation, math, SQL, tool calling, reasoning, health) with 5 complexity levels. Explore open-source models to find the right fit.
   </Card>
   <Card title="Multi-Channel" icon="comment-alt">
     Connect agents to Telegram, WhatsApp, Discord, and more through a modular channel abstraction.
   </Card>
-  <Card title="Real-Time Dashboard" icon="laptop">
-    Live progress matrix with color-coded results, per-test details, and historical tracking.
-  </Card>
-  <Card title="Skills System" icon="puzzle">
-    Install skill packages that bundle tool definitions with Python backends. Upload via web UI or CLI.
-  </Card>
-  <Card title="OpenAI-Compatible" icon="open-book">
-    Works with any OpenAI-compatible API — llama.cpp, Ollama, vLLM, OpenRouter, and more.
+  <Card title="Skills" icon="puzzle">
+    Pluggable capability system. Skill packages are self-contained (skill.json + setup.py + backend/tools/). Upload via web UI or CLI.
   </Card>
 </CardGrid>

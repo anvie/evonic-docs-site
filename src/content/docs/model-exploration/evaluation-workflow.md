@@ -1,13 +1,13 @@
 ---
 title: Evaluation Workflow
-description: How the Model Explorer evaluation pipeline works end-to-end.
+description: How the multi-pass LLM evaluation pipeline works end-to-end.
 sidebar:
   order: 1
 ---
 
-# Evaluation Workflow
+## Overview
 
-The Model Explorer evaluation engine tests LLMs across multiple domains with increasing complexity. Each test goes through a structured pipeline that produces a normalized score.
+The evaluation engine tests LLMs across multiple domains with increasing complexity. Each test goes through a structured pipeline that produces a normalized score.
 
 ## Pipeline Steps
 

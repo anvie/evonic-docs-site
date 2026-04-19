@@ -1,19 +1,23 @@
 ---
-title: Agent Platform Overview
-description: Introduction to the agentic platform for production serving.
+title: Agents — Core Platform
+description: The heart of the Evonic AI Platform — build, deploy, and manage AI agents.
 sidebar:
   order: 1
 ---
 
-## What is the Agent Platform?
+# Agents — Core Platform
 
-Beyond evaluation, Evonic can serve as a **production agentic platform**. Each agent is an independently configured LLM-powered assistant that can:
+The Evonic AI Platform is fundamentally an **agentic AI platform**. Agents are the core building blocks that power everything — from simple chatbots to complex multi-step workflows.
 
-- Respond to users via **multiple channels** (Telegram, WhatsApp, Discord)
-- Use **tools** to take actions (read files, call APIs, query databases)
-- Access a **knowledge base** of reference documents
-- Maintain **per-user conversation history** across sessions
-- Support **slash commands** (`/clear`, `/help`, `/summary`) for quick actions
+## What is an Agent?
+
+An agent is an independently configured LLM-powered assistant that can:
+
+- **Reason and plan** — Break down complex tasks into steps
+- **Take actions** — Execute tools, run code, query databases
+- **Remember context** — Maintain conversation history across sessions
+- **Connect anywhere** — Deploy to Telegram, WhatsApp, Discord, or web interfaces
+- **Learn from knowledge** — Access reference documents and custom knowledge bases
 
 ## Architecture
 
@@ -23,13 +27,13 @@ User Message
 Channel (Telegram, Web, etc.)
     ↓
 Agent Runtime
-    ├── Load agent config (system prompt, model, tools)
-    ├── Load/create session (per-user persistence)
-    ├── Build messages (system prompt + history + new message)
-    ├── Call LLM
-    ├── Execute tool calls (if any)
-    ├── Loop until final response
-    └── Save messages to session
+    ├─ Load agent config (system prompt, model, tools)
+    ├─ Load/create session (per-user persistence)
+    ├─ Build messages (system prompt + history + new message)
+    ├─ Call LLM
+    ├─ Execute tool calls (if any)
+    ├─ Loop until final response
+    └─ Save messages to session
     ↓
 Response → Channel → User
 ```
