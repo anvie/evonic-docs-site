@@ -20,12 +20,12 @@ export default defineConfig({
           ],
         },
         {
-          label: 'Local Models',
-          autogenerate: { directory: 'local-models' },
-        },
-        {
           label: 'Agents',
           autogenerate: { directory: 'agents' },
+        },
+        {
+          label: 'Plugins',
+          autogenerate: { directory: 'plugins' },
         },
         {
           label: 'Skills & Tools',
@@ -42,6 +42,10 @@ export default defineConfig({
         {
           label: 'CLI',
           autogenerate: { directory: 'cli' },
+        },
+        {
+          label: 'Local Models',
+          autogenerate: { directory: 'local-models' },
         },
         {
           label: 'Reference',
