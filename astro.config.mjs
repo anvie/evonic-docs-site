@@ -26,7 +26,7 @@ export default defineConfig({
         {
           label: 'Plugins',
           items: [
-            { label: 'Overview', slug: 'plugins/index' },
+            { label: 'Overview', slug: 'plugins/' },
             { label: 'Setup', slug: 'plugins/setup' },
             { label: 'Events', slug: 'plugins/events' },
             { label: 'SDK', slug: 'plugins/sdk' },
