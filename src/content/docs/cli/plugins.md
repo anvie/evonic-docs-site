@@ -19,6 +19,17 @@ my_plugin/
 
 That's it. No `setup.py`, no `backend/` subdirectory. Just two files at the root of the plugin directory.
 
+Plugins can also extend the platform with **Flask routes** (web pages and API endpoints) by providing a `routes.py` file with a `create_blueprint()` function. See [Route Registration](/docs/cli/route-registration) for a complete guide.
+
+```
+my_plugin/
+├── plugin.json    # Manifest: metadata, events, variables, routes
+├── handler.py     # Event handler functions
+├── routes.py      # Flask route handlers (optional)
+└── templates/     # Jinja2 templates (optional)
+    └── page.html
+```
+
 ### plugin.json
 
 The plugin manifest defines the plugin's metadata and events it responds to:
