@@ -1,23 +1,23 @@
 ---
-title: Plugin Management
-description: Complete guide to managing plugins with the Evonic CLI.
+title: Plugins
+description: Event-driven plugin system — create, manage, and extend Evonic with custom plugins.
 ---
 
-# Plugin Management
+# Plugins
 
 Plugins are event-driven extensions that respond to platform events. They run automatically when triggered by events and can perform actions like sending notifications, processing data, or integrating with external services.
 
 ## Plugin Structure
 
-A plugin is a directory or zip file containing:
+A plugin is a directory under `plugins/` containing:
 
 ```
 my_plugin/
-├── plugin.json         # Metadata and event definitions
-├── setup.py            # Python package configuration
-└── backend/
-    └── plugin.py       # Plugin implementation
+├── plugin.json    # Manifest: metadata, events, variables
+└── handler.py     # Event handler functions
 ```
+
+That's it. No `setup.py`, no `backend/` subdirectory. Just two files at the root of the plugin directory.
 
 ### plugin.json
 
@@ -30,7 +30,8 @@ The plugin manifest defines the plugin's metadata and events it responds to:
   "version": "1.0.0",
   "description": "Plugin that does something when events occur",
   "events": [
-    "event_name"
+    "message_received",
+    "turn_complete"
   ],
   "variables": [
     {
@@ -42,7 +43,254 @@ The plugin manifest defines the plugin's metadata and events it responds to:
 }
 ```
 
-## Commands
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | string | Yes | Unique plugin identifier (lowercase, alphanumeric + underscores) |
+| `name` | string | Yes | Display name for the plugin |
+| `version` | string | Yes | Semantic version (e.g. `1.0.0`) |
+| `description` | string | Yes | Short description of what the plugin does |
+| `events` | string[] | Yes | List of event names this plugin subscribes to |
+| `variables` | object[] | No | Configuration variables users can set |
+
+### Handler Functions
+
+Each event in the `events` array maps to a handler function named `on_<event_name>` in `handler.py`. The handler signature is:
+
+```python
+def on_<event_name>(event: dict, sdk: PluginSDK) -> None:
+    """Handle <event_name> events."""
+    # Your logic here
+```
+
+- **`event`** — a dict containing event-specific data (e.g. `session_id`, `message`, `summary`, etc.)
+- **`sdk`** — a `PluginSDK` instance providing helper methods (see [Plugin SDK](#plugin-sdk))
+- **Return value** — handlers should not return anything. The framework ignores return values.
+
+### Example Handler
+
+```python
+def on_message_received(event, sdk):
+    """Log every incoming message."""
+    session_id = event.get('session_id', '')
+    user_message = event.get('message', '')
+    sdk.log(f"Received message from session {session_id}: {user_message}")
+
+def on_turn_complete(event, sdk):
+    """Log when a conversation turn finishes."""
+    session_id = event.get('session_id', '')
+    sdk.log(f"Turn complete for session {session_id}")
+```
+
+## Plugin Events
+
+Plugins respond to platform events. Here are all supported events:
+
+| Event | Description | Event Data |
+|-------|-------------|------------|
+| `message_received` | User sends a message to an agent | `session_id`, `user_id`, `message`, `channel_id`, `agent_id` |
+| `message_sent` | Agent sends a message to a user | `session_id`, `user_id`, `message`, `channel_id`, `agent_id` |
+| `session_created` | A new session is created | `session_id`, `agent_id`, `user_id`, `channel_id` |
+| `processing_started` | Agent starts processing a message | `session_id`, `user_id`, `message`, `agent_id` |
+| `llm_thinking` | LLM is generating a response | `session_id`, `message`, `agent_id` |
+| `llm_response_chunk` | A chunk of LLM response is received | `session_id`, `chunk`, `agent_id` |
+| `tool_executed` | A tool is executed by the agent | `session_id`, `tool_name`, `tool_args`, `tool_result`, `agent_id` |
+| `final_answer` | Agent produces a final answer | `session_id`, `answer`, `agent_id` |
+| `turn_complete` | A full conversation turn finishes | `session_id`, `agent_id`, `user_id` |
+| `summary_updated` | Session summary is updated | `session_id`, `summary`, `message_count`, `agent_id` |
+
+## Plugin SDK
+
+Each handler receives a `PluginSDK` instance (`sdk` parameter) with these methods:
+
+### `sdk.log(message, level="info")`
+
+Log a message with plugin context. Messages appear in plugin logs.
+
+```python
+def on_message_received(event, sdk):
+    sdk.log("Processing incoming message")
+    sdk.log("Error occurred", level="error")
+    sdk.log("Debug info", level="warn")
+```
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `message` | string | — | Log message text |
+| `level` | string | `"info"` | Log level: `"info"`, `"warn"`, or `"error"` |
+
+### `sdk.send_message(agent_id, external_user_id, channel_id, text)`
+
+Send a message to a user via an agent session on a specific channel.
+
+```python
+def on_turn_complete(event, sdk):
+    session = sdk.get_session(event['session_id'])
+    agent_id = session.get('agent_id')
+    user_id = session.get('user_id')
+    channel_id = session.get('channel_id')
+
+    sdk.send_message(
+        agent_id=agent_id,
+        external_user_id=user_id,
+        channel_id=channel_id,
+        text="Your turn is complete!"
+    )
+```
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `agent_id` | string | Target agent ID |
+| `external_user_id` | string | User identifier on the channel (e.g. Telegram user ID) |
+| `channel_id` | string | Channel ID (UUID) or channel type hint like `'telegram'` |
+| `text` | string | Message text to send |
+
+**Returns:** `{"success": bool, "session_id": str}` on success, or `{"success": False, "error": str}` on failure.
+
+### `sdk.http_request(method, url, headers=None, json=None, data=None, timeout=30)`
+
+Make an HTTP request to an external API.
+
+```python
+def on_message_received(event, sdk):
+    response = sdk.http_request(
+        method="POST",
+        url="https://api.example.com/webhook",
+        json={"session_id": event.get("session_id"), "message": event.get("message")},
+        timeout=10
+    )
+    if response.get("ok"):
+        sdk.log(f"Webhook sent: {response['status_code']}")
+    else:
+        sdk.log(f"Webhook failed: {response.get('error')}", level="error")
+```
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `method` | string | — | HTTP method: `"GET"`, `"POST"`, `"PUT"`, `"DELETE"`, etc. |
+| `url` | string | — | Target URL |
+| `headers` | dict | `None` | Optional HTTP headers |
+| `json` | dict | `None` | JSON body (automatically serialized) |
+| `data` | string | `None` | Raw body data |
+| `timeout` | int | `30` | Request timeout in seconds |
+
+**Returns:** `{"status_code": int, "body": str, "headers": dict, "ok": bool}` on success, or `{"error": str, "ok": False}` on failure.
+
+### `sdk.get_session_messages(session_id, agent_id=None, limit=50)`
+
+Read messages from a session.
+
+```python
+def on_turn_complete(event, sdk):
+    messages = sdk.get_session_messages(
+        session_id=event['session_id'],
+        limit=10
+    )
+    sdk.log(f"Last 10 messages: {len(messages)}")
+```
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `session_id` | string | — | Session ID |
+| `agent_id` | string | `None` | Optional agent ID filter |
+| `limit` | int | `50` | Max number of messages to return |
+
+**Returns:** List of message dicts.
+
+### `sdk.get_session(session_id)`
+
+Get enriched session details (includes `agent_name`, `channel_type`, etc.).
+
+```python
+def on_message_received(event, sdk):
+    session = sdk.get_session(event['session_id'])
+    agent_name = session.get('agent_name', 'Unknown')
+    sdk.log(f"Session agent: {agent_name}")
+```
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `session_id` | string | Session ID |
+
+**Returns:** Dict with session details.
+
+## Configuration Variables
+
+Plugins can define configuration variables that users can set via CLI. Variable types:
+
+| Type | Description | Example |
+|------|-------------|---------|
+| `string` | Text value | `"https://hooks.example.com"` |
+| `number` | Numeric value | `10` |
+| `boolean` | True/false value | `true` |
+| `array` | List of values | `["value1", "value2"]` |
+
+Access variables in your handler via `sdk.config`:
+
+```python
+def on_message_received(event, sdk):
+    webhook_url = sdk.config.get('WEBHOOK_URL', '')
+    min_count = int(sdk.config.get('MIN_COUNT', 5))
+    enabled = sdk.config.get('ENABLE_FEATURE', True)
+```
+
+## Example Plugin: Message Logger
+
+Here's a complete example plugin that logs all incoming messages and sends a notification when a turn completes:
+
+### plugin.json
+
+```json
+{
+  "id": "message_logger",
+  "name": "Message Logger",
+  "version": "1.0.0",
+  "description": "Logs all incoming messages and notifies on turn completion",
+  "events": [
+    "message_received",
+    "turn_complete"
+  ],
+  "variables": [
+    {
+      "name": "WEBHOOK_URL",
+      "type": "string",
+      "description": "Webhook URL for notifications"
+    },
+    {
+      "name": "MIN_COUNT",
+      "type": "number",
+      "description": "Minimum messages before logging"
+    }
+  ]
+}
+```
+
+### handler.py
+
+```python
+def on_message_received(event, sdk):
+    """Log every incoming message."""
+    session_id = event.get('session_id', '')
+    user_message = event.get('message', '')
+    sdk.log(f"Received: session={session_id}, message={user_message}")
+
+def on_turn_complete(event, sdk):
+    """Send notification when a turn completes."""
+    session_id = event.get('session_id', '')
+    webhook_url = sdk.config.get('WEBHOOK_URL', '').strip()
+
+    if not webhook_url:
+        sdk.log("Skipped: no WEBHOOK_URL configured", level="warn")
+        return
+
+    sdk.http_request(
+        method="POST",
+        url=webhook_url,
+        json={"session_id": session_id, "event": "turn_complete"}
+    )
+    sdk.log(f"Turn complete notification sent for session {session_id}")
+```
+
+## CLI Commands
 
 ### Install a Plugin
 
@@ -60,6 +308,7 @@ evonic plugin install ./my_plugin.zip --force
 ```
 
 **Options:**
+
 | Option | Description |
 |--------|-------------|
 | `path` | Path to zip file or directory (required) |
@@ -74,6 +323,7 @@ evonic plugin uninstall my_plugin
 ```
 
 **Arguments:**
+
 | Argument | Description |
 |----------|-------------|
 | `plugin_id` | ID of the plugin to uninstall (required) |
@@ -87,6 +337,7 @@ evonic plugin list
 ```
 
 **Example Output:**
+
 ```
   ID             Name                     Version  Enabled  Events
   -------------  -----------------------  -------  -------  ------
@@ -104,6 +355,7 @@ evonic plugin info session-recap
 ```
 
 **Example Output:**
+
 ```
   Plugin ID    : session-recap
   Name         : Session Recap Extractor
@@ -140,6 +392,7 @@ evonic plugin disable session-recap
 ```
 
 **Arguments:**
+
 | Argument | Description |
 |----------|-------------|
 | `plugin_id` | ID of the plugin to enable/disable (required) |
@@ -153,6 +406,7 @@ evonic plugin reload session-recap
 ```
 
 **Arguments:**
+
 | Argument | Description |
 |----------|-------------|
 | `plugin_id` | ID of the plugin to reload (required) |
@@ -170,11 +424,13 @@ evonic plugin logs session-recap --limit 100
 ```
 
 **Arguments:**
+
 | Argument | Description |
 |----------|-------------|
 | `plugin_id` | ID of the plugin (required) |
 
 **Options:**
+
 | Option | Description |
 |--------|-------------|
 | `--limit LIMIT, -n LIMIT` | Number of log entries to show |
@@ -193,149 +449,46 @@ evonic plugin config session-recap --set MIN_MESSAGES 10
 ```
 
 **Arguments:**
+
 | Argument | Description |
 |----------|-------------|
 | `plugin_id` | ID of the plugin (required) |
 
 **Options:**
+
 | Option | Description |
 |--------|-------------|
 | `--set KEY [VALUE ...]` | Set configuration key=value pairs |
-
-## Plugin Events
-
-Plugins respond to platform events. Common events include:
-
-| Event | Description |
-|-------|-------------|
-| `summary_updated` | Triggered when a session summary is updated |
-| `message_sent` | Triggered when a message is sent to an agent |
-| `message_received` | Triggered when a message is received from a user |
-| `tool_executed` | Triggered when a tool is executed |
-| `agent_created` | Triggered when a new agent is created |
-| `agent_updated` | Triggered when an agent is updated |
-
-## Creating Custom Plugins
-
-### Step 1: Create Directory Structure
-
-```bash
-mkdir -p my_plugin/backend
-```
-
-### Step 2: Create plugin.json
-
-```json
-{
-  "id": "my_plugin",
-  "name": "My Custom Plugin",
-  "version": "1.0.0",
-  "description": "Plugin that logs all messages",
-  "events": [
-    "message_sent",
-    "message_received"
-  ],
-  "variables": [
-    {
-      "name": "LOG_LEVEL",
-      "type": "string",
-      "description": "Logging level (INFO, DEBUG, ERROR)"
-    }
-  ]
-}
-```
-
-### Step 3: Create Plugin Implementation
-
-```python
-# backend/plugin.py
-import logging
-
-logger = logging.getLogger(__name__)
-
-def on_message_sent(event_data: dict) -> dict:
-    """Handle message_sent events."""
-    logger.info(f"Message sent: {event_data}")
-    return {"status": "processed"}
-
-def on_message_received(event_data: dict) -> dict:
-    """Handle message_received events."""
-    logger.info(f"Message received: {event_data}")
-    return {"status": "processed"}
-```
-
-### Step 4: Create setup.py
-
-```python
-from setuptools import setup, find_packages
-
-setup(
-    name='my_plugin',
-    version='1.0.0',
-    packages=find_packages(),
-)
-```
-
-### Step 5: Install and Enable the Plugin
-
-```bash
-evonic plugin install ./my_plugin/
-evonic plugin enable my_plugin
-```
-
-## Configuration Variables
-
-Plugins can define configuration variables that users can set. Variable types include:
-
-| Type | Description | Example |
-|------|-------------|---------|
-| `string` | Text value | `"https://hooks.example.com"` |
-| `number` | Numeric value | `10` |
-| `boolean` | True/false value | `true` |
-| `array` | List of values | `["value1", "value2"]` |
-
-### Setting Configuration
-
-```bash
-# Set a string value
-evonic plugin config my_plugin --set CONFIG_KEY "my value"
-
-# Set a numeric value
-evonic plugin config my_plugin --set MIN_COUNT 10
-
-# Set a boolean value
-evonic plugin config my_plugin --set ENABLE_FEATURE true
-```
 
 ## Best Practices
 
 ### Event Handling
 
 - Handle events gracefully with try/except blocks
-- Return structured results (dict) from event handlers
-- Log important actions for debugging
-- Don't block on long-running operations
+- Don't return anything from handlers — the framework ignores return values
+- Log important actions for debugging using `sdk.log()`
+- Don't block on long-running operations — use `sdk.http_request()` with a short timeout
 
 ### Configuration
 
 - Provide sensible defaults for all configuration variables
 - Validate configuration values on load
 - Use environment variables for sensitive data
-- Document all configuration variables
+- Document all configuration variables in `plugin.json`
 
 ### Logging
 
-- Use the standard logging module
-- Include context in log messages
-- Use appropriate log levels (INFO, DEBUG, ERROR)
-- Don't log sensitive data (API keys, passwords)
+- Use `sdk.log()` for all logging — it adds plugin context automatically
+- Include context in log messages (session_id, user_id, etc.)
+- Use appropriate log levels (`info`, `warn`, `error`)
+- Don't log sensitive data (API keys, passwords, PII)
 
 ### Error Handling
 
 - Handle errors gracefully without crashing
-- Return error details in the result dict
-- Log errors with context
+- Log errors with context using `sdk.log(message, level="error")`
 - Provide meaningful error messages
+- Check return values from SDK methods (e.g. `sdk.send_message()`)
 
 ## Troubleshooting
 
@@ -345,7 +498,7 @@ evonic plugin config my_plugin --set ENABLE_FEATURE true
 
 **Solution:**
 - Verify the plugin is enabled: `evonic plugin info <plugin_id>`
-- Check that the event name matches in plugin.json
+- Check that the event name matches in `plugin.json`
 - Check plugin logs: `evonic plugin logs <plugin_id>`
 - Verify the event is being emitted by the platform
 
@@ -375,6 +528,6 @@ evonic plugin config my_plugin --set ENABLE_FEATURE true
 
 **Solution:**
 - Check log level in plugin configuration
-- Verify logging is configured in plugin code
+- Verify `sdk.log()` is being called in your handler
 - Use `--limit` to see more entries: `evonic plugin logs <plugin_id> --limit 100`
 - Check if the plugin is enabled
