@@ -25,7 +25,14 @@ export default defineConfig({
         },
         {
           label: 'Plugins',
-          autogenerate: { directory: 'plugins' },
+          items: [
+            { label: 'Overview', slug: 'plugins/index' },
+            { label: 'Setup', slug: 'plugins/setup' },
+            { label: 'Events', slug: 'plugins/events' },
+            { label: 'SDK', slug: 'plugins/sdk' },
+            { label: 'Best Practices', slug: 'plugins/best-practices' },
+            { label: 'Troubleshooting', slug: 'plugins/troubleshooting' },
+          ],
         },
         {
           label: 'Skills & Tools',
