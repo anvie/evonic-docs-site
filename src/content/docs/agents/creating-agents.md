@@ -7,7 +7,7 @@ sidebar:
 
 # Creating Agents
 
-Agents are the core building blocks of the Evonic AI Platform. Each agent is an independently configured LLM-powered assistant that can reason, plan, and take actions.
+Agents are the core building blocks of the Evonic AI. Each agent is an independently configured LLM-powered assistant that can reason, plan, and take actions.
 
 ## Creating an Agent
 
@@ -32,6 +32,20 @@ curl -X POST http://localhost:8080/api/agents \
     "description": "Book recommendation assistant for a local bookstore"
   }'
 ```
+
+## Default Agent Capabilities
+
+New agents come with several capabilities enabled by default:
+
+| Capability | Description |
+|---|---|
+| **Vision** (`vision_enabled`) | Agent can process images sent through supported channels (e.g., Telegram) |
+| **Agent ID Injection** (`inject_agent_id`) | The agent's own ID is injected into its system prompt so it knows its identity |
+| **Date/Time Injection** (`inject_datetime`) | Current date and time are injected into the system prompt each turn |
+| **Intermediate Responses** (`send_intermediate_responses`) | Tool results and intermediate steps are sent as visible messages to the user in real-time |
+| **Agent State** (`enable_agent_state`) | Plan/Execute mode system is active; state persists across conversation turns and summarization |
+
+These capabilities can be toggled per-agent in the **General** tab.
 
 ## Agent Configuration
 
@@ -112,6 +126,21 @@ Chat directly with the agent from the browser to test its behavior before deploy
 - **Thinking timeline** — Visual timeline showing the agent's reasoning process
 - **Tab persistence** — Your active tab is remembered across page refreshes (via URL hash)
 - **Mobile layout** — Responsive design for mobile devices
+
+## Safety Checker Toggle
+
+Each agent has a **safety checker** that reviews tool calls (such as `bash` and `runpy`) before execution. This is enabled by default (`safety_checker_enabled = 1`).
+
+You can disable the safety checker per agent to enable **full autopilot mode**, where the agent executes tools without requiring user approval for each call.
+
+| Setting | Value | Behavior |
+|---|---|---|
+| Enabled (default) | `1` | Potentially dangerous tool calls trigger a user approval gate |
+| Disabled | `0` | Tools execute directly — full autopilot without intervention |
+
+:::caution[Warning]
+Disabling the safety checker means the agent will execute code and system commands without any approval gate. Only disable this for agents you fully trust.
+:::
 
 ## Updating an Agent
 

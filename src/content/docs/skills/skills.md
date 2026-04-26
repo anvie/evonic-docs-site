@@ -187,8 +187,6 @@ curl -X PUT http://localhost:8080/api/skills/my-skill/toggle \
   -d '{"enabled": false}'
 ```
 
-Disabled skills' tools are hidden from the registry and cannot be assigned to agents.
-
 ### Uninstalling
 
 Uninstalling a skill:
@@ -200,6 +198,57 @@ python3 manage_skill.py uninstall my-skill
 ```
 
 Or via the web UI: click **Delete** on the skill card and confirm.
+
+## Configurable Skills
+
+Some skills support additional configuration through **skill settings**. These settings allow you to customize a skill's behavior without modifying its code.
+
+Settings are configured via the UI setting block when assigning or configuring a skill for an agent. The exact settings available depend on the skill's implementation.
+
+### Example: Kanban Skill Settings
+
+The Kanban skill provides a setting `create_task_super_only`:
+
+| Setting | Type | Description |
+|---|---|---|
+| `create_task_super_only` | Boolean | When `true`, only the super agent can create new tasks on the Kanban board. Other agents can still edit or delete tasks they have permission for, but cannot create new ones. |
+
+To configure this:
+
+1. Open the skill settings in the UI
+2. Toggle `create_task_super_only` to your preference
+3. Save — the setting takes effect immediately
+
+### Adding Settings to a Custom Skill
+
+To make a custom skill configurable:
+
+1. Define settings in `skill.json` under a `settings` field:
+
+```json
+{
+  "id": "my-skill",
+  "name": "My Skill",
+  "settings": [
+    {
+      "name": "allow_override",
+      "type": "boolean",
+      "default": false,
+      "description": "Allow users to override the default behavior"
+    }
+  ]
+}
+```
+
+2. Access settings in your backend via the `agent` context:
+
+```python
+def execute(agent: dict, args: dict) -> dict:
+    allow_override = agent.get("skill_settings", {}).get("allow_override", False)
+    if allow_override:
+        # custom logic
+    return {"result": "ok"}
+```
 
 ## How Skills Integrate
 
@@ -238,7 +287,7 @@ The bundled `bookstore` skill demonstrates the pattern. It wraps the `bookstore-
 skills/bookstore/
 ├── skill.json
 ├── setup.py                    # Validates bookstore-cli is in PATH
-├── bookstore-tools-defs.json      # 12 tool definitions
+├── bookstore-tools-defs.json   # 12 tool definitions
 └── backend/
     ├── cli_helper.py           # Shared subprocess wrapper
     └── tools/

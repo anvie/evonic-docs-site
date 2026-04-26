@@ -41,6 +41,35 @@ curl -X POST http://localhost:8080/api/agents/bookstore_bot/channels \
   }'
 ```
 
+## Primary Channel
+
+An agent can designate one connected channel as its **primary channel**. The primary channel determines the default routing target for **outbound notifications** — for example, when an agent calls `escalate_to_user`, the notification is sent through the primary channel if one is set and active.
+
+### Setting a Primary Channel
+
+Via the API:
+
+```bash
+curl -X POST http://localhost:8080/api/agents/<agent_id>/channels/<channel_id>/set-primary
+```
+
+You can also set the primary channel from the **Channels** tab in the web UI.
+
+### Unsetting a Primary Channel
+
+```bash
+curl -X POST http://localhost:8080/api/agents/<agent_id>/channels/<channel_id>/unset-primary
+```
+
+### Routing Priority
+
+When the agent needs to send an outbound notification:
+
+1. If a **primary channel** is set and active → use it
+2. Otherwise → fall back to the channel the user originally messaged from
+
+This ensures notifications reach the user through their preferred channel, even if the conversation started elsewhere.
+
 ## Telegram Setup
 
 ### Prerequisites
@@ -95,6 +124,8 @@ curl -X POST http://localhost:8080/api/agents/bookstore_bot/channels/<channel_id
 | `DELETE` | `/api/agents/<id>/channels/<ch_id>` | Delete a channel |
 | `POST` | `/api/agents/<id>/channels/<ch_id>/start` | Start the channel |
 | `POST` | `/api/agents/<id>/channels/<ch_id>/stop` | Stop the channel |
+| `POST` | `/api/agents/<id>/channels/<ch_id>/set-primary` | Set as primary channel |
+| `POST` | `/api/agents/<id>/channels/<ch_id>/unset-primary` | Unset as primary channel |
 
 ## How Channels Work
 
