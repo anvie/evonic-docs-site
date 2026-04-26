@@ -3,12 +3,12 @@ import starlight from '@astrojs/starlight';
 
 export default defineConfig({
 	server: {
-		"allowedHosts": ["quantity-newsletter-clan-variations.trycloudflare.com"]
+		"allowedHosts": ["*"]
 	},
   integrations: [
     starlight({
-      title: 'Evonic AI Platform',
-      description: 'Documentation for the Evonic AI Platform — Local-first agentic AI for open models',
+      title: 'Evonic AI',
+      description: 'Documentation for Evonic AI — Local-first agentic AI for open models',
       customCss: ['./src/styles/custom.css'],
       sidebar: [
         {
@@ -26,7 +26,7 @@ export default defineConfig({
         {
           label: 'Plugins',
           items: [
-            { label: 'Overview', slug: 'plugins/' },
+            { label: 'Overview', slug: 'plugins' },
             { label: 'Setup', slug: 'plugins/setup' },
             { label: 'Events', slug: 'plugins/events' },
             { label: 'SDK', slug: 'plugins/sdk' },
