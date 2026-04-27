@@ -75,7 +75,7 @@ Tools can come from two sources:
 
 For built-in tools: if your JSON definition has `"function": {"name": "get_weather", ...}`, create `backend/tools/get_weather.py`.
 
-For skill tools: the backend is bundled inside the skill package. See [Skills](/guides/skills/) for details.
+For skill tools: the backend is bundled inside the skill package. See [Skills](/skills/skills/) for details.
 
 ## Tool Registry
 
@@ -156,12 +156,12 @@ If no Python backend exists for a tool, the real executor returns `{"error": "No
 
 ### `clear_log_file`
 
-Clears the `llm_api_calls.log` file and adds a reset marker with the current date. Useful for resetting API call logs between sessions.
+Clears the agent-specific `llm.log` and `sessrecap.log` files (located in `logs/{agent_id}/`) and adds a reset marker with the current date. Useful for resetting API call and session recap logs between sessions.
 
 ```json
 {
   "name": "clear_log_file",
-  "description": "Truncates the llm_api_calls.log file and adds a reset marker with the current date.",
+  "description": "Truncates the agent-specific llm.log and sessrecap.log files and adds a reset marker with the current date.",
   "parameters": {
     "type": "object",
     "properties": {},
@@ -220,4 +220,4 @@ Quick summary:
 2. Create a Python backend in `backend/tools/<name>.py`
 3. Assign the tool to an agent via the **Tools** tab
 
-Alternatively, package multiple related tools as a **skill** for easy distribution and installation. See [Skills](/guides/skills/).
+Alternatively, package multiple related tools as a **skill** for easy distribution and installation. See [Skills](/skills/skills/).

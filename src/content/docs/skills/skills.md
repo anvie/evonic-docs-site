@@ -11,7 +11,7 @@ A **skill** is an installable package that bundles tool definitions (OpenAI func
 
 Skills are managed via:
 - **Web UI** — the `/skills` page for uploading, enabling/disabling, and deleting
-- **CLI** — the `manage_skill.py` script for command-line installation
+- **CLI** — the `evonic skill` commands for command-line installation and management
 
 Once installed and enabled, a skill's tools are automatically available for assignment to agents.
 
@@ -129,16 +129,16 @@ The `agent` and `args` parameters follow the same contract as [regular tool back
 
 ```bash
 # Install from a zip file
-python3 manage_skill.py install path/to/skill.zip
+evonic skill add ./my-skill.zip
 
 # Install from a local directory
-python3 manage_skill.py install skills/my-skill
+evonic skill add ./my-skill/
+
+# Install from GitHub
+evonic skill add https://github.com/user/my-skill
 
 # List installed skills
-python3 manage_skill.py list
-
-# Uninstall a skill
-python3 manage_skill.py uninstall my-skill
+evonic skill list
 ```
 
 ### Zip File Structure
@@ -187,17 +187,44 @@ curl -X PUT http://localhost:8080/api/skills/my-skill/toggle \
   -d '{"enabled": false}'
 ```
 
-### Uninstalling
+### Get Skill Details
 
-Uninstalling a skill:
-1. Calls `setup.uninstall()` to run any cleanup logic
-2. Deletes the skill directory from `skills/`
+View detailed information about a specific skill:
 
 ```bash
-python3 manage_skill.py uninstall my-skill
+evonic skill get my-skill
+```
+
+**Output:**
+
+```
+ID:        my-skill
+Name:      My Skill
+Version:   1.0.0
+Status:    enabled
+Description: Description of what this skill does
+
+Tools (3):
+  - my_tool
+    What this tool does
+
+Variables (0):
+```
+
+### Uninstalling
+
+Uninstalling a skill removes it from the platform:
+
+1. Deletes the skill directory from `skills/`
+2. Removes the skill from the tool registry
+
+```bash
+evonic skill rm my-skill
 ```
 
 Or via the web UI: click **Delete** on the skill card and confirm.
+
+Disabled skills' tools are hidden from the registry and cannot be assigned to agents.
 
 ## Configurable Skills
 

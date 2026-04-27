@@ -14,7 +14,7 @@ A tool has two parts:
 The JSON definition is used for both evaluation (mock) and production (function schema). The Python backend is only called in production (agent runtime).
 
 :::tip[Packaging multiple tools?]
-If you're creating a set of related tools, consider packaging them as a **skill** for easy distribution. See [Skills](/guides/skills/).
+If you're creating a set of related tools, consider packaging them as a **skill** for easy distribution. See [Skills](/skills/skills/).
 :::
 
 ## Step 1: JSON Definition
@@ -315,7 +315,7 @@ my-skill/
 └── backend/tools/*.py      # Backend implementations
 ```
 
-See the full [Skills guide](/guides/skills/) for details on creating, installing, and managing skill packages.
+See the full [Skills guide](/skills/skills/) for details on creating, installing, and managing skill packages.
 
 ## Patch Tool Safety
 
