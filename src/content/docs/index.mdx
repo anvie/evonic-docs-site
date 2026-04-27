@@ -1,4 +1,4 @@
-import { Card } from '@astrojs/starlight/components';
+import { Card, LinkCard } from '@astrojs/starlight/components';
 
 ---
 title: Evonic AI — Local-first agentic AI for open models
@@ -10,21 +10,9 @@ description: Evonic AI is a local-first, agent-native platform. Build AI agents 
 Local-first, agent-native AI platform. Build, deploy, and manage AI agents with custom tools, knowledge bases, and real-time messaging — all powered by open LLMs.
 
 <div style={{display: 'grid', gridTemplateColumns: '1fr', gap: '0.75rem', maxWidth: '720px'}}>
-  <a href="/getting-started/installation" style={{textDecoration: 'none'}}>
-    <Card title="Quick Start" description="Install Evonic and get your first agent running in minutes.">
-      <a href="/getting-started/installation" style={{color: 'var(--sl-color-text-accent)'}}>Start now →</a>
-    </Card>
-  </a>
-  <a href="/agents/overview" style={{textDecoration: 'none'}}>
-    <Card title="Agents" description="Learn about the core platform — agents, tools, knowledge bases, and channels.">
-      <a href="/agents/overview" style={{color: 'var(--sl-color-text-accent)'}}>Explore →</a>
-    </Card>
-  </a>
-  <a href="/plugins" style={{textDecoration: 'none'}}>
-    <Card title="Plugins" description="Extend Evonic with custom plugins, events, and an SDK for building integrations.">
-      <a href="/plugins" style={{color: 'var(--sl-color-text-accent)'}}>Learn more →</a>
-    </Card>
-  </a>
+  <LinkCard href="/getting-started/installation" title="Quick Start" description="Install Evonic and get your first agent running in minutes." />
+  <LinkCard href="/agents/overview" title="Agents" description="Learn about the core platform — agents, tools, knowledge bases, and channels." />
+  <LinkCard href="/plugins" title="Plugins" description="Extend Evonic with custom plugins, events, and an SDK for building integrations." />
 </div>
 
 ---
@@ -32,41 +20,13 @@ Local-first, agent-native AI platform. Build, deploy, and manage AI agents with 
 ## Features
 
 <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem', maxWidth: '720px'}}>
-  <a href="/agents/overview" style={{textDecoration: 'none'}}>
-    <Card title="Agents" description="Build AI agents with custom tools and knowledge bases.">
-      <a href="/agents/overview" style={{color: 'var(--sl-color-text-accent)'}}>Overview →</a>
-    </Card>
-  </a>
-  <a href="/plugins" style={{textDecoration: 'none'}}>
-    <Card title="Plugins" description="Extend Evonic with custom plugins and events.">
-      <a href="/plugins" style={{color: 'var(--sl-color-text-accent)'}}>Learn more →</a>
-    </Card>
-  </a>
-  <a href="/evaluation" style={{textDecoration: 'none'}}>
-    <Card title="Evaluation" description="Measure and improve agent performance with regex evaluators.">
-      <a href="/evaluation" style={{color: 'var(--sl-color-text-accent)'}}>Explore →</a>
-    </Card>
-  </a>
-  <a href="/skills" style={{textDecoration: 'none'}}>
-    <Card title="Skills & Tools" description="Discover and manage skills and custom tools.">
-      <a href="/skills" style={{color: 'var(--sl-color-text-accent)'}}>Learn more →</a>
-    </Card>
-  </a>
-  <a href="/security/heuristic-code-safety" style={{textDecoration: 'none'}}>
-    <Card title="Security" description="Heuristic code safety and agent sandboxing.">
-      <a href="/security/heuristic-code-safety" style={{color: 'var(--sl-color-text-accent)'}}>Learn more →</a>
-    </Card>
-  </a>
-  <a href="/guides/system-prompt-hierarchy" style={{textDecoration: 'none'}}>
-    <Card title="Guides" description="Self-update system, system prompt hierarchy, and more.">
-      <a href="/guides/system-prompt-hierarchy" style={{color: 'var(--sl-color-text-accent)'}}>Explore →</a>
-    </Card>
-  </a>
-  <a href="/cli/overview" style={{textDecoration: 'none'}}>
-    <Card title="CLI Reference" description="Command-line tools for managing Evonic.">
-      <a href="/cli/overview" style={{color: 'var(--sl-color-text-accent)'}}>View docs →</a>
-    </Card>
-  </a>
+  <LinkCard href="/agents/overview" title="Agents" description="Build AI agents with custom tools and knowledge bases." />
+  <LinkCard href="/plugins" title="Plugins" description="Extend Evonic with custom plugins and events." />
+  <LinkCard href="/evaluation" title="Evaluation" description="Measure and improve agent performance with regex evaluators." />
+  <LinkCard href="/skills" title="Skills & Tools" description="Discover and manage skills and custom tools." />
+  <LinkCard href="/security/heuristic-code-safety" title="Security" description="Heuristic code safety and agent sandboxing." />
+  <LinkCard href="/guides/system-prompt-hierarchy" title="Guides" description="Self-update system, system prompt hierarchy, and more." />
+  <LinkCard href="/cli/overview" title="CLI Reference" description="Command-line tools for managing Evonic." />
 </div>
 
 ---
