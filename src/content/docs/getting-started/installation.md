@@ -143,7 +143,7 @@ URL: http://localhost:8080
 
 ### Updating the Server
 
-Check for and apply self-updates from the Git remote. Requires the [self-update supervisor](/guides/self-update) to be set up first.
+Check for and apply updates from the Git remote. Requires the [update supervisor](/agents/self-update) to be set up first.
 
 ```bash
 evonic update [--check] [--tag TAG] [--rollback] [--force]
@@ -174,7 +174,7 @@ evonic update --rollback
 
 When the update supervisor is running in the background, `evonic update` signals it via `SIGUSR1` to trigger an immediate check. If the supervisor is not running, the update is performed inline in the current process.
 
-**See also:** [Self-Update System guide](/guides/self-update)
+**See also:** [Update System guide](/agents/self-update)
 
 ## Next Steps
 
