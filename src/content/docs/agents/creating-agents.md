@@ -33,6 +33,78 @@ curl -X POST http://localhost:8080/api/agents \
   }'
 ```
 
+### Via CLI
+
+```bash
+# Basic agent
+evonic agent add my_bot --name "My Bot"
+
+# Agent with description
+evonic agent add bookstore_bot --name "Bookstore Assistant" --description "Book recommendation assistant"
+
+# Agent with a specific model
+evonic agent add research_bot --name "Research Bot" --model gpt-4
+
+# Agent from a skillset template
+evonic agent add dev_bot --name "Dev Bot" --skillset coder --description "Coding assistant"
+```
+
+**Options:**
+
+| Flag | Required | Description |
+|------|----------|-------------|
+| `--name` | Yes | Display name for the agent |
+| `--description` | No | Short description |
+| `--model` | No | Model override |
+| `--skillset` | No | Skillset template ID (pre-configures tools & prompt) |
+
+## Listing Agents
+
+View all agents with their status, tool count, and channel count:
+
+```bash
+evonic agent list
+```
+
+**Output:**
+
+```
+ID        Name         Status   Tools  Channels
+-------------------------------------------------
+siwa      Siwa Miwa    enabled     10         1
+claimg    ClaimGuard   enabled      7         0
+```
+
+## Getting Agent Details
+
+View detailed information about a specific agent:
+
+```bash
+evonic agent get bookstore_bot
+```
+
+**Output:**
+
+```
+ID:          bookstore_bot
+Name:        Bookstore Assistant
+Description: Book recommendation assistant for a local bookstore
+Status:      enabled
+Super:       no
+Model:       moonshotai/kimi-k2-thinking
+
+System Prompt: You are a book recommendation assistant...
+
+Tools (10):
+  - bash
+  - calculator
+  - patch
+  ...
+
+Channels (1):
+  - Mirai
+```
+
 ## Default Agent Capabilities
 
 New agents come with several capabilities enabled by default:
@@ -142,7 +214,46 @@ You can disable the safety checker per agent to enable **full autopilot mode**, 
 Disabling the safety checker means the agent will execute code and system commands without any approval gate. Only disable this for agents you fully trust.
 :::
 
+## Enabling and Disabling Agents
+
+### Enable an Agent
+
+```bash
+evonic agent enable my_bot
+```
+
+### Disable an Agent
+
+```bash
+evonic agent disable my_bot
+```
+
+Disabling an agent prevents it from processing new messages. Super agents cannot be disabled.
+
+## Deleting an Agent
+
+Permanently remove an agent. Requires interactive confirmation:
+
+```bash
+evonic agent remove my_bot
+```
+
+**Output:**
+
+```
+Agent to remove:
+  ID:        my_bot
+  Name:      My Bot
+  Status:    enabled
+Are you sure? [y/N]: y
+Agent removed: my_bot
+```
+
+Deleting an agent removes its database records, all channel configurations, chat sessions, and the KB directory on disk.
+
 ## Updating an Agent
+
+Update an agent's configuration via the API:
 
 ```bash
 curl -X PUT http://localhost:8080/api/agents/bookstore_bot \
@@ -151,14 +262,6 @@ curl -X PUT http://localhost:8080/api/agents/bookstore_bot \
     "name": "Bookstore Bot",
     "system_prompt": "Updated system prompt here..."
   }'
-```
-
-## Deleting an Agent
-
-Deleting an agent removes its database records, all channel configurations, chat sessions, and the KB directory on disk.
-
-```bash
-curl -X DELETE http://localhost:8080/api/agents/bookstore_bot
 ```
 
 ## Agent ID Rules

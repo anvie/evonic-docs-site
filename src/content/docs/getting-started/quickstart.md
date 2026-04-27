@@ -48,4 +48,4 @@ With your agent, you can:
 - [Install and configure local models](/local-models/overview)
 - [Create more agents](/agents/creating-agents)
 - [Add custom skills](/skills/skills)
-- [Explore model evaluation](/model-exploration/overview)
+- [Explore model evaluation](/evaluation/overview)

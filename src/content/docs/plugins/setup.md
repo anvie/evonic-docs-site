@@ -5,11 +5,13 @@ description: Install, configure, enable, and manage plugins via CLI.
 
 # Setup
 
-This guide covers installing, configuring, and managing plugins through the Evonic CLI.
+This guide covers installing, configuring, and managing plugins through the Evonic CLI and web UI.
 
 ## Install a Plugin
 
 Install a plugin from a zip file or directory.
+
+### Via CLI
 
 ```bash
 # Install from zip file
@@ -28,6 +30,10 @@ evonic plugin install ./my_plugin.zip --force
 |--------|-------------|
 | `path` | Path to zip file or directory (required) |
 | `-f, --force` | Force overwrite existing plugin |
+
+### Via Web UI
+
+Navigate to the plugin management page and upload your plugin zip file.
 
 ## Uninstall a Plugin
 

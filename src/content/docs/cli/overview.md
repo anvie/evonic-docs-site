@@ -1,143 +1,50 @@
 ---
-title: CLI Overview
-description: Universal CLI for managing Evonic skills and plugins.
+title: CLI Commands
+description: Complete reference for all Evonic CLI commands.
 ---
 
-# CLI Overview
+# CLI Commands
 
-The `evonic` CLI is the universal command-line interface for managing Evonic skills and plugins. It provides a fast, scriptable way to install, configure, and manage your agent ecosystem without needing the web UI.
-
-## Installation
-
-The CLI is included with the Evonic AI Platform. No separate installation is required.
-
-```bash
-# Check if CLI is available
-evonic --help
-
-# Or use full path
-./evonic --help
-```
-
-## Quick Start
-
-```bash
-# List all installed skills
-evonic skill list
-
-# Install a skill from a zip file
-evonic skill install ./my_skill.zip
-
-# Install a skill from a directory
-evonic skill install ./my_skill/
-
-# List all installed plugins
-evonic plugin list
-
-# Get details about a specific skill
-evonic skill info claimguard
-```
+The `evonic` CLI is the command-line interface for managing the Evonic platform. It covers server management, agents, skills, skillsets, models, plugins, and schedules.
 
 ## Command Structure
-
-The CLI follows a simple hierarchical structure:
 
 ```bash
 evonic <category> <command> [options] [arguments]
 ```
 
-### Categories
+## Available Categories
 
 | Category | Description |
 |----------|-------------|
-| `skill` | Manage skills (tool packages) |
-| `plugin` | Manage plugins (event-driven extensions) |
+| `start` / `stop` / `status` | Server management |
+| `plugin` | Plugin management |
+| `skill` | Skill (tool package) management |
+| `skillset` | Skillset template management |
+| `agent` | Agent management |
+| `model` | LLM model management |
 
-### Common Options
-
-| Option | Description |
-|--------|-------------|
-| `-h, --help` | Show help for a command |
-| `-f, --force` | Force operation (overwrite existing) |
-
-## Skills vs Plugins
-
-Understanding the difference between skills and plugins is key to using the CLI effectively.
-
-### Skills
-
-Skills are **self-contained tool packages** that extend agent capabilities. Each skill includes:
-
-- `skill.json` — Metadata (name, version, description, tools)
-- `setup.py` — Python package configuration
-- `backend/tools/` — Tool implementations (Python files)
-
-Skills are **always available** to agents once installed. They provide tools that agents can invoke during conversations.
-
-**Examples:**
-- `krasan` — Hotel booking tools (7 tools)
-- `claimguard` — Medical/clinical expert with ICD-10 coding (2 tools)
-- `hello_world` — Simple demo skill (1 tool)
-
-### Plugins
-
-Plugins are **event-driven extensions** that respond to platform events. Each plugin includes:
-
-- `plugin.json` — Metadata (name, version, description, events)
-- `backend/` — Plugin implementation
-- Configuration variables for customization
-
-Plugins are **optional** and can be enabled/disabled. They run automatically when triggered by events.
-
-**Examples:**
-- `session-recap` — Extracts actionable items from session summaries and sends notifications
-
-## Real-World Examples
-
-### Installing Skills
+## Quick Reference
 
 ```bash
-# Install from zip
-evonic skill install ./hotel_booking.zip
+# Check CLI is available
+evonic --help
 
-# Install from directory
-evonic skill install ./my_custom_skill/
+# Start the server
+evonic start
 
-# Force overwrite existing skill
-evonic skill install ./updated_skill.zip --force
-```
-
-### Managing Plugins
-
-```bash
-# Install plugin
-evonic plugin install ./notification_plugin.zip
-
-# View plugin logs
-evonic plugin logs session-recap
-
-# Reload plugin after changes
-evonic plugin reload session-recap
-```
-
-### Configuration
-
-```bash
-# Show skill configuration
-evonic skill config claimguard
-
-# Set configuration value
-evonic skill config claimguard --set API_KEY my-secret-key
-
-# Show plugin configuration
-evonic plugin config session-recap
-
-# Set plugin configuration
-evonic plugin config session-recap --set WEBHOOK_URL https://hooks.example.com/notify
+# List agents, skills, skillsets, models
+evonic agent list
+evonic skill list
+evonic skillset list
+evonic model list
 ```
 
 ## Next Steps
 
-- [Skill Management](/cli/skills) — Complete guide to managing skills
-- [Plugin Management](/cli/plugins) — Complete guide to managing plugins
-- [Configuration](/cli/configuration) — Advanced configuration patterns
+- [Server Management](/cli/server) — Start, stop, status, restart, logs
+- [Agent Management](/cli/agents) — Create, update, enable, disable, remove agents
+- [Skill Management](/cli/skills) — Install, get details, uninstall skills
+- [Skillset Management](/cli/skillsets) — List templates, apply to agents
+- [Model Management](/cli/models) — Add, get, remove LLM models
+- [Plugin Management](/cli/plugins) — Install, uninstall, list plugins

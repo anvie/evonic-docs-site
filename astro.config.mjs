@@ -3,7 +3,7 @@ import starlight from '@astrojs/starlight';
 
 export default defineConfig({
 	server: {
-		"allowedHosts": ["*"]
+		allowedHosts: true,
 	},
   integrations: [
     starlight({
@@ -35,24 +35,20 @@ export default defineConfig({
           ],
         },
         {
+          label: 'Evaluation',
+          autogenerate: { directory: 'evaluation' },
+        },
+        {
           label: 'Skills & Tools',
           autogenerate: { directory: 'skills' },
         },
         {
-          label: 'Model Explorer',
-          autogenerate: { directory: 'model-exploration' },
-        },
-        {
-          label: 'Scheduler',
-          autogenerate: { directory: 'scheduler' },
+          label: 'Security',
+          autogenerate: { directory: 'security' },
         },
         {
           label: 'Guides',
           autogenerate: { directory: 'guides' },
-        },
-        {
-          label: 'CLI',
-          autogenerate: { directory: 'cli' },
         },
         {
           label: 'Local Models',

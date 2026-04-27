@@ -1,6 +1,6 @@
 ---
 title: Configuration
-description: All configuration options for the Evonic AI Platform.
+description: All configuration options for the Evonic AI.
 ---
 
 All configuration is done via environment variables in a `.env` file at the project root.

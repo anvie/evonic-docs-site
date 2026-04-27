@@ -1,13 +1,13 @@
 ---
 title: Agents — Core Platform
-description: The heart of the Evonic AI Platform — build, deploy, and manage AI agents.
+description: The heart of the Evonic AI — build, deploy, and manage AI agents.
 sidebar:
   order: 1
 ---
 
 # Agents — Core Platform
 
-The Evonic AI Platform is fundamentally an **agentic AI platform**. Agents are the core building blocks that power everything — from simple chatbots to complex multi-step workflows.
+The Evonic AI is fundamentally an **agentic AI platform**. Agents are the core building blocks that power everything — from simple chatbots to complex multi-step workflows.
 
 ## What is an Agent?
 

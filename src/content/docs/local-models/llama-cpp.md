@@ -43,13 +43,13 @@ python convert.py model.bin model.gguf
 ./server -m model.gguf --host 0.0.0.0 --port 8080
 ```
 
-## Configuration with Evonic AI Platform
+## Configuration with Evonic AI
 
 ### API Endpoint
 llama.cpp server runs at `http://localhost:8080` by default.
 
 ### Configuration
-In your Evonic AI Platform configuration:
+In your Evonic AI configuration:
 ```yaml
 model:
   provider: llama-cpp

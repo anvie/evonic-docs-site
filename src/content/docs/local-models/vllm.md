@@ -42,13 +42,13 @@ curl http://localhost:8000/v1/completions \
     }'
 ```
 
-## Configuration with Evonic AI Platform
+## Configuration with Evonic AI
 
 ### API Endpoint
 vLLM runs an OpenAI-compatible API at `http://localhost:8000/v1`.
 
 ### Configuration
-In your Evonic AI Platform configuration:
+In your Evonic AI configuration:
 ```yaml
 model:
   provider: vllm

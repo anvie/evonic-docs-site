@@ -92,7 +92,7 @@ The primary way to create an agent from a skillset is through the `apply_skillse
 
 | Parameter | Required | Description |
 |-----------|----------|-------------|
-| `skill_id` | Yes | The skillset template ID (e.g., `"coder"`, `"devops"`) |
+| `skill_id` | Yes | The skillset template ID (e.g., "coder", "devops") |
 | `agent_id` | Yes | Unique ID for the new agent (alphanumeric and underscores only) |
 | `name` | No | Display name for the agent (uses skillset default if omitted) |
 | `description` | No | Description for the agent (uses skillset default if omitted) |
@@ -121,16 +121,60 @@ After this call, an agent named "My Coder Agent" with ID `my_coder` is created w
 
 ### Via CLI
 
-List available skillsets:
+**List available skillsets:**
 
 ```bash
-python3 manage_skillset.py list
+evonic skillset list
 ```
 
-Create an agent from a skillset:
+**Output:**
+
+```
+ID                Name                  Description                                                                                                               Tools  Skills
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+coder             Coder                 General-purpose coding agent for building, debugging, and refactoring software...       7       0
+data_analyst      Data Analyst          Data analysis agent for statistical analysis, data processing, visualization...         7       1
+devops            DevOps Engineer       DevOps and infrastructure agent for managing CI/CD pipelines...                       8       0
+pentester         Penetration Tester    Penetration testing agent for security assessment...                                 5       0
+sysadmin          System Administrator  System administration agent for server management...                                  8       0
+```
+
+**Get skillset details:**
 
 ```bash
-python3 manage_skillset.py apply --skill coder --agent-id my_coder
+evonic skillset get coder
+```
+
+**Output:**
+
+```
+ID:          coder
+Name:        Coder
+Description: General-purpose coding agent for building, debugging, and refactoring software.
+Model:       (default)
+
+System Prompt: You are a skilled software developer. You write clean, well-documented code...
+
+Tools (7):
+  - read_file
+  - write_file
+  - str_replace
+  - patch
+  - bash
+  - runpy
+  - calculator
+```
+
+**Create an agent from a skillset:**
+
+```bash
+evonic skillset apply coder --agent-id my_coder --name "My Coder Agent"
+```
+
+**Output:**
+
+```
+Agent created: My Coder Agent (my_coder) from skillset 'coder'
 ```
 
 ## Skillset JSON Format
