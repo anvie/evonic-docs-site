@@ -43,6 +43,10 @@ export default defineConfig({
           autogenerate: { directory: 'model-exploration' },
         },
         {
+          label: 'Scheduler',
+          autogenerate: { directory: 'scheduler' },
+        },
+        {
           label: 'Guides',
           autogenerate: { directory: 'guides' },
         },
