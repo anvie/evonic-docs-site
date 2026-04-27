@@ -8,25 +8,25 @@ sidebar:
 ## High-Level Architecture
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│  Frontend (Vanilla HTML/CSS/JS + Jinja2)                │
-│  templates/ + static/                                    │
-├─────────────────────────────────────────────────────────┤
-│  Flask HTTP Layer                                        │
-│  app.py + routes/agents.py + routes/skills.py            │
-├──────────────────────┬──────────────────────────────────┤
-│  Evaluation Engine   │  Agent Runtime                    │
-│  evaluator/engine.py │  backend/agent_runtime.py         │
-├──────────────────────┼──────────────────────────────────┤
-│  Evaluator Strategies│  Tool Registry                    │
-│  evaluator/strategies│  backend/tools/registry.py        │
-├──────────────────────┴──────────────────────────────────┤
-│  LLM Client (OpenAI-compatible)                          │
-│  evaluator/llm_client.py                                 │
-├─────────────────────────────────────────────────────────┤
-│  SQLite Persistence                                      │
-│  models/db.py                                            │
-└─────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────┐
+│  Frontend (Vanilla HTML/CSS/JS + Jinja2)            │
+│  templates/ + static/                                │
+├─────────────────────────────────────────────────────┤
+│  Flask HTTP Layer                                    │
+│  app.py + routes/agents.py + routes/skills.py        │
+├──────────────────────────┬──────────────────────────┤
+│  Evaluation Engine       │  Agent Runtime            │
+│  evaluator/engine.py     │  backend/agent_runtime.py  │
+├──────────────────────────┬──────────────────────────┤
+│  Evaluator Strategies    │  Tool Registry            │
+│  evaluator/strategies    │  backend/tools/registry.py │
+├──────────────────────────┬──────────────────────────┤
+│  LLM Client (OpenAI-compatible)                     │
+│  evaluator/llm_client.py                             │
+├─────────────────────────────────────────────────────┤
+│  SQLite Persistence                                  │
+│  models/db.py                                        │
+└─────────────────────────────────────────────────────┘
 ```
 
 ## Key Modules
@@ -119,39 +119,19 @@ turn_complete → message_sent
 ```
 
 Events are logged to `logs/events.log` with UTC timestamps.
-See the [Event Stream guide](/development/event-stream) for the full reference.
+See the [Events reference](/system/events) for the full reference.
 
 ### `backend/plugin_manager.py`
 
 Plugin lifecycle management:
 - Discovers and loads plugins from `plugins/*/handler.py`
-- Registers plugin handlers as subscribers on `event_stream` via bridge closures
-- Provides a per-plugin in-memory log ring buffer accessible via the UI
-- `plugin_manager.dispatch()` is a thin wrapper over `event_stream.emit()`
+- Registers event subscriptions via `plugin.json`
+- Manages plugin state (enabled/disabled)
+- Provides `PluginSDK` to handler functions
 
-### `config.py`
+### `backend/event_logger.py`
 
-Central configuration loaded from `.env` via `python-dotenv`. All settings are exposed as module-level constants.
-
-## Design Patterns
-
-| Pattern | Where Used |
-|---|---|
-| **Strategy** | Evaluator system — pluggable scoring strategies |
-| **Singleton** | `EvaluationEngine`, `Database`, `LLMClient` instances |
-| **Factory** | `get_evaluator()` maps domain to strategy class |
-| **Blueprint** | Agent and skill routes separated from main app |
-| **Observer** | `EventStream` pub/sub bus + log queue for real-time UI updates |
-| **Template Method** | `BaseEvaluator.evaluate()` defines the evaluation skeleton |
-
-## Frontend
-
-Vanilla HTML/CSS/JS with Jinja2 templates — no build step. Tailwind CSS loaded from CDN. The frontend polls the API for live updates during evaluations.
-
-Key templates:
-- `index.html` — Dashboard with progress matrix
-- `settings.html` — Test management with domain/test/evaluator/tool editors
-- `skills.html` — Skill package management (upload, enable/disable, delete)
-- `agents.html` — Agent list
-- `agent_detail.html` — Agent config with 5 tabs
-- `history.html` / `history_detail.html` — Results archive
+Structured event logger:
+- Wraps `event_stream` to emit typed events
+- Formats events for the `logs/events.log` file
+- Provides utilities for event filtering and aggregation
