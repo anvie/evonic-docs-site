@@ -65,7 +65,7 @@ The plugin manifest defines the plugin's metadata and events it responds to:
 
 ### Handler Functions
 
-Each event in the `events` array maps to a handler function named `on_<event_name>` in `handler.py`. See [Plugin Events](/docs/plugins/events) for a list of all supported events. The handler signature is:
+Each event in the `events` array maps to a handler function named `on_<event_name>` in `handler.py`. See [Events](/system/events) for a list of all supported events. The handler signature is:
 
 ```python
 def on_<event_name>(event: dict, sdk: PluginSDK) -> None:
@@ -74,7 +74,7 @@ def on_<event_name>(event: dict, sdk: PluginSDK) -> None:
 ```
 
 - **`event`** — a dict containing event-specific data (e.g. `session_id`, `message`, `summary`, etc.)
-- **`sdk`** — a `PluginSDK` instance providing helper methods (see [Plugin SDK](/docs/plugins/sdk))
+- **`sdk`** — a `PluginSDK` instance providing helper methods (see [Plugin SDK](/plugins/sdk))
 - **Return value** — handlers should not return anything. The framework ignores return values.
 
 ### Example Handler
@@ -172,8 +172,8 @@ def on_turn_complete(event, sdk):
 
 ## Quick Links
 
-- [Plugin SDK](/docs/plugins/sdk) — Available methods and helpers
-- [Plugin Events](/docs/plugins/events) — All supported events
-- [Setup](/docs/plugins/setup) — Install, configure, and manage plugins
-- [Best Practices](/docs/plugins/best-practices) — Tips for writing great plugins
-- [Troubleshooting](/docs/plugins/troubleshooting) — Common issues and fixes
+- [Plugin SDK](/plugins/sdk) — Available methods and helpers
+- [Events](/system/events) — All supported events
+- [Setup](/plugins/setup) — Install, configure, and manage plugins
+- [Best Practices](/plugins/best-practices) — Tips for writing great plugins
+- [Troubleshooting](/plugins/troubleshooting) — Common issues and fixes

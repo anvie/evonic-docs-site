@@ -20,6 +20,17 @@ export default defineConfig({
           ],
         },
         {
+          label: 'System',
+          items: [
+            { label: 'Overview', slug: 'system' },
+            { label: 'Agents', slug: 'system/agents' },
+            { label: 'Skills', slug: 'system/skills' },
+            { label: 'Plugins', slug: 'system/plugins' },
+            { label: 'Models', slug: 'system/models' },
+            { label: 'Events', slug: 'system/events' },
+          ],
+        },
+        {
           label: 'Agents',
           autogenerate: { directory: 'agents' },
         },
@@ -28,7 +39,6 @@ export default defineConfig({
           items: [
             { label: 'Overview', slug: 'plugins' },
             { label: 'Setup', slug: 'plugins/setup' },
-            { label: 'Events', slug: 'plugins/events' },
             { label: 'SDK', slug: 'plugins/sdk' },
             { label: 'Best Practices', slug: 'plugins/best-practices' },
             { label: 'Troubleshooting', slug: 'plugins/troubleshooting' },

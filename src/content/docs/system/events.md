@@ -1,11 +1,27 @@
 ---
 title: Events
-description: All supported platform events that plugins can subscribe to.
+description: Platform events — the event-driven communication layer for plugins.
+sidebar:
+  order: 6
 ---
 
-# Plugin Events
+# Events
 
-Plugins respond to platform events. Here are all supported events:
+Events form the backbone of Evonic AI's event-driven architecture. Every significant moment in a message turn emits a named event that any plugin can react to without coupling into the core pipeline.
+
+## Event Flow
+
+Events are emitted in a specific order during a conversation turn:
+
+```
+message_received → processing_started → llm_thinking? →
+llm_response_chunk → tool_executed* → final_answer →
+turn_complete → message_sent
+```
+
+Events are logged to `logs/events.log` with UTC timestamps.
+
+## Supported Events
 
 | Event | Description | Event Data |
 |-------|-------------|------------|
@@ -19,20 +35,6 @@ Plugins respond to platform events. Here are all supported events:
 | `final_answer` | Agent produces a final answer | `session_id`, `answer`, `agent_id` |
 | `turn_complete` | A full conversation turn finishes | `session_id`, `agent_id`, `user_id` |
 | `summary_updated` | Session summary is updated | `session_id`, `summary`, `message_count`, `agent_id` |
-
-## Event Flow
-
-Events are emitted in a specific order during a conversation turn:
-
-1. `message_received` — User sends a message
-2. `processing_started` — Agent begins processing
-3. `llm_thinking` — LLM starts generating
-4. `llm_response_chunk` — Response chunks arrive
-5. `tool_executed` — (if tools are used)
-6. `final_answer` — Agent produces final answer
-7. `message_sent` — Agent sends response to user
-8. `turn_complete` — Turn finishes
-9. `summary_updated` — Session summary updated
 
 ## Subscribing to Events
 
@@ -50,4 +52,9 @@ Subscribe to events by listing them in your `plugin.json`:
 }
 ```
 
-Each event maps to a handler function `on_<event_name>` in `handler.py`.
+Each event maps to a handler function `on_<event_name>` in `handler.py`. See [Plugin SDK](/plugins/sdk) for details.
+
+## Learn More
+
+- [Plugins Overview](/system/plugins) — how events fit into the plugin system
+- [Plugin SDK](/plugins/sdk) — available SDK methods for event handlers
