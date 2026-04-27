@@ -22,6 +22,7 @@ export default defineConfig({
         {
           label: 'System',
           items: [
+            { label: 'Design Philosophy', slug: 'design-philosophy' },
             { label: 'Overview', slug: 'system' },
             { label: 'Agents', slug: 'system/agents' },
             { label: 'Skills', slug: 'system/skills' },
