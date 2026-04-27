@@ -5,8 +5,6 @@ sidebar:
   order: 5
 ---
 
-# Models
-
 Models define the language models that power agent conversations. Evonic supports multiple model providers and local inference engines.
 
 ## Supported Runners

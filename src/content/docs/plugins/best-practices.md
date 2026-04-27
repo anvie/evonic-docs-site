@@ -3,8 +3,6 @@ title: Best Practices
 description: Tips and recommendations for writing robust Evonic plugins.
 ---
 
-# Best Practices
-
 ## Event Handling
 
 - Handle events gracefully with try/except blocks

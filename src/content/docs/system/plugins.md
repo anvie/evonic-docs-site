@@ -5,8 +5,6 @@ sidebar:
   order: 4
 ---
 
-# Plugins
-
 Plugins are event-driven extensions that respond to platform events. They run automatically when triggered by events and can perform actions like sending notifications, processing data, or integrating with external services.
 
 ## How Plugins Fit In

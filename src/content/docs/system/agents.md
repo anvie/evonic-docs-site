@@ -5,8 +5,6 @@ sidebar:
   order: 2
 ---
 
-# Agents
-
 Agents are the core building blocks of Evonic AI. Each agent is an independently configured LLM-powered assistant that can reason, plan, take actions, and communicate through channels.
 
 ## Agent Runtime

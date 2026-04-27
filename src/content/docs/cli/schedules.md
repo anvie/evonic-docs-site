@@ -3,8 +3,6 @@ title: Schedule Management
 description: CLI commands for managing scheduled jobs.
 ---
 
-# Schedule Management
-
 The `evonic` CLI integrates with the scheduler skill for creating, listing, and cancelling scheduled jobs.
 
 > Note: Schedule commands are available through the scheduler skill. Install it first with `evonic skill add` if not already installed.

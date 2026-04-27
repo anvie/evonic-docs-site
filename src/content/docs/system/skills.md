@@ -5,8 +5,6 @@ sidebar:
   order: 3
 ---
 
-# Skills
-
 Skills are installable packages that bundle tool definitions (OpenAI function schemas) with their Python backend implementations. They extend the platform's tool capabilities without modifying core code.
 
 ## How Skills Fit In

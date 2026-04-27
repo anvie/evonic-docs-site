@@ -5,8 +5,6 @@ sidebar:
   order: 2
 ---
 
-# Creating Agents
-
 Agents are the core building blocks of the Evonic AI. Each agent is an independently configured LLM-powered assistant that can reason, plan, and take actions.
 
 ## Creating an Agent

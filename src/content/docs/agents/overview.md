@@ -5,8 +5,6 @@ sidebar:
   order: 1
 ---
 
-# Agents — Core Platform
-
 The Evonic AI is fundamentally an **agentic AI platform**. Agents are the core building blocks that power everything — from simple chatbots to complex multi-step workflows.
 
 ## What is an Agent?

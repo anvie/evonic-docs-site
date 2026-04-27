@@ -3,8 +3,6 @@ title: Local Models Overview
 description: Why local-first, benefits, and use cases for running AI models locally.
 ---
 
-# Local Models Overview
-
 The Evonic AI is designed with a **local-first** philosophy. By running AI models locally, you gain full control over your data, privacy, and inference costs — while still accessing the latest open-source models.
 
 ## Why Local-First?

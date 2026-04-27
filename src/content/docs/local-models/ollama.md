@@ -3,8 +3,6 @@ title: Ollama Setup
 description: How to install and configure Ollama for local model inference.
 ---
 
-# Ollama Setup
-
 Ollama is the easiest way to run large language models locally. It provides a simple CLI and API interface with support for many popular models.
 
 ## Installation

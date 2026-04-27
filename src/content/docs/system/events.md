@@ -5,8 +5,6 @@ sidebar:
   order: 6
 ---
 
-# Events
-
 Events form the backbone of Evonic AI's event-driven architecture. Every significant moment in a message turn emits a named event that any plugin can react to without coupling into the core pipeline.
 
 `backend/event_stream.py` is a lightweight pub/sub event bus that decouples event producers (agent runtime, channels) from consumers (plugins, internal components).

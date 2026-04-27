@@ -3,8 +3,6 @@ title: llama.cpp Setup
 description: How to install and configure llama.cpp for local model inference.
 ---
 
-# llama.cpp Setup
-
 llama.cpp is a highly optimized C++ library for running large language models with minimal resources. It's ideal for edge devices, CPU-only environments, and maximum portability.
 
 ## Installation

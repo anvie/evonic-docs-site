@@ -3,8 +3,6 @@ title: CLI Commands
 description: Complete reference for all Evonic CLI commands.
 ---
 
-# CLI Commands
-
 The `evonic` CLI is the command-line interface for managing the Evonic platform. It covers server management, agents, skills, skillsets, models, plugins, and schedules.
 
 ## Command Structure

@@ -3,8 +3,6 @@ title: Quantization Guide
 description: Understanding quantization for local models - GGUF, AWQ, INT4/INT8 and more.
 ---
 
-# Quantization Guide
-
 Quantization reduces model size and inference cost by representing weights with fewer bits. This is essential for running large models on consumer hardware.
 
 ## What is Quantization?

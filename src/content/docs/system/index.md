@@ -5,8 +5,6 @@ sidebar:
   order: 1
 ---
 
-# System Architecture
-
 This section covers the core architecture of Evonic AI — the building blocks that power every agent, skill, and plugin.
 
 ```

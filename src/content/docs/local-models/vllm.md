@@ -3,8 +3,6 @@ title: vLLM Setup
 description: How to install and configure vLLM for high-throughput local model inference.
 ---
 
-# vLLM Setup
-
 vLLM is a high-throughput and memory-efficient inference engine for large language models. It's designed for production workloads with support for PagedAttention, continuous batching, and optimized GPU utilization.
 
 ## Installation

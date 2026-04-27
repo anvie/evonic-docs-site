@@ -3,8 +3,6 @@ title: Model Selection Guide
 description: How to choose the right model for your use case and hardware.
 ---
 
-# Model Selection Guide
-
 Choosing the right model is critical for balancing performance, cost, and hardware requirements. This guide helps you select the best model for your needs.
 
 ## Quick Decision Matrix

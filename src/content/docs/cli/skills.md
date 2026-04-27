@@ -3,8 +3,6 @@ title: Skill Management
 description: CLI commands for managing Evonic skills.
 ---
 
-# Skill Management
-
 Skills are self-contained tool packages that extend agent capabilities. The CLI provides commands for listing, installing, inspecting, and removing skills.
 
 ## `evonic skill list`

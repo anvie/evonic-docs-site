@@ -3,8 +3,6 @@ title: Setup
 description: Install, configure, enable, and manage plugins via CLI.
 ---
 
-# Setup
-
 This guide covers installing, configuring, and managing plugins through the Evonic CLI and web UI.
 
 ## Install a Plugin

@@ -3,8 +3,6 @@ title: Troubleshooting
 description: Common plugin issues and how to fix them.
 ---
 
-# Troubleshooting
-
 ## Plugin Not Loading
 
 ### Symptom
