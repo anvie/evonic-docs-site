@@ -1,56 +1,90 @@
+import { Card } from '@astrojs/starlight/components';
+
 ---
-title: Evonic AI
-description: Local-first agentic AI for open models — running agents locally with full control.
+title: Evonic AI — Local-first agentic AI for open models
+description: Evonic AI is a local-first, agent-native platform. Build AI agents with custom tools, knowledge bases, and real-time messaging — all powered by open LLMs.
 ---
 
 # Evonic AI
 
-Local-first agentic AI for open models.
+Local-first, agent-native AI platform. Build, deploy, and manage AI agents with custom tools, knowledge bases, and real-time messaging — all powered by open LLMs.
+
+<div style={{display: 'grid', gridTemplateColumns: '1fr', gap: '0.75rem', maxWidth: '720px'}}>
+  <a href="/getting-started/installation" style={{textDecoration: 'none'}}>
+    <Card title="Quick Start" description="Install Evonic and get your first agent running in minutes.">
+      <a href="/getting-started/installation" style={{color: 'var(--sl-color-text-accent)'}}>Start now →</a>
+    </Card>
+  </a>
+  <a href="/agents/overview" style={{textDecoration: 'none'}}>
+    <Card title="Agents" description="Learn about the core platform — agents, tools, knowledge bases, and channels.">
+      <a href="/agents/overview" style={{color: 'var(--sl-color-text-accent)'}}>Explore →</a>
+    </Card>
+  </a>
+  <a href="/plugins" style={{textDecoration: 'none'}}>
+    <Card title="Plugins" description="Extend Evonic with custom plugins, events, and an SDK for building integrations.">
+      <a href="/plugins" style={{color: 'var(--sl-color-text-accent)'}}>Learn more →</a>
+    </Card>
+  </a>
+</div>
+
+---
 
 ## Features
 
-- **Local-first** — run everything on your machine
-- **Agent framework** — create and manage autonomous agents
-- **Plugin system** — extend with custom tools, channels, and events
-- **Skill system** — modular capabilities that agents can use
-- **Scheduler** — schedule tasks and runs
-- **Evaluation framework** — test and benchmark agent performance
-- **Model support** — Ollama, vLLM, and local models
+<div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem', maxWidth: '720px'}}>
+  <a href="/agents/overview" style={{textDecoration: 'none'}}>
+    <Card title="Agents" description="Build AI agents with custom tools and knowledge bases.">
+      <a href="/agents/overview" style={{color: 'var(--sl-color-text-accent)'}}>Overview →</a>
+    </Card>
+  </a>
+  <a href="/plugins" style={{textDecoration: 'none'}}>
+    <Card title="Plugins" description="Extend Evonic with custom plugins and events.">
+      <a href="/plugins" style={{color: 'var(--sl-color-text-accent)'}}>Learn more →</a>
+    </Card>
+  </a>
+  <a href="/evaluation" style={{textDecoration: 'none'}}>
+    <Card title="Evaluation" description="Measure and improve agent performance with regex evaluators.">
+      <a href="/evaluation" style={{color: 'var(--sl-color-text-accent)'}}>Explore →</a>
+    </Card>
+  </a>
+  <a href="/skills" style={{textDecoration: 'none'}}>
+    <Card title="Skills & Tools" description="Discover and manage skills and custom tools.">
+      <a href="/skills" style={{color: 'var(--sl-color-text-accent)'}}>Learn more →</a>
+    </Card>
+  </a>
+  <a href="/security/heuristic-code-safety" style={{textDecoration: 'none'}}>
+    <Card title="Security" description="Heuristic code safety and agent sandboxing.">
+      <a href="/security/heuristic-code-safety" style={{color: 'var(--sl-color-text-accent)'}}>Learn more →</a>
+    </Card>
+  </a>
+  <a href="/guides/system-prompt-hierarchy" style={{textDecoration: 'none'}}>
+    <Card title="Guides" description="Self-update system, system prompt hierarchy, and more.">
+      <a href="/guides/system-prompt-hierarchy" style={{color: 'var(--sl-color-text-accent)'}}>Explore →</a>
+    </Card>
+  </a>
+  <a href="/cli/overview" style={{textDecoration: 'none'}}>
+    <Card title="CLI Reference" description="Command-line tools for managing Evonic.">
+      <a href="/cli/overview" style={{color: 'var(--sl-color-text-accent)'}}>View docs →</a>
+    </Card>
+  </a>
+</div>
 
-## Security
+---
 
-Evonic AI prioritizes security with:
+## Resources
 
-- Isolated agent workspaces
-- Heuristic safety on tool execution
-- Strict context management
+- [GitHub](https://github.com/evonic-ai/evonic)
+- [Community](https://t.me/evonicai)
+- [Self Update](/agents/self-update) — auto-update agents
+- [System Prompt Hierarchy](/guides/system-prompt-hierarchy) — organize prompts by priority
 
 ## Quick Start
 
-Install Evonic AI and create your first agent:
+1. **Install** — `pip install evonic`
+2. **Configure** — Set your API key and model
+3. **Create an agent** — Define a system prompt and tools
+4. **Run** — Start the server and test
 
-```bash
-pip install evonic
-evonic init my-agent
-evonic run my-agent
-```
+## Next Steps
 
-## Getting Started
-
-- [Installation](/getting-started/installation) — install Evonic AI
-- [Quick Start](/getting-started/quickstart) — get up and running in 5 minutes
-- [Configuration](/getting-started/configuration) — configure your installation
-
-## Guides
-
-- [Heuristic Code Safety](/security/heuristic-code-safety) — 3-layer safety system for tool execution
-- [Headless Mode](/guides/headless-mode) — run agents without a UI
-- [Regex Evaluator](/guides/regex-evaluators) — create regex-based evaluators
-- [Self Update](/guides/self-update) — auto-update agents
-- [System Prompt Hierarchy](/guides/system-prompt-hierarchy) — manage prompt structure
-
-## Reference
-
-- [Configuration](/reference/configuration) — all configuration options
-- [Database Schema](/reference/database-schema) — schema reference
-- [API Reference](/reference/api-agents/) — REST API docs
+Explore the [Getting Started](/getting-started/installation) guide, then dive into the [Agents](/agents/overview) section to learn about building and managing AI agents.
