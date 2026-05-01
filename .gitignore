@@ -271,3 +271,7 @@ agents/**
 # Local configuration overrides
 config.local.py
 settings.local.py
+
+# never commit
+key/
+
