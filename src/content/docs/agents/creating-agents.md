@@ -149,14 +149,14 @@ Always respond in English. Be friendly and professional.
 
 You can override the default model for a specific agent. This is useful when you want different agents to use different models based on their requirements:
 
-```env
+```
 # In the Model Override field:
 llama3.2:3b
 ```
 
 Or use a remote model:
 
-```env
+```
 # For cloud models:
 meta-llama/Llama-3-8b-Instruct
 ```
