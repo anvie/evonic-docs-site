@@ -1,11 +1,11 @@
 ---
-title: Evonet — Cloud Workplace Connector
+title: Evonet: Cloud Workplace Connector
 description: A lightweight Go binary that connects any device to Evonic over WebSocket, enabling remote agent execution without SSH or a public IP.
 sidebar:
   order: 8
 ---
 
-**Evonet** is a lightweight Go binary that runs on a target device and connects it to an Evonic server over WebSocket. Once connected, agents can execute bash scripts, Python code, and file operations on that device — without SSH, port forwarding, or a public IP address.
+**Evonet** is a lightweight Go binary that runs on a target device and connects it to an Evonic server over WebSocket. Once connected, agents can execute bash scripts, Python code, and file operations on that device: without SSH, port forwarding, or a public IP address.
 
 It's the backend for **Cloud Workplaces**. See [Workplaces](/agents/workplaces) for the Evonic-side setup.
 
@@ -17,7 +17,7 @@ Agent (Evonic server) ──── WebSocket (outbound) ──── Evonet (you
                                                       bash / python / files
 ```
 
-Evonet makes the connection *outbound* from the device, so the device needs no open inbound ports. Any device that can reach the Evonic server URL works — home networks, corporate firewalls, cloud VMs, Raspberry Pis.
+Evonet makes the connection *outbound* from the device, so the device needs no open inbound ports. Any device that can reach the Evonic server URL works: home networks, corporate firewalls, cloud VMs, Raspberry Pis.
 
 ## Installation
 
@@ -166,19 +166,19 @@ EOF
 cd evonet/
 make embed CONFIG=../config.json
 
-# 3. Distribute the 'evonet' binary — it auto-connects on 'evonet run'
+# 3. Distribute the 'evonet' binary: it auto-connects on 'evonet run'
 ```
 
 The JSON config is appended after the binary using a magic marker. It can still be overridden by `~/.evonet/config.yaml` or CLI flags.
 
 ## Security Notes
 
-- The connector token is equivalent to a password — protect `~/.evonet/config.yaml` with `chmod 600`.
+- The connector token is equivalent to a password: protect `~/.evonet/config.yaml` with `chmod 600`.
 - Pairing codes expire after 5 minutes. They cannot be reused.
 - `exec_bash` and `exec_python` run with the OS privileges of the `evonet` process. Run Evonet as a dedicated least-privilege user.
 - All traffic flows over the WebSocket connection authenticated by the connector token (no additional auth per request).
 
 ## See Also
 
-- [Workplaces — Execution Environments](/agents/workplaces) — create and manage Workplaces in the Evonic UI
-- [Configuration Reference](/reference/configuration) — server-side connector settings
+- [Workplaces: Execution Environments](/agents/workplaces): create and manage Workplaces in the Evonic UI
+- [Configuration Reference](/reference/configuration): server-side connector settings

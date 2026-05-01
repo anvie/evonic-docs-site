@@ -26,9 +26,9 @@ Open `http://localhost:8080` in your browser.
 
 Choose a channel to deploy your agent:
 
-- **Telegram** — Set up a Telegram bot and connect it
-- **WhatsApp** — Connect via WhatsApp Business API
-- **Discord** — Add your agent to a Discord server
+- **Telegram**: Set up a Telegram bot and connect it
+- **WhatsApp**: Connect via WhatsApp Business API
+- **Discord**: Add your agent to a Discord server
 
 ## Test Your Agent
 

@@ -34,9 +34,9 @@ tool = Tool(
 
 The `runpy` and `bash` tools are protected by a **3-layer heuristic safety system**:
 
-1. **Pattern Matching** — blocks dangerous regex patterns like `rm -rf /`, `dd if=`, etc.
-2. **Path Validation** — ensures file operations stay within the workspace directory
-3. **Command Whitelisting** — restricts allowed commands and flags
+1. **Pattern Matching**: blocks dangerous regex patterns like `rm -rf /`, `dd if=`, etc.
+2. **Path Validation**: ensures file operations stay within the workspace directory
+3. **Command Whitelisting**: restricts allowed commands and flags
 
 The safety system is implemented in `backend/tools/lib/heuristic_safety.py` and is applied before any command is executed. If a command is blocked, the tool returns an error explaining which rule was violated.
 

@@ -59,10 +59,10 @@ OpenAI-compatible HTTP client:
 ### `evaluator/strategies/` (~400 lines total)
 
 Five evaluator strategies inheriting from `BaseEvaluator`:
-- `KeywordEvaluator` — keyword/regex matching
-- `TwoPassEvaluator` — two-pass answer extraction
-- `SQLExecutorEvaluator` — SQL execution and validation
-- `ToolCallEvaluator` — tool call validation
+- `KeywordEvaluator`: keyword/regex matching
+- `TwoPassEvaluator`: two-pass answer extraction
+- `SQLExecutorEvaluator`: SQL execution and validation
+- `ToolCallEvaluator`: tool call validation
 - Custom evaluators via `evaluator/custom_evaluator.py`
 
 ### `models/db.py` (~1500 lines)
@@ -102,9 +102,9 @@ Skill package lifecycle:
 ### `backend/channels/` (~200 lines total)
 
 Channel abstraction layer:
-- `base.py` — `BaseChannel` abstract class
-- `telegram.py` — Telegram bot implementation using python-telegram-bot; all async bot calls are routed via `run_coroutine_threadsafe` onto the bot's dedicated event loop
-- `registry.py` — `ChannelManager` for lifecycle management
+- `base.py`: `BaseChannel` abstract class
+- `telegram.py`: Telegram bot implementation using python-telegram-bot; all async bot calls are routed via `run_coroutine_threadsafe` onto the bot's dedicated event loop
+- `registry.py`: `ChannelManager` for lifecycle management
 
 ### `backend/event_stream.py`
 

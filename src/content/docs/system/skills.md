@@ -1,6 +1,6 @@
 ---
 title: Skills
-description: Skill packages — tool definitions bundled with Python backends.
+description: Skill packages: tool definitions bundled with Python backends.
 sidebar:
   order: 3
 ---
@@ -27,12 +27,12 @@ Agent Runtime (executes tools during conversation)
 
 Skills are managed via:
 
-- **Web UI** — the `/skills` page for uploading, enabling/disabling, and deleting
-- **CLI** — the `evonic skill` commands for command-line management
+- **Web UI**: the `/skills` page for uploading, enabling/disabling, and deleting
+- **CLI**: the `evonic skill` commands for command-line management
 
 Once installed and enabled, a skill's tools are automatically available for assignment to agents.
 
 ## Learn More
 
-- [Skills — Full Reference](/skills/skills) — complete documentation with package structure, installation, and management
-- [Skillsets](/skills/skillsets) — group skills for agent configuration
+- [Skills: Full Reference](/skills/skills): complete documentation with package structure, installation, and management
+- [Skillsets](/skills/skillsets): group skills for agent configuration

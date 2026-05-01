@@ -1,6 +1,6 @@
 ---
 title: Plugins
-description: Plugin system — event-driven extensions for the Evonic platform.
+description: Plugin system: event-driven extensions for the Evonic platform.
 sidebar:
   order: 4
 ---
@@ -15,9 +15,9 @@ Platform Event (message_received, turn_complete, etc.)
 Event Stream (pub/sub bus)
     ↓
 Plugin System
-    ├── Plugin A — on_message_received()
-    ├── Plugin B — on_turn_complete()
-    └── Plugin C — on_message_sent()
+    ├── Plugin A: on_message_received()
+    ├── Plugin B: on_turn_complete()
+    └── Plugin C: on_message_sent()
 ```
 
 ## Plugin Structure
@@ -34,8 +34,8 @@ Plugins can also extend the platform with **Flask routes** (web pages and API en
 
 ## Learn More
 
-- [Plugins — Full Reference](/plugins) — complete documentation with structure, handler functions, and examples
-- [Events](/system/events) — all supported platform events
-- [Plugin SDK](/plugins/sdk) — available SDK methods
+- [Plugins: Full Reference](/plugins): complete documentation with structure, handler functions, and examples
+- [Events](/system/events): all supported platform events
+- [Plugin SDK](/plugins/sdk): available SDK methods
 - [Best Practices](/plugins/best-practices)
 - [Troubleshooting](/plugins/troubleshooting)

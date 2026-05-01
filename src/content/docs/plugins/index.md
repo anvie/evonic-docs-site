@@ -1,6 +1,6 @@
 ---
 title: Overview
-description: Introduction to the Evonic plugin system — create, manage, and extend Evonic with custom plugins.
+description: Introduction to the Evonic plugin system: create, manage, and extend Evonic with custom plugins.
 ---
 
 # Plugins
@@ -73,9 +73,9 @@ def on_<event_name>(event: dict, sdk: PluginSDK) -> None:
     # Your logic here
 ```
 
-- **`event`** — a dict containing event-specific data (e.g. `session_id`, `message`, `summary`, etc.)
-- **`sdk`** — a `PluginSDK` instance providing helper methods (see [Plugin SDK](/plugins/sdk))
-- **Return value** — handlers should not return anything. The framework ignores return values.
+- **`event`**: a dict containing event-specific data (e.g. `session_id`, `message`, `summary`, etc.)
+- **`sdk`**: a `PluginSDK` instance providing helper methods (see [Plugin SDK](/plugins/sdk))
+- **Return value**: handlers should not return anything. The framework ignores return values.
 
 ### Example Handler
 
@@ -172,8 +172,8 @@ def on_turn_complete(event, sdk):
 
 ## Quick Links
 
-- [Plugin SDK](/plugins/sdk) — Available methods and helpers
-- [Events](/system/events) — All supported events
-- [Setup](/plugins/setup) — Install, configure, and manage plugins
-- [Best Practices](/plugins/best-practices) — Tips for writing great plugins
-- [Troubleshooting](/plugins/troubleshooting) — Common issues and fixes
+- [Plugin SDK](/plugins/sdk): Available methods and helpers
+- [Events](/system/events): All supported events
+- [Setup](/plugins/setup): Install, configure, and manage plugins
+- [Best Practices](/plugins/best-practices): Tips for writing great plugins
+- [Troubleshooting](/plugins/troubleshooting): Common issues and fixes

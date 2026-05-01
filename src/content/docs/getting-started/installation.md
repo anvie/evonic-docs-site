@@ -1,14 +1,14 @@
 ---
 title: Installation
-description: How to install and set up the Evonic AI.
+description: How to install and set up Evonic.
 ---
 
 ## Prerequisites
 
 - **Python 3.8+**
-- **An LLM endpoint** — any OpenAI-compatible API (llama.cpp, Ollama, vLLM, OpenRouter, etc.)
-- **Git** — for cloning the repository
-- **Docker** — required for isolated `runpy` and `bash` tool execution (see [Docker Setup](#docker-setup))
+- **An LLM endpoint**: any OpenAI-compatible API (llama.cpp, Ollama, vLLM, OpenRouter, etc.)
+- **Git**: for cloning the repository
+- **Docker**: required for isolated `runpy` and `bash` tool execution (see [Docker Setup](#docker-setup))
 
 ## Clone and Install
 
@@ -37,7 +37,7 @@ pip install python-telegram-bot
 
 ## Docker Setup
 
-The agent tools `runpy` and `bash` execute code inside an isolated Docker container by default (via `DockerBackend`). This sandbox provides filesystem isolation, resource limits, and network restrictions — ensuring agent code runs safely without affecting the host system.
+The agent tools `runpy` and `bash` execute code inside an isolated Docker container by default (via `DockerBackend`). This sandbox provides filesystem isolation, resource limits, and network restrictions, ensuring agent code runs safely without affecting the host system.
 
 **Prerequisites:** Docker must be installed and the daemon running.
 
@@ -110,12 +110,12 @@ evonic --help
 
 The CLI covers server management, agents, skills, skillsets, models, plugins, and schedules. See each section for detailed CLI usage:
 
-- [Plugin Management](/plugins/setup) — Install, list, configure plugins
-- [Skills](/skills/skills/) — Install, enable, and manage skills
-- [Creating Agents](/agents/creating-agents) — Create and manage agents
-- [Local Models](/local-models/overview) — Manage LLM model configurations
-- [Skillsets](/skills/skillsets) — Apply agent templates
-- [Scheduler](/guides/scheduler) — Create scheduled jobs
+- [Plugin Management](/plugins/setup): Install, list, configure plugins
+- [Skills](/skills/skills/): Install, enable, and manage skills
+- [Creating Agents](/agents/creating-agents): Create and manage agents
+- [Local Models](/local-models/overview): Manage LLM model configurations
+- [Skillsets](/skills/skillsets): Apply agent templates
+- [Scheduler](/guides/scheduler): Create scheduled jobs
 
 ## Starting the Server
 
@@ -184,7 +184,7 @@ evonic update [--check] [--tag TAG] [--rollback] [--force]
 
 | Flag | Description |
 |------|-------------|
-| `--check` | Fetch tags and report what is available — no update is applied |
+| `--check` | Fetch tags and report what is available: no update is applied |
 | `--tag TAG` | Update to a specific tag instead of the latest |
 | `--rollback` | Roll back to the previous stable release |
 | `--force` | Skip SSH signature verification (development only) |

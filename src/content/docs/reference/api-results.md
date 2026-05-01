@@ -104,7 +104,7 @@ Returns the most recent run's metadata.
 }
 ```
 
-### Last Run — Domain/Level Results
+### Last Run: Domain/Level Results
 
 ```http
 GET /api/v1/history/last/<domain>/<level>
@@ -112,7 +112,7 @@ GET /api/v1/history/last/<domain>/<level>
 
 Returns test results from the most recent run for a specific domain/level.
 
-### Specific Run — Domain/Level Results
+### Specific Run: Domain/Level Results
 
 ```http
 GET /api/v1/history/<run_id>/<domain>/<level>

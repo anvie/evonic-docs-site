@@ -10,8 +10,8 @@ sidebar:
 A **skill** is an installable package that bundles tool definitions (OpenAI function schemas) with their Python backend implementations. Skills extend the platform's tool capabilities without modifying core code.
 
 Skills are managed via:
-- **Web UI** — the `/skills` page for uploading, enabling/disabling, and deleting
-- **CLI** — the `evonic skill` commands for command-line installation and management
+- **Web UI**: the `/skills` page for uploading, enabling/disabling, and deleting
+- **CLI**: the `evonic skill` commands for command-line installation and management
 
 Once installed and enabled, a skill's tools are automatically available for assignment to agents.
 
@@ -27,7 +27,7 @@ my-skill/
         └── *.py            # One Python file per tool
 ```
 
-### `skill.json` — Manifest
+### `skill.json`: Manifest
 
 ```json
 {
@@ -51,7 +51,7 @@ my-skill/
 | `tools_file` | Yes | Filename of the tool definitions JSON (relative to skill root) |
 | `enabled` | No | Whether the skill is active (default: `true`) |
 
-### `setup.py` — Lifecycle Hooks
+### `setup.py`: Lifecycle Hooks
 
 ```python
 def install(context: dict) -> dict:
@@ -244,7 +244,7 @@ To configure this:
 
 1. Open the skill settings in the UI
 2. Toggle `create_task_super_only` to your preference
-3. Save — the setting takes effect immediately
+3. Save: the setting takes effect immediately
 
 ### Adding Settings to a Custom Skill
 
@@ -282,8 +282,8 @@ def execute(agent: dict, args: dict) -> dict:
 ### Tool Discovery
 
 The `ToolRegistry` discovers tools from two sources:
-1. **Built-in tools** — JSON files in `test_definitions/tools/`
-2. **Skill tools** — definitions from `skills/*/` (enabled skills only)
+1. **Built-in tools**: JSON files in `test_definitions/tools/`
+2. **Skill tools**: definitions from `skills/*/` (enabled skills only)
 
 Both sources are combined via `tool_registry.get_all_tool_defs()`.
 
@@ -304,7 +304,7 @@ Skill backends are auto-reloaded on file change, just like built-in tool backend
 
 ### Agent Assignment
 
-Skill tools appear alongside built-in tools in the agent tool assignment UI. Assign them the same way — via the agent's **Tools** tab or the API.
+Skill tools appear alongside built-in tools in the agent tool assignment UI. Assign them the same way: via the agent's **Tools** tab or the API.
 
 ## Example: Bookstore Booking Skill
 

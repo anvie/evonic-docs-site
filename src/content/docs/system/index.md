@@ -1,11 +1,11 @@
 ---
 title: System Architecture
-description: Overview of the Evonic AI architecture — agents, skills, plugins, models, and events.
+description: Overview of the Evonic architecture: agents, skills, plugins, models, and events.
 sidebar:
   order: 1
 ---
 
-This section covers the core architecture of Evonic AI — the building blocks that power every agent, skill, and plugin.
+This section covers the core architecture of Evonic: the building blocks that power every agent, skill, and plugin.
 
 ```
                               ┌──────────────┐
@@ -44,7 +44,7 @@ This section covers the core architecture of Evonic AI — the building blocks t
              │
     ┌────────▼───────────────────────────────────────────────────────┐
     │                     Persistence Layer                          │
-    │  SQLite (models/db.py) — sessions, messages, agents, models,  │
+    │  SQLite (models/db.py): sessions, messages, agents, models,  │
     │  evaluations, results, and more                               │
     └───────────────────────────────────────────────────────────────┘
 ```

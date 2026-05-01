@@ -22,7 +22,7 @@ POST /api/start
 | Field | Type | Description |
 |---|---|---|
 | `model_name` | string | Label for this run (default: `"default"`) |
-| `domains` | string[] | Optional — limit to specific domains (null = all) |
+| `domains` | string[] | Optional: limit to specific domains (null = all) |
 
 **Response:**
 ```json

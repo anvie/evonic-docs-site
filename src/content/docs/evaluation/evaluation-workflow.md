@@ -25,7 +25,7 @@ Domain prompt → Level prompt → Test prompt
 
 Each layer can either **overwrite** (replace) or **append** (concatenate) the prompt from the layer above. See [System Prompt Hierarchy](/guides/system-prompt-hierarchy) for details.
 
-### 3. PASS 1 — Full LLM Response
+### 3. PASS 1: Full LLM Response
 
 The engine sends the resolved system prompt + user prompt to the LLM and receives a complete response with reasoning.
 
@@ -49,7 +49,7 @@ Based on the test's `evaluator_id`, the response is routed to the appropriate ev
 | `ToolCallEvaluator` | Tool/function calling tests |
 | `CustomEvaluator` | Regex, LLM-judge, or hybrid |
 
-### 5. PASS 2 — Answer Extraction (Optional)
+### 5. PASS 2: Answer Extraction (Optional)
 
 For evaluators that use PASS 2 (math, SQL, tool calling), a second LLM call extracts just the final answer in a strict format:
 
@@ -64,11 +64,11 @@ This separated extraction improves scoring accuracy by removing reasoning noise.
 ### 6. Scoring
 
 Each evaluator produces an `EvaluationResult`:
-- **score** — float from 0.0 to 1.0
-- **status** — `passed` (score >= 0.7) or `failed`
-- **details** — evaluator-specific metadata
-- **extracted_answer** — the clean answer after extraction
-- **pass2_used** — whether PASS 2 was used
+- **score**: float from 0.0 to 1.0
+- **status**: `passed` (score >= 0.7) or `failed`
+- **details**: evaluator-specific metadata
+- **extracted_answer**: the clean answer after extraction
+- **pass2_used**: whether PASS 2 was used
 
 ### 7. Aggregation
 
@@ -83,10 +83,10 @@ Level 5 tests count 5x more than level 1, rewarding performance on harder proble
 ### 8. Persistence
 
 All results are saved to SQLite:
-- `evaluation_runs` — run metadata and overall score
-- `test_results` — per-domain/level aggregate
-- `individual_test_results` — every test with full prompt, response, and details
-- `level_scores` — aggregated per domain/level
+- `evaluation_runs`: run metadata and overall score
+- `test_results`: per-domain/level aggregate
+- `individual_test_results`: every test with full prompt, response, and details
+- `level_scores`: aggregated per domain/level
 
 ## Tool Calling Flow
 

@@ -1,11 +1,11 @@
 ---
 title: Events
-description: The event-driven architecture of Evonic AI — pub/sub bus, event reference, SSE features, and plugin integration.
+description: The event-driven architecture of Evonic: pub/sub bus, event reference, SSE features, and plugin integration.
 sidebar:
   order: 6
 ---
 
-Events form the backbone of Evonic AI's event-driven architecture. Every significant moment in a message turn emits a named event that any plugin can react to without coupling into the core pipeline.
+Events form the backbone of Evonic's event-driven architecture. Every significant moment in a message turn emits a named event that any plugin can react to without coupling into the core pipeline.
 
 `backend/event_stream.py` is a lightweight pub/sub event bus that decouples event producers (agent runtime, channels) from consumers (plugins, internal components).
 
@@ -80,7 +80,7 @@ Emitted at the top of `_do_process()`, before the system prompt is built. The ty
 
 ### `llm_thinking`
 
-Emitted when the LLM response contains a reasoning block — either via the `reasoning_content` field (llama.cpp reasoning mode) or thinking tags (`<think>` / Gemma 4 `<|channel>thought`).
+Emitted when the LLM response contains a reasoning block: either via the `reasoning_content` field (llama.cpp reasoning mode) or thinking tags (`<think>` / Gemma 4 `<|channel>thought`).
 
 | Field | Type | Description |
 |---|---|---|
@@ -223,7 +223,7 @@ Plugins do **not** call `event_stream` directly. They declare subscriptions in `
 
 When a plugin is loaded, `PluginManager` registers a bridge closure on `event_stream` for each declared event. The bridge handles the kill switch check, plugin log buffering, and `PluginSDK` creation transparently.
 
-`plugin_manager.dispatch()` is kept for backwards compatibility — it now delegates to `event_stream.emit()` internally.
+`plugin_manager.dispatch()` is kept for backwards compatibility: it now delegates to `event_stream.emit()` internally.
 
 To expose a new event to plugins, add its name to `VALID_EVENTS` in `backend/plugin_manager.py`.
 
@@ -240,10 +240,10 @@ def on_tool_executed(data: dict):
 event_stream.on('tool_executed', on_tool_executed)
 ```
 
-Keep handlers fast and non-blocking — they run in a shared thread pool. For long-running work, spawn your own thread or use a queue inside the handler.
+Keep handlers fast and non-blocking: they run in a shared thread pool. For long-running work, spawn your own thread or use a queue inside the handler.
 
 ## Learn More
 
-- [Plugins Overview](/system/plugins) — how events fit into the plugin system
-- [Plugin SDK](/plugins/sdk) — available SDK methods for event handlers
-- [Architecture](/development/architecture) — how events are used across the codebase
+- [Plugins Overview](/system/plugins): how events fit into the plugin system
+- [Plugin SDK](/plugins/sdk): available SDK methods for event handlers
+- [Architecture](/development/architecture): how events are used across the codebase

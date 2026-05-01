@@ -135,7 +135,7 @@ In `templates/agent_detail.html`, add config fields for the new type in the `upd
 
 ### Message Handling
 
-The core interaction is simple — when a message arrives:
+The core interaction is simple: when a message arrives:
 
 ```python
 from backend.agent_runtime import agent_runtime

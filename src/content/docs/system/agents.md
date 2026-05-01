@@ -1,11 +1,11 @@
 ---
 title: Agents
-description: Agent architecture — runtime, sessions, knowledge bases, tools, and channels.
+description: Agent architecture: runtime, sessions, knowledge bases, tools, and channels.
 sidebar:
   order: 2
 ---
 
-Agents are the core building blocks of Evonic AI. Each agent is an independently configured LLM-powered assistant that can reason, plan, take actions, and communicate through channels.
+Agents are the core building blocks of Evonic. Each agent is an independently configured LLM-powered assistant that can reason, plan, take actions, and communicate through channels.
 
 ## Agent Runtime
 
@@ -56,7 +56,7 @@ Channels connect agents to external messaging platforms (Telegram, WhatsApp, Dis
 
 ## Learn More
 
-- [Agents — Core Platform](/agents/overview) — full introduction
+- [Agents: Core Platform](/agents/overview): full introduction
 - [Creating and configuring agents](/agents/creating-agents)
 - [Knowledge Base](/agents/knowledge-base)
 - [Tools](/agents/tools)

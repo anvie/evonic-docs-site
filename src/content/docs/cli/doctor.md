@@ -3,7 +3,7 @@ title: System Diagnostics (doctor)
 description: CLI command for comprehensive Evonic system health diagnostics.
 ---
 
-The `evonic doctor` command runs a comprehensive health check across the entire Evonic system. It checks environment, configuration, connections, services, files, agents, skills, and LLM providers — all from the terminal.
+The `evonic doctor` command runs a comprehensive health check across the entire Evonic system. It checks environment, configuration, connections, services, files, agents, skills, and LLM providers: all from the terminal.
 
 ## `evonic doctor`
 
@@ -81,8 +81,8 @@ Verifies existence and permissions of important directories:
 Directories checked: `logs/`, `data/`, `plugins/`, `skills/`, `agents/`, `skillsets/`, `templates/`, `db/`, `run/`.
 
 Each directory is checked for:
-- **Existence** — warns if missing
-- **Read/write access** — reports `rw`, `read-only`, or `no read access`
+- **Existence**: warns if missing
+- **Read/write access**: reports `rw`, `read-only`, or `no read access`
 
 ### 6. Agent & Skill Health Check
 
@@ -117,9 +117,9 @@ Output is color-coded for readability:
 | Symbol | Color | Meaning |
 |--------|-------|---------|
 | ✓ | Green | Check passed |
-| ✗ | Red | Check failed — needs attention |
-| ⚠ | Yellow | Warning — non-critical issue |
-| ℹ | Blue | Informational — no pass/fail judgment |
+| ✗ | Red | Check failed: needs attention |
+| ⚠ | Yellow | Warning: non-critical issue |
+| ℹ | Blue | Informational: no pass/fail judgment |
 
 Each section is displayed with a cyan header banner:
 
@@ -170,13 +170,13 @@ fi
 
 ## Implementation Notes
 
-- **Pure CLI** — no plugin, no API endpoint, no web UI. Runs entirely in the terminal.
-- **Reuses existing logic** — LLM connection tests use the same `api_test_model` pattern from `routes/models.py` (HTTP GET to `{base_url}/models`).
+- **Pure CLI**: no plugin, no API endpoint, no web UI. Runs entirely in the terminal.
+- **Reuses existing logic**: LLM connection tests use the same `api_test_model` pattern from `routes/models.py` (HTTP GET to `{base_url}/models`).
 - **No external dependencies** beyond what Evonic already requires.
 - Located in `cli/commands.py` as `doctor_command()`, dispatched from `cli/__main__.py`.
 
 ## See Also
 
-- [Server Management](/cli/server) — start, stop, and monitor the server
-- [Agent Management](/cli/agents) — manage agents from the CLI
-- [Model Management](/cli/models) — configure LLM providers
+- [Server Management](/cli/server): start, stop, and monitor the server
+- [Agent Management](/cli/agents): manage agents from the CLI
+- [Model Management](/cli/models): configure LLM providers

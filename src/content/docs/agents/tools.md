@@ -1,6 +1,6 @@
 ---
 title: Tools
-description: Runpy and Bash — tools for executing code and shell commands in an isolated environment.
+description: Runpy and Bash: tools for executing code and shell commands in an isolated environment.
 ---
 
 Runpy and Bash are tools that allow agents to execute Python code and shell commands. They're designed to be safe and isolated, with multiple layers of protection against dangerous operations.
@@ -27,9 +27,9 @@ The Bash tool executes shell commands in an isolated container. It allows agents
 
 The `runpy` and `bash` tools are protected by a **3-layer heuristic safety system** that prevents dangerous operations:
 
-1. **Pattern Matching** — blocks dangerous regex patterns like `rm -rf /`, `dd if=`, etc.
-2. **Path Validation** — ensures file operations stay within the workspace directory
-3. **Command Whitelisting** — restricts allowed commands and flags
+1. **Pattern Matching**: blocks dangerous regex patterns like `rm -rf /`, `dd if=`, etc.
+2. **Path Validation**: ensures file operations stay within the workspace directory
+3. **Command Whitelisting**: restricts allowed commands and flags
 
 See [Heuristic Code Safety](/security/heuristic-code-safety) for full details.
 

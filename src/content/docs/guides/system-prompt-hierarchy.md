@@ -34,7 +34,7 @@ ELSE:
   "system_prompt_mode": "overwrite"
 }
 
-// test.json — no system_prompt field
+// test.json: no system_prompt field
 // Result: "Kamu adalah asisten yang ramah."
 ```
 
@@ -128,4 +128,4 @@ Set `system_prompt` and `system_prompt_mode` in `domain.json` or individual test
 - Use domain-level prompts for **shared knowledge** (persona, pricing, policies)
 - Use `append` mode for **additional instructions** on specific tests
 - Use `overwrite` mode only for **completely different contexts**
-- Keep domain prompts concise — avoid duplicating information in every test
+- Keep domain prompts concise: avoid duplicating information in every test

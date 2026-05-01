@@ -27,9 +27,9 @@ Displays a list of available slash commands with brief descriptions.
 **Response format:**
 ```
 Available commands:
-• /clear — Clear conversation history
-• /help — Show this help message
-• /summary — Summarize conversation
+• /clear: Clear conversation history
+• /help: Show this help message
+• /summary: Summarize conversation
 ```
 
 ### `/summary`

@@ -7,7 +7,7 @@ sidebar:
 
 ## What is a Skillset
 
-A **skillset** is a pre-configured template that bundles everything needed to create a ready-to-use agent in one step: system prompt, tool assignments, skills, and even model selection. Think of it as a preset or blueprint — instead of manually configuring an agent from scratch, you apply a skillset and get a fully functional agent instantly.
+A **skillset** is a pre-configured template that bundles everything needed to create a ready-to-use agent in one step: system prompt, tool assignments, skills, and even model selection. Think of it as a preset or blueprint: instead of manually configuring an agent from scratch, you apply a skillset and get a fully functional agent instantly.
 
 Skillsets are stored as JSON files in the `skillsets/` directory at the project root.
 
@@ -22,7 +22,7 @@ When you apply a skillset, the platform performs the following steps automatical
 5. Sets the model if specified.
 6. Returns the newly created agent.
 
-The result is an agent that is immediately ready to process messages — no manual configuration needed.
+The result is an agent that is immediately ready to process messages: no manual configuration needed.
 
 ## Available Skillsets
 
@@ -84,7 +84,7 @@ The platform ships with the following built-in skillsets:
 
 ## How to Use
 
-### Via API — `apply_skillset`
+### Via API: `apply_skillset`
 
 The primary way to create an agent from a skillset is through the `apply_skillset` platform function. This can be called by the super agent or via the API.
 
@@ -98,7 +98,7 @@ The primary way to create an agent from a skillset is through the `apply_skillse
 | `description` | No | Description for the agent (uses skillset default if omitted) |
 | `model` | No | Optional model override (uses skillset default if omitted) |
 
-**Example — Creating a coder agent:**
+**Example: Creating a coder agent:**
 
 ```python
 # Create a coding agent from the "coder" skillset

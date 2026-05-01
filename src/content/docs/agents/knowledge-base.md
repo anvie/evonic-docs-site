@@ -7,7 +7,7 @@ sidebar:
 
 ## Overview
 
-Each agent has a knowledge base (KB) stored as files on the filesystem at `agents/<agent_id>/kb/`. The agent accesses these files at runtime using the built-in `read` tool — it does **not** load all files into the system prompt automatically.
+Each agent has a knowledge base (KB) stored as files on the filesystem at `agents/<agent_id>/kb/`. The agent accesses these files at runtime using the built-in `read` tool: it does **not** load all files into the system prompt automatically.
 
 This design keeps the system prompt lean while giving the agent access to large reference documents on demand.
 
@@ -61,10 +61,10 @@ The `read` tool is **sandboxed** to the agent's KB directory:
 
 In the agent detail page, go to the **Knowledge** tab:
 
-- **Upload** — click "Upload" to select a `.md` or `.txt` file
-- **New File** — click "+ New File" to create an empty file and open the editor
-- **Edit** — click "Edit" on any file to modify it inline
-- **Delete** — click "Delete" to remove a file
+- **Upload**: click "Upload" to select a `.md` or `.txt` file
+- **New File**: click "+ New File" to create an empty file and open the editor
+- **Edit**: click "Edit" on any file to modify it inline
+- **Delete**: click "Delete" to remove a file
 
 ### Via the API
 
@@ -115,8 +115,8 @@ curl -X DELETE http://localhost:8080/api/agents/bookstore_bot/kb/faq.md
 
 ## Best Practices
 
-- **Keep files focused** — one topic per file (pricing, FAQ, policies, etc.)
-- **Use descriptive filenames** — the agent sees these names and decides which to read
-- **Include headers** — markdown structure helps the agent find relevant sections
-- **Don't duplicate system prompt content** — put static persona in the system prompt, reference data in KB files
-- **Keep files reasonable in size** — very large files consume tokens when read
+- **Keep files focused**: one topic per file (pricing, FAQ, policies, etc.)
+- **Use descriptive filenames**: the agent sees these names and decides which to read
+- **Include headers**: markdown structure helps the agent find relevant sections
+- **Don't duplicate system prompt content**: put static persona in the system prompt, reference data in KB files
+- **Keep files reasonable in size**: very large files consume tokens when read
