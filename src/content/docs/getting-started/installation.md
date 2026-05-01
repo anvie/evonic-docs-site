@@ -25,7 +25,6 @@ pip install -r requirements.txt
 | `flask>=3.0` | Web framework |
 | `requests>=2.31` | HTTP client for LLM API |
 | `python-dotenv>=1.0.0` | Environment variable loading |
-| `anthropic>=0.40.0` | Anthropic API (optional, for improver module) |
 
 ### Optional Dependencies
 

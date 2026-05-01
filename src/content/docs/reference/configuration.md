@@ -78,12 +78,6 @@ Settings for the [Evonet](/agents/evonet) WebSocket relay server that enables Cl
 
 The relay server starts automatically on application boot. Ensure port `8081` (or your configured port) is reachable by devices running Evonet.
 
-## Optional Services
-
-| Variable | Default | Description |
-|---|---|---|
-| `ANTHROPIC_API_KEY` | *(empty)* | Anthropic API key for the improver module |
-
 ## Evaluator Overrides
 
 Override the default evaluator strategy for specific domains:
