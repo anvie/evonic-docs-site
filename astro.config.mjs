@@ -8,8 +8,8 @@ export default defineConfig({
 	},
   integrations: [
     starlight({
-      title: 'Evonic AI',
-      description: 'Documentation for Evonic AI — Local-first agentic AI for open models',
+      title: 'Evonic',
+      description: 'Documentation for Evonic — Local-first agentic AI for open models',
       customCss: ['./src/styles/custom.css'],
       sidebar: [
         {

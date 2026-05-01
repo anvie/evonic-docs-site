@@ -1,5 +1,5 @@
 ---
-title: Evonet: Cloud Workplace Connector
+title: "Evonet: Cloud Workplace Connector"
 description: A lightweight Go binary that connects any device to Evonic over WebSocket, enabling remote agent execution without SSH or a public IP.
 sidebar:
   order: 8
