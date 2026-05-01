@@ -42,7 +42,7 @@ Response → Channel → User
 
 Each agent has a **workspace directory** (`agents/<agent_id>/workspace/`) for file operations. This is configurable per-agent in the General tab and provides an isolated filesystem context for tools like `runpy`, `bash`, and `write_file`.
 
-For agents that need to operate on remote machines or devices, assign a **Home** — a first-class execution environment that can be a local directory, an SSH server, or any device running [Evocon](/agents/evocon) (a lightweight Go connector). See [Homes](/agents/homes) for details.
+For agents that need to operate on remote machines or devices, assign a **Workplace** — a first-class execution environment that can be a local directory, an SSH server, or any device running [Evonet](/agents/evonet) (a lightweight Go connector). See [Workplaces](/agents/workplaces) for details.
 
 An agent is defined by a **slug ID** (e.g., `bookstore_bot`, `library_assistant`), a system prompt, an optional model override, and a set of assigned tools. Manage agents at `/agents` in the web UI.
 
@@ -95,5 +95,5 @@ See [Slash Commands](/agents/slash-commands) for full details.
 - [Setting up channels](/agents/channels)
 - [Agent state system](/agents/agent-state)
 - [Slash commands](/agents/slash-commands)
-- [Homes — execution environments](/agents/homes)
-- [Evocon — cloud home connector](/agents/evocon)
+- [Workplaces — execution environments](/agents/workplaces)
+- [Evonet — cloud workplace connector](/agents/evonet)

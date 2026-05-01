@@ -5,6 +5,16 @@ description: Runpy and Bash — tools for executing code and shell commands in a
 
 Runpy and Bash are tools that allow agents to execute Python code and shell commands. They're designed to be safe and isolated, with multiple layers of protection against dangerous operations.
 
+## Prerequisites
+
+The `runpy` and `bash` tools run inside an isolated Docker container by default. Before using these tools, build the sandbox image:
+
+```bash
+docker build -t evonic-sandbox:latest docker/tools/
+```
+
+If Docker is unavailable, set `sandbox_enabled=0` on the agent to fall back to local subprocess execution (less isolated). See the [Docker Setup guide](/getting-started/installation#docker-setup) for full configuration options.
+
 ## Runpy Tool
 
 The Runpy tool executes Python code in an isolated environment. It provides a sandboxed Python interpreter where agents can run scripts, test code, and perform computations.

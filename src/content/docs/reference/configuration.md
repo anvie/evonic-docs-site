@@ -27,6 +27,20 @@ All configuration is done via environment variables in a `.env` file.
 | OpenRouter | `https://openrouter.ai/api/v1` |
 | OpenAI | `https://api.openai.com/v1` |
 
+## Docker Sandbox
+
+Settings for the isolated Docker container used by the `runpy` and `bash` tools. The sandbox image is built from `docker/tools/Dockerfile`. See [Docker Setup](/getting-started/installation#docker-setup) for build instructions.
+
+| Variable | Default | Description |
+|---|---|---|
+| `SANDBOX_IMAGE` | `evonic-sandbox:latest` | Docker image used for the sandbox container |
+| `SANDBOX_MEMORY_LIMIT` | `512m` | Memory limit per container |
+| `SANDBOX_CPU_LIMIT` | `1` | CPU limit per container |
+| `SANDBOX_NETWORK` | `none` | Network mode — `none` or `bridge` |
+| `SANDBOX_MAX_CONTAINERS` | `10` | Maximum number of containers in the pool (LRU eviction) |
+| `SANDBOX_IDLE_TIMEOUT` | `1800` | Idle timeout in seconds before container is destroyed (30 min) |
+| `SANDBOX_WORKSPACE` | *(project root)* | Host path mounted at `/workspace` inside the container |
+
 ## Two-Pass Extraction
 
 | Variable | Default | Description |
@@ -50,19 +64,19 @@ All configuration is done via environment variables in a `.env` file.
 | `LOG_FULL_THINKING` | `0` | Include full LLM thinking content in live log output |
 | `LOG_FULL_RESPONSE` | `0` | Include full LLM response in live log output |
 
-## Cloud Home Connector (Evocon)
+## Cloud Workplace Connector (Evonet)
 
-Settings for the [Evocon](/agents/evocon) WebSocket relay server that enables Cloud Homes.
+Settings for the [Evonet](/agents/evonet) WebSocket relay server that enables Cloud Workplaces.
 
 | Variable | Default | Description |
 |---|---|---|
-| `CONNECTOR_WS_HOST` | `0.0.0.0` | Bind address for the Evocon relay server |
-| `CONNECTOR_WS_PORT` | `8081` | Port for the Evocon relay server |
+| `CONNECTOR_WS_HOST` | `0.0.0.0` | Bind address for the Evonet relay server |
+| `CONNECTOR_WS_PORT` | `8081` | Port for the Evonet relay server |
 | `CONNECTOR_PING_INTERVAL` | `30` | WebSocket keepalive ping interval in seconds |
 | `CONNECTOR_PING_TIMEOUT` | `10` | Ping timeout in seconds before marking connector offline |
 | `CONNECTOR_PAIRING_CODE_TTL` | `300` | Pairing code validity window in seconds (default: 5 minutes) |
 
-The relay server starts automatically on application boot. Ensure port `8081` (or your configured port) is reachable by devices running Evocon.
+The relay server starts automatically on application boot. Ensure port `8081` (or your configured port) is reachable by devices running Evonet.
 
 ## Optional Services
 
