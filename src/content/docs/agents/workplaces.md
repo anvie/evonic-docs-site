@@ -1,5 +1,5 @@
 ---
-title: Workplaces: Execution Environments
+title: "Workplaces: Execution Environments"
 description: Attach agents to local directories, remote SSH servers, or any device running Evonet, without manual SSH setup.
 sidebar:
   order: 7
