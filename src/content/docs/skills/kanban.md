@@ -1,6 +1,6 @@
 ---
 title: Kanban
-description: Kanban plugin for task management: permissions, comment monitoring, and task workflows.
+description: "Kanban plugin for task management: permissions, comment monitoring, and task workflows."
 sidebar:
   order: 9
 ---

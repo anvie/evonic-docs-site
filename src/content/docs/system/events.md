@@ -1,6 +1,6 @@
 ---
 title: Events
-description: The event-driven architecture of Evonic: pub/sub bus, event reference, SSE features, and plugin integration.
+description: "The event-driven architecture of Evonic: pub/sub bus, event reference, SSE features, and plugin integration."
 sidebar:
   order: 6
 ---

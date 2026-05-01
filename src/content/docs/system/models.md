@@ -1,6 +1,6 @@
 ---
 title: Models
-description: Model configuration: managing LLM models for agents.
+description: "Model configuration: managing LLM models for agents."
 sidebar:
   order: 5
 ---

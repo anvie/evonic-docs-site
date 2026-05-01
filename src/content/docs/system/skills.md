@@ -1,6 +1,6 @@
 ---
 title: Skills
-description: Skill packages: tool definitions bundled with Python backends.
+description: "Skill packages: tool definitions bundled with Python backends."
 sidebar:
   order: 3
 ---

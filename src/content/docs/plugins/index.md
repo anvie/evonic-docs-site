@@ -1,6 +1,6 @@
 ---
 title: Overview
-description: Introduction to the Evonic plugin system: create, manage, and extend Evonic with custom plugins.
+description: "Introduction to the Evonic plugin system: create, manage, and extend Evonic with custom plugins."
 ---
 
 # Plugins

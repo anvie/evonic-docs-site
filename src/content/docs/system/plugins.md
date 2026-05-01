@@ -1,6 +1,6 @@
 ---
 title: Plugins
-description: Plugin system: event-driven extensions for the Evonic platform.
+description: "Plugin system: event-driven extensions for the Evonic platform."
 sidebar:
   order: 4
 ---
