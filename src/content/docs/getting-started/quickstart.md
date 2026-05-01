@@ -11,6 +11,22 @@ description: Create your first AI agent in minutes.
 
 Open `http://localhost:8080` in your browser.
 
+## Create the Super Agent (First-Time Setup)
+
+On a fresh Evonic installation, you must create the **Super Agent** first. This is the platform administrator — it manages other agents, applies skillsets, and orchestrates your entire AI workflow.
+
+1. Navigate to the **Agent Platform** section at `/agents`
+2. Click **+ New Agent**
+3. Fill in:
+   - **Agent ID**: a short slug (e.g., `siwa`)
+   - **Name**: your Super Agent's display name (e.g., "Siwa Miwa")
+   - **Description**: e.g., "Super agent — platform administrator"
+4. Click **Create** — the first agent is automatically designated as the Super Agent
+
+:::tip[Why a Super Agent?]
+The Super Agent has elevated privileges: it can't be disabled, it creates and manages other agents, and it handles platform-level operations. [Read more about the Super Agent →](/agents/creating-agents/#super-agent)
+:::
+
 ## Create Your First Agent
 
 1. Navigate to the **Agent Platform** section
