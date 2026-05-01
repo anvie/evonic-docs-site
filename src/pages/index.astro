@@ -21,9 +21,11 @@
       --bg-deep: #020617;
       --bg-navy: #152A3A;
       --bg-navy-light: #1B394F;
-      --accent: #818cf8;
-      --accent-glow: #667eea;
-      --accent-warm: #764ba2;
+      --bg-navy-dark: #0D2137;
+      --bg-navy-shade: #0F2835;
+      --accent: #22d3ee;
+      --accent-glow: #06b6d4;
+      --accent-warm: #2dd4bf;
       --text-primary: #f1f5f9;
       --text-secondary: #94a3b8;
       --text-muted: #64748b;
@@ -59,10 +61,10 @@
       width: 140%;
       height: 140%;
       background:
-        radial-gradient(ellipse at 30% 20%, rgba(21, 42, 58, 0.9) 0%, transparent 60%),
-        radial-gradient(ellipse at 70% 50%, rgba(27, 57, 79, 0.7) 0%, transparent 55%),
-        radial-gradient(ellipse at 50% 80%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
-        radial-gradient(ellipse at 20% 70%, rgba(118, 75, 162, 0.1) 0%, transparent 45%);
+        radial-gradient(ellipse at 30% 20%, rgba(21, 42, 58, 0.95) 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 40%, rgba(13, 33, 55, 0.8) 0%, transparent 55%),
+        radial-gradient(ellipse at 50% 80%, rgba(15, 40, 53, 0.6) 0%, transparent 50%),
+        radial-gradient(ellipse at 20% 65%, rgba(27, 57, 79, 0.45) 0%, transparent 45%);
       animation: bgFloat 20s ease-in-out infinite alternate;
     }
 
@@ -71,8 +73,8 @@
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(circle at 80% 30%, rgba(129, 140, 248, 0.06) 0%, transparent 40%),
-        radial-gradient(circle at 10% 60%, rgba(27, 57, 79, 0.4) 0%, transparent 50%);
+        radial-gradient(circle at 80% 30%, rgba(34, 211, 238, 0.04) 0%, transparent 40%),
+        radial-gradient(circle at 10% 60%, rgba(27, 57, 79, 0.55) 0%, transparent 50%);
       animation: bgFloat 15s ease-in-out 5s infinite alternate-reverse;
     }
 
@@ -86,7 +88,7 @@
       inset: 0;
       z-index: 0;
       pointer-events: none;
-      background-image: radial-gradient(circle, rgba(129, 140, 248, 0.05) 1px, transparent 1px);
+      background-image: radial-gradient(circle, rgba(34, 211, 238, 0.04) 1px, transparent 1px);
       background-size: 40px 40px;
     }
 
@@ -119,7 +121,7 @@
 
     .topbar-link:hover {
       color: var(--accent);
-      background: rgba(129, 140, 248, 0.08);
+      background: rgba(34, 211, 238, 0.08);
     }
 
     /* ── Hero ── */
@@ -143,7 +145,7 @@
     .mascot-glow {
       position: absolute;
       inset: -40px;
-      background: radial-gradient(circle, rgba(129, 140, 248, 0.2) 0%, rgba(102, 126, 234, 0.08) 40%, transparent 70%);
+      background: radial-gradient(circle, rgba(34, 211, 238, 0.18) 0%, rgba(6, 182, 212, 0.06) 40%, transparent 70%);
       border-radius: 50%;
       animation: glowPulse 3s ease-in-out infinite;
     }
@@ -157,7 +159,7 @@
       position: relative;
       width: 200px;
       height: auto;
-      filter: drop-shadow(0 0 30px rgba(129, 140, 248, 0.3));
+      filter: drop-shadow(0 0 30px rgba(34, 211, 238, 0.25));
       animation: mascotFloat 4s ease-in-out infinite;
     }
 
@@ -182,7 +184,7 @@
     }
 
     .tagline-main .highlight {
-      background: linear-gradient(135deg, var(--accent), var(--accent-warm));
+      background: linear-gradient(135deg, var(--accent-glow), var(--accent-warm));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -226,41 +228,41 @@
 
     .btn-primary {
       background: linear-gradient(135deg, var(--accent-glow), var(--accent-warm));
-      color: #fff;
-      box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+      color: #020617;
+      box-shadow: 0 4px 20px rgba(6, 182, 212, 0.3);
     }
 
     .btn-primary:hover {
-      box-shadow: 0 6px 30px rgba(102, 126, 234, 0.5);
+      box-shadow: 0 6px 30px rgba(6, 182, 212, 0.5);
       transform: translateY(-2px);
     }
 
     .btn-ghost {
       background: rgba(27, 57, 79, 0.5);
       color: var(--text-primary);
-      border: 1px solid rgba(129, 140, 248, 0.2);
+      border: 1px solid rgba(34, 211, 238, 0.2);
       backdrop-filter: blur(10px);
     }
 
     .btn-ghost:hover {
       background: rgba(27, 57, 79, 0.8);
-      border-color: rgba(129, 140, 248, 0.4);
+      border-color: rgba(34, 211, 238, 0.4);
       transform: translateY(-2px);
     }
 
-    /* ── Features ── */
+    /* ── Features Section ── */
 
     .features-section {
-      padding: 2rem 2rem 5rem;
+      padding: 2rem 1.5rem 4rem;
+      max-width: 900px;
+      margin: 0 auto;
       position: relative;
       z-index: 1;
-      max-width: 1200px;
-      margin: 0 auto;
     }
 
     .features-label {
       text-align: center;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.15em;
@@ -276,7 +278,7 @@
 
     .feature-card {
       background: rgba(27, 57, 79, 0.35);
-      border: 1px solid rgba(129, 140, 248, 0.1);
+      border: 1px solid rgba(34, 211, 238, 0.08);
       border-radius: 16px;
       padding: 1.75rem 1.5rem;
       transition: all 0.3s;
@@ -285,7 +287,7 @@
 
     .feature-card:hover {
       background: rgba(27, 57, 79, 0.65);
-      border-color: rgba(129, 140, 248, 0.3);
+      border-color: rgba(34, 211, 238, 0.25);
       transform: translateY(-4px);
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
     }
@@ -406,8 +408,8 @@
           </div>
           <div class="feature-card">
             <span class="feature-icon">🛡️</span>
-            <h3>Isolated Execution</h3>
-            <p>Every agent runs in its own sandbox. Secure by default, no cross-contamination.</p>
+            <h3>Safety by Design</h3>
+            <p>Sandboxed execution + heuristic safety checkpoints. Dangerous actions are intercepted — real autonomy, real guardrails.</p>
           </div>
           <div class="feature-card">
             <span class="feature-icon">⚡</span>
@@ -419,7 +421,7 @@
     </main>
 
     <footer class="footer">
-      <p>Evonic &copy; 2026 &mdash; <a href="https://github.com/anvie/evonic-docs-site">Open Source</a> AI Agent Framework</p>
+      <p>Build with 💙 by <a href="https://twitter.com/anvie" target="_blank" rel="noopener">Robin Syihab</a> (<a href="https://twitter.com/anvie" target="_blank" rel="noopener">@anvie</a>)</p>
     </footer>
   </div>
 </body>
