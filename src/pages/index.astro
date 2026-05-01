@@ -132,41 +132,86 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 2rem 1.5rem 4rem;
+      padding: 1rem 1.5rem 3rem;
       position: relative;
       z-index: 1;
     }
 
-    .mascot-wrapper {
+    /* ── Swarm Mascots ── */
+
+    .swarm-container {
       position: relative;
-      margin-bottom: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 700px;
+      margin-bottom: 2rem;
+      min-height: 300px;
     }
 
-    .mascot-glow {
+    .swarm-center {
+      position: relative;
+      z-index: 3;
+      flex-shrink: 0;
+    }
+
+    .swarm-glow {
       position: absolute;
-      inset: -40px;
-      background: radial-gradient(circle, rgba(34, 211, 238, 0.18) 0%, rgba(6, 182, 212, 0.06) 40%, transparent 70%);
+      inset: -60px;
+      background: radial-gradient(circle, rgba(34, 211, 238, 0.2) 0%, rgba(6, 182, 212, 0.07) 40%, transparent 70%);
       border-radius: 50%;
       animation: glowPulse 3s ease-in-out infinite;
     }
 
     @keyframes glowPulse {
       0%, 100% { opacity: 0.5; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.1); }
+      50% { opacity: 1; transform: scale(1.12); }
     }
 
-    .mascot {
+    .mascot-large {
       position: relative;
-      width: 200px;
+      width: 260px;
       height: auto;
-      filter: drop-shadow(0 0 30px rgba(34, 211, 238, 0.25));
+      filter: drop-shadow(0 0 40px rgba(34, 211, 238, 0.3));
       animation: mascotFloat 4s ease-in-out infinite;
+      z-index: 3;
     }
 
     @keyframes mascotFloat {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
+      50% { transform: translateY(-10px); }
     }
+
+    /* Flanking small mascots */
+    .swarm-flank {
+      position: absolute;
+      pointer-events: none;
+      animation: flankFloat 5s ease-in-out infinite;
+    }
+
+    .swarm-flank img {
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 0 12px rgba(34, 211, 238, 0.15));
+    }
+
+    @keyframes flankFloat {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-6px) rotate(1deg); }
+      50% { transform: translateY(-2px) rotate(-1deg); }
+      75% { transform: translateY(-8px) rotate(0.5deg); }
+    }
+
+    /* Left side */
+    .flank-l1 { left: 8%; top: 20%; width: 90px; opacity: 0.55; animation-delay: 0s; z-index: 1; }
+    .flank-l2 { left: 18%; top: 55%; width: 65px; opacity: 0.4; animation-delay: 1.2s; z-index: 1; }
+    .flank-l3 { left: 2%; top: 50%; width: 50px; opacity: 0.3; animation-delay: 2.5s; z-index: 0; }
+
+    /* Right side */
+    .flank-r1 { right: 8%; top: 18%; width: 85px; opacity: 0.55; animation-delay: 0.6s; z-index: 1; }
+    .flank-r2 { right: 16%; top: 58%; width: 60px; opacity: 0.4; animation-delay: 1.8s; z-index: 1; }
+    .flank-r3 { right: 2%; top: 48%; width: 55px; opacity: 0.3; animation-delay: 3.1s; z-index: 0; }
 
     /* ── Tagline ── */
 
@@ -245,22 +290,21 @@
     }
 
     .btn-ghost:hover {
-      background: rgba(27, 57, 79, 0.8);
       border-color: rgba(34, 211, 238, 0.4);
       transform: translateY(-2px);
     }
 
-    /* ── Features Section ── */
+    /* ── Sections shared ── */
 
-    .features-section {
+    .section {
       padding: 2rem 1.5rem 4rem;
-      max-width: 900px;
+      max-width: 1000px;
       margin: 0 auto;
       position: relative;
       z-index: 1;
     }
 
-    .features-label {
+    .section-label {
       text-align: center;
       font-size: 0.75rem;
       font-weight: 600;
@@ -270,7 +314,9 @@
       margin-bottom: 2rem;
     }
 
-    .features-grid {
+    /* ── Principles / Features Grid ── */
+
+    .principles-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1.25rem;
@@ -311,6 +357,52 @@
       line-height: 1.5;
     }
 
+    /* ── Features (detail list) ── */
+
+    .features-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .feature-item {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      background: rgba(27, 57, 79, 0.25);
+      border: 1px solid rgba(34, 211, 238, 0.06);
+      border-radius: 14px;
+      padding: 1.25rem 1.25rem;
+      transition: all 0.3s;
+      backdrop-filter: blur(8px);
+    }
+
+    .feature-item:hover {
+      background: rgba(27, 57, 79, 0.5);
+      border-color: rgba(34, 211, 238, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .feature-item-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .feature-item-body h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .feature-item-body p {
+      font-size: 0.825rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
     /* ── Footer ── */
 
     .footer {
@@ -333,16 +425,35 @@
 
     /* ── Responsive ── */
 
+    @media (max-width: 768px) {
+      .swarm-container {
+        min-height: 240px;
+        max-width: 100%;
+      }
+      .mascot-large { width: 180px; }
+      .flank-l1 { left: 2%; top: 22%; width: 55px; }
+      .flank-l2 { left: 10%; top: 58%; width: 45px; }
+      .flank-l3 { left: -2%; top: 48%; width: 35px; }
+      .flank-r1 { right: 2%; top: 20%; width: 50px; }
+      .flank-r2 { right: 8%; top: 60%; width: 40px; }
+      .flank-r3 { right: -2%; top: 46%; width: 38px; }
+    }
+
     @media (max-width: 640px) {
       .topbar { padding: 1rem 1rem; }
-      .hero { padding: 1rem 1rem 3rem; }
-      .mascot { width: 150px; }
-      .features-grid {
+      .hero { padding: 0.5rem 1rem 2rem; }
+      .swarm-container { min-height: 200px; margin-bottom: 1rem; }
+      .mascot-large { width: 140px; }
+      .principles-grid {
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         gap: 1rem;
       }
-      .features-section { padding: 1rem 1rem 3rem; }
+      .features-list {
+        grid-template-columns: 1fr;
+      }
+      .section { padding: 1rem 1rem 3rem; }
       .feature-card { padding: 1.25rem 1rem; }
+      .feature-item { padding: 1rem; }
     }
   </style>
 </head>
@@ -358,15 +469,31 @@
 
     <main>
       <section class="hero">
-        <div class="mascot-wrapper">
-          <div class="mascot-glow"></div>
-          <img
-            class="mascot"
-            src="/img/mascot.png"
-            alt="Evonic Mascot"
-            width="200"
-            height="auto"
-          />
+        <!-- Swarm Mascots -->
+        <div class="swarm-container">
+
+          <!-- Left flank -->
+          <div class="swarm-flank flank-l1"><img src="/img/mascot.png" alt="Evonic agent" width="90" height="auto" /></div>
+          <div class="swarm-flank flank-l2"><img src="/img/mascot.png" alt="Evonic agent" width="65" height="auto" /></div>
+          <div class="swarm-flank flank-l3"><img src="/img/mascot.png" alt="Evonic agent" width="50" height="auto" /></div>
+
+          <!-- Center large -->
+          <div class="swarm-center">
+            <div class="swarm-glow"></div>
+            <img
+              class="mascot-large"
+              src="/img/mascot-large.png"
+              alt="Evonic Mascot"
+              width="260"
+              height="auto"
+            />
+          </div>
+
+          <!-- Right flank -->
+          <div class="swarm-flank flank-r1"><img src="/img/mascot.png" alt="Evonic agent" width="85" height="auto" /></div>
+          <div class="swarm-flank flank-r2"><img src="/img/mascot.png" alt="Evonic agent" width="60" height="auto" /></div>
+          <div class="swarm-flank flank-r3"><img src="/img/mascot.png" alt="Evonic agent" width="55" height="auto" /></div>
+
         </div>
 
         <div class="tagline">
@@ -388,9 +515,10 @@
         </div>
       </section>
 
-      <section class="features-section">
-        <p class="features-label">Core Principles</p>
-        <div class="features-grid">
+      <!-- Core Principles (6 items) -->
+      <section class="section">
+        <p class="section-label">Core Principles</p>
+        <div class="principles-grid">
           <div class="feature-card">
             <span class="feature-icon">🔓</span>
             <h3>Open Model First</h3>
@@ -416,12 +544,80 @@
             <h3>Fast &amp; Reliable</h3>
             <p>Optimized for speed. Async-first architecture built for production workloads.</p>
           </div>
+          <div class="feature-card">
+            <span class="feature-icon">🌟</span>
+            <h3>Open Source</h3>
+            <p>Free and open. Community-driven. No hidden tiers, no enterprise-only features. Everything out in the open.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features (8 items) -->
+      <section class="section">
+        <p class="section-label">Features</p>
+        <div class="features-list">
+          <div class="feature-item">
+            <span class="feature-item-icon">🧠</span>
+            <div class="feature-item-body">
+              <h4>Independent Agents</h4>
+              <p>True independent agents — not sub-agents. Each has its own role, memory, and workplace. Direct agent-to-agent messaging, no middleman.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <span class="feature-item-icon">🌐</span>
+            <div class="feature-item-body">
+              <h4>Anywhere Workplaces</h4>
+              <p>Run agents locally or remotely — even behind NAT without a public IP. Your workplace, your rules, no network gymnastics.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <span class="feature-item-icon">📦</span>
+            <div class="feature-item-body">
+              <h4>Sandbox Execution</h4>
+              <p>Every agent runs in an isolated sandbox. Peace of mind knowing your system is protected from unexpected agent behavior.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <span class="feature-item-icon">🔍</span>
+            <div class="feature-item-body">
+              <h4>Heuristic Safety Checking</h4>
+              <p>Early detection of risky agent behavior across the swarm. Catch anomalies before they cascade — proactive, not reactive.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <span class="feature-item-icon">🛠️</span>
+            <div class="feature-item-body">
+              <h4>Skills &amp; Skillsets</h4>
+              <p>Not just prompts — agents come with real tools. Skillsets let you spin up agents with specific capabilities in no time.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <span class="feature-item-icon">📋</span>
+            <div class="feature-item-body">
+              <h4>Plugins + Kanban</h4>
+              <p>Pre-built powerful plugins included. The Kanban plugin brings agentic workflow management right out of the box.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <span class="feature-item-icon">💬</span>
+            <div class="feature-item-body">
+              <h4>Multi-Channel Support</h4>
+              <p>Connect your swarm to multiple communication channels. One agent, many surfaces — Discord, Telegram, Slack, and more.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <span class="feature-item-icon">⏰</span>
+            <div class="feature-item-body">
+              <h4>Reliable Scheduler</h4>
+              <p>Set it and trust it. Built-in scheduler keeps your agents on track — cron-based, persistent, and battle-tested.</p>
+            </div>
+          </div>
         </div>
       </section>
     </main>
 
     <footer class="footer">
-      <p>Build with 💙 by <a href="https://twitter.com/anvie" target="_blank" rel="noopener">Robin Syihab</a> (<a href="https://twitter.com/anvie" target="_blank" rel="noopener">@anvie</a>)</p>
+      <p>Evonic &copy; 2026 - Build with 💙 by <a href="https://twitter.com/anvie" target="_blank" rel="noopener">Robin Syihab</a> (<a href="https://twitter.com/anvie" target="_blank" rel="noopener">@anvie</a>)</p>
     </footer>
   </div>
 </body>
