@@ -7,6 +7,44 @@ sidebar:
 
 Agents are the core building blocks of Evonic. Each agent is an independently configured LLM-powered assistant that can reason, plan, and take actions.
 
+## Super Agent
+
+When you first set up Evonic, **the very first agent you create is automatically designated as the Super Agent**. This isn't optional — the platform requires a Super Agent to bootstrap itself.
+
+### What Makes It "Super"?
+
+The Super Agent is the **platform administrator**. It has elevated privileges that regular agents don't:
+
+| Privilege | Super Agent | Regular Agent |
+|---|---|---|
+| Can be disabled? | ❌ No | ✅ Yes |
+| Apply skillsets to create new agents | ✅ Yes | ❌ No |
+| Create tasks on Kanban (`create_task_super_only`) | ✅ Yes | ❌ No |
+| Bypass super-agent setup checks (update endpoint) | ✅ Yes | ❌ No |
+
+### Role & Responsibilities
+
+Think of the Super Agent as your **AI platform manager**. Its job is:
+
+- **Orchestrate other agents**: Create, configure, and manage specialized agents for different tasks
+- **Apply skillsets**: Use pre-built templates to spin up new agents with the right tools and prompts
+- **Oversee workflows**: Manage Kanban boards and coordinate multi-agent operations
+- **Self-update the platform**: Has special access to the update system to keep Evonic current
+
+### How to Identify the Super Agent
+
+In the CLI, the Super Agent shows `Super: yes`:
+
+```bash
+evonic agent get siwa
+# Output:
+# ID:          siwa
+# Name:        Siwa Miwa
+# Description: Super agent
+# Status:      enabled
+# Super:       yes        ← this is the Super Agent
+```
+
 ## Creating an Agent
 
 ### Via the Web UI
