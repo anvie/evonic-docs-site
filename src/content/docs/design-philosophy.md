@@ -5,6 +5,9 @@ sidebar:
   order: 0
 ---
 
+
+> **Swarm Intelligence, Zero Lock-in.**
+> *Your Models. Your Rules. Your Swarm.*
 Evonic is built around five core principles that shape every design decision, from the runtime model to the developer experience.
 
 ## Open Model First
