@@ -1,6 +1,6 @@
 ---
 title: "Agents: Core Platform"
-description: The heart of Evonic: build, deploy, and manage AI agents.
+description: "The heart of Evonic: build, deploy, and manage AI agents."
 sidebar:
   order: 1
 ---

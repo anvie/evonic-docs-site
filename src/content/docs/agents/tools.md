@@ -1,6 +1,6 @@
 ---
 title: Tools
-description: Runpy and Bash: tools for executing code and shell commands in an isolated environment.
+description: "Runpy and Bash: tools for executing code and shell commands in an isolated environment."
 ---
 
 Runpy and Bash are tools that allow agents to execute Python code and shell commands. They're designed to be safe and isolated, with multiple layers of protection against dangerous operations.

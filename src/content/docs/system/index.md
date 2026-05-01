@@ -1,6 +1,6 @@
 ---
 title: System Architecture
-description: Overview of the Evonic architecture: agents, skills, plugins, models, and events.
+description: "Overview of the Evonic architecture: agents, skills, plugins, models, and events."
 sidebar:
   order: 1
 ---

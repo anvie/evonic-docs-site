@@ -1,6 +1,6 @@
 ---
 title: Agents
-description: Agent architecture: runtime, sessions, knowledge bases, tools, and channels.
+description: "Agent architecture: runtime, sessions, knowledge bases, tools, and channels."
 sidebar:
   order: 2
 ---
