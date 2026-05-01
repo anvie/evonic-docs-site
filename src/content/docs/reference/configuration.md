@@ -50,6 +50,20 @@ All configuration is done via environment variables in a `.env` file.
 | `LOG_FULL_THINKING` | `0` | Include full LLM thinking content in live log output |
 | `LOG_FULL_RESPONSE` | `0` | Include full LLM response in live log output |
 
+## Cloud Home Connector (Evocon)
+
+Settings for the [Evocon](/agents/evocon) WebSocket relay server that enables Cloud Homes.
+
+| Variable | Default | Description |
+|---|---|---|
+| `CONNECTOR_WS_HOST` | `0.0.0.0` | Bind address for the Evocon relay server |
+| `CONNECTOR_WS_PORT` | `8081` | Port for the Evocon relay server |
+| `CONNECTOR_PING_INTERVAL` | `30` | WebSocket keepalive ping interval in seconds |
+| `CONNECTOR_PING_TIMEOUT` | `10` | Ping timeout in seconds before marking connector offline |
+| `CONNECTOR_PAIRING_CODE_TTL` | `300` | Pairing code validity window in seconds (default: 5 minutes) |
+
+The relay server starts automatically on application boot. Ensure port `8081` (or your configured port) is reachable by devices running Evocon.
+
 ## Optional Services
 
 | Variable | Default | Description |

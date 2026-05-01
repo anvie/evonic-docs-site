@@ -11,29 +11,20 @@ Agents can communicate with each other directly using the **agent-to-agent messa
 
 ## Core Tools
 
-Four tools power the messaging system:
+Three tools power the messaging system:
 
 | Tool | Purpose |
 |---|---|
-| `send_agent_message` | Send a message to another agent |
-| `check_agent_response` | Check for a response from another agent |
+| `send_agent_message` | Send a message to another agent (fire-and-forget — replies are auto-delivered) |
 | `escalate_to_user` | Forward a message to the user's session |
 | `resolve_agent_approval` | Approve or reject an agent's pending approval request |
 
 ### `send_agent_message`
 
-Send an asynchronous message to another agent. The target agent processes the message in its own session and can respond at its own pace.
+Send an asynchronous message to another agent. The target agent processes the message in its own session. When the target finishes, their reply is **automatically forwarded** back to your user session — no polling required.
 
 ```
 send_agent_message(target_agent_id: "reviewer", message: "Please review this code...")
-```
-
-### `check_agent_response`
-
-Poll for a response from a previously messaged agent. Returns the latest reply or a "no response yet" indicator.
-
-```
-check_agent_response(target_agent_id: "reviewer")
 ```
 
 ### `escalate_to_user`
@@ -68,8 +59,58 @@ For agent-to-agent scenarios, Agent B can also call `resolve_agent_approval` to 
 
 ## Guard Rails
 
-The messaging system enforces safeguards to prevent abuse:
+The messaging system enforces several layers of protection against abuse and infinite loops.
+
+### Rate and scale limits
 
 - **Self-messaging blocked** — An agent cannot send a message to itself
-- **Rate limit** — Maximum **10 messages per minute** per sender-target pair
-- **Depth limit** — Maximum **5 hops** in a message chain (A→B→C→D→E→stop) to prevent infinite forwarding loops
+- **Per-pair rate limit** — Maximum **10 messages per minute** per sender→target pair
+- **Global rate limit** — Maximum **30 messages per minute** per sender across all targets
+- **Fan-out limit** — Maximum **5 unique targets** per 5-second window (one LLM turn)
+- **Depth limit** — Maximum **3 hops** in a chain (A→B→C→stop) to prevent cascading loops
+
+### Loop prevention: passive reply pattern
+
+The most dangerous failure mode in multi-agent systems is a **ping-pong loop** — where two agents keep messaging each other indefinitely:
+
+```
+A → B  (asks B to do task)
+B → A  (B has a question)
+A → B  (A replies)
+B → A  (B has another question)
+...    (infinite)
+```
+
+To prevent this, the system enforces a **passive reply rule**:
+
+> **An agent that received a task cannot use `send_agent_message` to reply back to the agent that sent it.** Instead, it must end its turn with a final answer.
+
+When agent B finishes its turn, the system automatically forwards B's reply to A's session — no active send required. This auto-forwarding is handled by an internal `_on_final_answer` event listener that routes B's response back through the original message chain.
+
+**Correct pattern:**
+
+```
+User (Y) → Agent A  (asks A to delegate task 123)
+Agent A  → Agent B  (delegates task 123)
+
+Agent B needs clarification:
+  ✗ B.send_agent_message(A, "need clarification")  ← BLOCKED
+  ✓ B ends turn: "I need clarification about X before I can proceed"
+    → auto-forwarded to A's session
+
+Agent A reads B's response:
+  → A.escalate_to_user("B needs clarification about X")
+  → User Y answers
+  → A sends updated task to B (depth increments, still within limit)
+
+Agent B completes task:
+  → B ends turn with final answer
+  → auto-forwarded to A
+  → A relays result to User Y
+```
+
+This means **all escalation paths always flow upward** (toward the user), never sideways between peer agents.
+
+### If you need human input from within a sub-task
+
+Use `escalate_to_user` instead. This forwards the message to the agent's own human session. If agent B has no direct user channel, it should surface the question in its final answer — the calling agent A (which does have a user channel) will receive it and can escalate.

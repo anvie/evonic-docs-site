@@ -8,6 +8,7 @@ description: How to install and set up the Evonic AI.
 - **Python 3.8+**
 - **An LLM endpoint** — any OpenAI-compatible API (llama.cpp, Ollama, vLLM, OpenRouter, etc.)
 - **Git** — for cloning the repository
+- **Docker** — required for isolated `runpy` and `bash` tool execution (see [Docker Setup](#docker-setup))
 
 ## Clone and Install
 
@@ -33,6 +34,38 @@ For the Telegram channel integration (agent platform):
 ```bash
 pip install python-telegram-bot
 ```
+
+## Docker Setup
+
+The agent tools `runpy` and `bash` execute code inside an isolated Docker container by default (via `DockerBackend`). This sandbox provides filesystem isolation, resource limits, and network restrictions — ensuring agent code runs safely without affecting the host system.
+
+**Prerequisites:** Docker must be installed and the daemon running.
+
+**Build the sandbox image:**
+
+```bash
+docker build -t evonic-sandbox:latest docker/tools/
+```
+
+The image is built from `docker/tools/Dockerfile` and includes Python 3.11, system utilities (`curl`, `git`, `ripgrep`, `sqlite3`, etc.), and a non-root `devuser` matching the host UID/GID. The host workspace is mounted at `/workspace` and the `runpy_helpers` package is automatically available inside the container.
+
+**Configuration** (in `.env`):
+
+```env
+# Docker image name (default)
+SANDBOX_IMAGE=evonic-sandbox:latest
+
+# Resource limits
+SANDBOX_MEMORY_LIMIT=512m
+SANDBOX_CPU_LIMIT=1
+SANDBOX_NETWORK=none        # or 'bridge'
+SANDBOX_MAX_CONTAINERS=10
+
+# Idle timeout in seconds (containers are destroyed after this)
+SANDBOX_IDLE_TIMEOUT=1800
+```
+
+> **Note:** If Docker is unavailable, set `sandbox_enabled=0` on the agent to fall back to local subprocess execution (less isolated).
 
 ## Install a Local Model Runner (Optional)
 
