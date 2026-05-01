@@ -10,6 +10,12 @@
   --sl-color-gray-5: #1e293b;
   --sl-color-gray-6: #0f172a;
   --sl-color-black: #020617;
+
+  /* Evonic landing page colors */
+  --evonic-navy: #152A3A;
+  --evonic-navy-light: #1B394F;
+  --evonic-accent-glow: #667eea;
+  --evonic-accent-warm: #764ba2;
 }
 
 :root[data-theme='dark'] {
