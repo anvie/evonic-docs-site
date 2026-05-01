@@ -39,13 +39,13 @@ ollama pull codellama
 ollama run llama3.2
 ```
 
-## Configuration with Evonic AI
+## Configuration with Evonic
 
 ### API Endpoint
 Ollama runs a local API server by default at `http://localhost:11434`.
 
 ### Configuration
-In your Evonic AI configuration:
+In your Evonic configuration:
 ```yaml
 model:
   provider: ollama

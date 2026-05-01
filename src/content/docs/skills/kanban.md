@@ -1,6 +1,6 @@
 ---
 title: Kanban
-description: Kanban plugin for task management — permissions, comment monitoring, and task workflows.
+description: Kanban plugin for task management: permissions, comment monitoring, and task workflows.
 sidebar:
   order: 9
 ---
@@ -29,8 +29,8 @@ These permissions are configured per-agent in the agent's **Tools** tab (or equi
 
 When the Kanban plugin is active, the platform automatically monitors comments on tasks for follow-up activity:
 
-- **Auto-clear on task pick** — When a task is moved to *In Progress*, its prior comment context is automatically cleared so the agent starts fresh when picking up the task.
-- **Follow-up alerts** — If a task receives a new comment after being picked up, the monitor detects the follow-up and can trigger an alert or notification to relevant agents or users.
+- **Auto-clear on task pick**: When a task is moved to *In Progress*, its prior comment context is automatically cleared so the agent starts fresh when picking up the task.
+- **Follow-up alerts**: If a task receives a new comment after being picked up, the monitor detects the follow-up and can trigger an alert or notification to relevant agents or users.
 
 This ensures agents don't get stale context when starting work on a task, and that new discussion on tasks doesn't go unnoticed.
 

@@ -5,7 +5,7 @@ sidebar:
   order: 2
 ---
 
-Agents are the core building blocks of the Evonic AI. Each agent is an independently configured LLM-powered assistant that can reason, plan, and take actions.
+Agents are the core building blocks of Evonic. Each agent is an independently configured LLM-powered assistant that can reason, plan, and take actions.
 
 ## Creating an Agent
 
@@ -14,10 +14,10 @@ Agents are the core building blocks of the Evonic AI. Each agent is an independe
 1. Go to `/agents`
 2. Click **+ New Agent**
 3. Fill in:
-   - **Agent ID** — slug format, alphanumeric + underscores only (e.g., `bookstore_bot`)
-   - **Name** — display name (e.g., "Bookstore Assistant")
-   - **Description** — short description
-4. Click **Create** — you'll be redirected to the agent's config page
+   - **Agent ID**: slug format, alphanumeric + underscores only (e.g., `bookstore_bot`)
+   - **Name**: display name (e.g., "Bookstore Assistant")
+   - **Description**: short description
+4. Click **Create**: you'll be redirected to the agent's config page
 
 ### Via the API
 
@@ -171,8 +171,8 @@ The workspace provides an isolated context for tools like `runpy`, `bash`, `writ
 
 Agents operate in one of two modes: **Plan** or **Execute**. This state is persisted across conversation turns and survives LLM context summarization.
 
-- **Plan mode** — The agent generates plans and reasoning before executing. This is the default mode when a new session starts.
-- **Execute mode** — The agent executes actions directly.
+- **Plan mode**: The agent generates plans and reasoning before executing. This is the default mode when a new session starts.
+- **Execute mode**: The agent executes actions directly.
 
 The agent state is managed automatically by the runtime. See [Agent State](/agents/agent-state) for details.
 
@@ -192,10 +192,10 @@ Connect external messaging platforms. See [Channels](/agents/channels).
 
 Chat directly with the agent from the browser to test its behavior before deploying to external channels. The chat interface supports:
 
-- **Stop button** — Interrupt the agent while it's processing
-- **Thinking timeline** — Visual timeline showing the agent's reasoning process
-- **Tab persistence** — Your active tab is remembered across page refreshes (via URL hash)
-- **Mobile layout** — Responsive design for mobile devices
+- **Stop button**: Interrupt the agent while it's processing
+- **Thinking timeline**: Visual timeline showing the agent's reasoning process
+- **Tab persistence**: Your active tab is remembered across page refreshes (via URL hash)
+- **Mobile layout**: Responsive design for mobile devices
 
 ## Safety Checker Toggle
 
@@ -206,7 +206,7 @@ You can disable the safety checker per agent to enable **full autopilot mode**, 
 | Setting | Value | Behavior |
 |---|---|---|
 | Enabled (default) | `1` | Potentially dangerous tool calls trigger a user approval gate |
-| Disabled | `0` | Tools execute directly — full autopilot without intervention |
+| Disabled | `0` | Tools execute directly: full autopilot without intervention |
 
 :::caution[Warning]
 Disabling the safety checker means the agent will execute code and system commands without any approval gate. Only disable this for agents you fully trust.

@@ -6,9 +6,9 @@ description: Tips and recommendations for writing robust Evonic plugins.
 ## Event Handling
 
 - Handle events gracefully with try/except blocks
-- Don't return anything from handlers — the framework ignores return values
+- Don't return anything from handlers: the framework ignores return values
 - Log important actions for debugging using `sdk.log()`
-- Don't block on long-running operations — use `sdk.http_request()` with a short timeout
+- Don't block on long-running operations: use `sdk.http_request()` with a short timeout
 
 ## Configuration
 
@@ -19,7 +19,7 @@ description: Tips and recommendations for writing robust Evonic plugins.
 
 ## Logging
 
-- Use `sdk.log()` for all logging — it adds plugin context automatically
+- Use `sdk.log()` for all logging: it adds plugin context automatically
 - Include context in log messages (session_id, user_id, etc.)
 - Use appropriate log levels (`info`, `warn`, `error`)
 - Don't log sensitive data (API keys, passwords, PII)

@@ -101,7 +101,7 @@ evonic update [--check] [--tag TAG] [--rollback] [--force]
 
 | Flag | Description |
 |------|-------------|
-| `--check` | Fetch tags and report what is available — no update is applied |
+| `--check` | Fetch tags and report what is available: no update is applied |
 | `--tag TAG` | Update to a specific tag instead of the latest |
 | `--rollback` | Roll back to the previous stable release |
 | `--force` | Skip SSH signature verification (development only) |

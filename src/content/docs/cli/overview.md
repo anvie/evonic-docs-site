@@ -48,11 +48,11 @@ evonic model list
 
 ## Next Steps
 
-- [Server Management](/cli/server) — Start, stop, status, restart, logs, updates
-- [System Diagnostics](/cli/doctor) — Full system health check (environment, config, connections, LLM providers)
-- [Agent Management](/cli/agents) — Create, update, enable, disable, remove agents
-- [Skill Management](/cli/skills) — Install, get details, uninstall skills
-- [Skillset Management](/cli/skillsets) — List templates, apply to agents
-- [Model Management](/cli/models) — Add, get, remove LLM models
-- [Plugin Management](/cli/plugins) — Install, uninstall, list plugins
-- [Schedule Management](/cli/schedules) — Manage scheduled tasks
+- [Server Management](/cli/server): Start, stop, status, restart, logs, updates
+- [System Diagnostics](/cli/doctor): Full system health check (environment, config, connections, LLM providers)
+- [Agent Management](/cli/agents): Create, update, enable, disable, remove agents
+- [Skill Management](/cli/skills): Install, get details, uninstall skills
+- [Skillset Management](/cli/skillsets): List templates, apply to agents
+- [Model Management](/cli/models): Add, get, remove LLM models
+- [Plugin Management](/cli/plugins): Install, uninstall, list plugins
+- [Schedule Management](/cli/schedules): Manage scheduled tasks

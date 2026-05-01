@@ -20,7 +20,7 @@ def on_message_received(event, sdk):
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `message` | string | — | Log message text |
+| `message` | string |: | Log message text |
 | `level` | string | `"info"` | Log level: `"info"`, `"warn"`, or `"error"` |
 
 ## `sdk.send_message(agent_id, external_user_id, channel_id, text)`
@@ -71,8 +71,8 @@ def on_message_received(event, sdk):
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `method` | string | — | HTTP method: `"GET"`, `"POST"`, `"PUT"`, `"DELETE"`, etc. |
-| `url` | string | — | Target URL |
+| `method` | string |: | HTTP method: `"GET"`, `"POST"`, `"PUT"`, `"DELETE"`, etc. |
+| `url` | string |: | Target URL |
 | `headers` | dict | `None` | Optional HTTP headers |
 | `json` | dict | `None` | JSON body (automatically serialized) |
 | `data` | string | `None` | Raw body data |
@@ -95,7 +95,7 @@ def on_turn_complete(event, sdk):
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `session_id` | string | — | Session ID |
+| `session_id` | string |: | Session ID |
 | `agent_id` | string | `None` | Optional agent ID filter |
 | `limit` | int | `50` | Max number of messages to return |
 

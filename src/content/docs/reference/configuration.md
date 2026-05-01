@@ -36,7 +36,7 @@ Settings for the isolated Docker container used by the `runpy` and `bash` tools.
 | `SANDBOX_IMAGE` | `evonic-sandbox:latest` | Docker image used for the sandbox container |
 | `SANDBOX_MEMORY_LIMIT` | `512m` | Memory limit per container |
 | `SANDBOX_CPU_LIMIT` | `1` | CPU limit per container |
-| `SANDBOX_NETWORK` | `none` | Network mode — `none` or `bridge` |
+| `SANDBOX_NETWORK` | `none` | Network mode: `none` or `bridge` |
 | `SANDBOX_MAX_CONTAINERS` | `10` | Maximum number of containers in the pool (LRU eviction) |
 | `SANDBOX_IDLE_TIMEOUT` | `1800` | Idle timeout in seconds before container is destroyed (30 min) |
 | `SANDBOX_WORKSPACE` | *(project root)* | Host path mounted at `/workspace` inside the container |

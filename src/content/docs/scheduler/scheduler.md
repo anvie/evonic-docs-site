@@ -10,11 +10,11 @@ sidebar:
 **Scheduler** is a centralized scheduling system built on top of [APScheduler](https://apscheduler.readthedocs.io/). It provides a unified interface for creating, managing, and executing scheduled tasks across the platform.
 
 Use cases include:
-- **Reminders** — send a message to an agent at a specific time
-- **One-shot schedules** — trigger an action once at a given date/time
-- **Recurring jobs** — run periodically at fixed intervals
-- **Cron-based triggers** — execute on complex cron-like schedules
-- **Webhook dispatch** — fire HTTP requests on schedule
+- **Reminders**: send a message to an agent at a specific time
+- **One-shot schedules**: trigger an action once at a given date/time
+- **Recurring jobs**: run periodically at fixed intervals
+- **Cron-based triggers**: execute on complex cron-like schedules
+- **Webhook dispatch**: fire HTTP requests on schedule
 
 All schedules are persisted in SQLite and survive application restarts.
 
@@ -144,7 +144,7 @@ Schedules are created through the scheduler skill's agent tools. Install the sch
 
 The scheduler supports three trigger types, each with its own configuration format.
 
-### `date` — One-shot at specific time
+### `date`: One-shot at specific time
 
 Fires once at a specific date and time. `max_runs` is automatically set to `1`.
 
@@ -164,7 +164,7 @@ scheduler.create_schedule(
 |-------|------|----------|-------------|
 | `run_date` | string | Yes | ISO 8601 datetime string (e.g., `2026-05-01T10:00:00`) |
 
-### `interval` — Recurring at fixed intervals
+### `interval`: Recurring at fixed intervals
 
 Fires repeatedly at a fixed interval (seconds, minutes, hours, days, weeks, months, or years).
 
@@ -192,7 +192,7 @@ scheduler.create_schedule(
 | `months` | int | Interval in months |
 | `years` | int | Interval in years |
 
-### `cron` — Cron-like scheduling
+### `cron`: Cron-like scheduling
 
 Fires on a cron-like schedule with day-of-week, hour, minute, etc.
 
@@ -228,7 +228,7 @@ See the [APScheduler CronTrigger docs](https://apscheduler.readthedocs.io/en/sta
 
 When a schedule fires, the scheduler executes an action based on the `action_type` field.
 
-### `agent_message` — Send a message to an agent
+### `agent_message`: Send a message to an agent
 
 Sends a message to a specific agent as if it came from an external user.
 
@@ -254,7 +254,7 @@ scheduler.create_schedule(
 | `message` | string | Yes | Message content |
 | `channel_id` | string | No | Target channel (e.g., telegram, slack) |
 
-### `emit_event` — Emit a system event
+### `emit_event`: Emit a system event
 
 Emits an event to the platform's event stream, which can be consumed by plugins, evaluators, or other components.
 
@@ -278,7 +278,7 @@ scheduler.create_schedule(
 | `event_name` | string | Yes | Name of the event to emit |
 | `payload` | dict | No | Arbitrary JSON payload |
 
-### `webhook` — Fire an HTTP request
+### `webhook`: Fire an HTTP request
 
 Sends an HTTP request to an external endpoint.
 

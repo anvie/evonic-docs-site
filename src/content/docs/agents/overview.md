@@ -1,21 +1,21 @@
 ---
-title: Agents — Core Platform
-description: The heart of the Evonic AI — build, deploy, and manage AI agents.
+title: Agents: Core Platform
+description: The heart of Evonic: build, deploy, and manage AI agents.
 sidebar:
   order: 1
 ---
 
-The Evonic AI is fundamentally an **agentic AI platform**. Agents are the core building blocks that power everything — from simple chatbots to complex multi-step workflows.
+Evonic is fundamentally an **agentic AI platform**. Agents are the core building blocks that power everything: from simple chatbots to complex multi-step workflows.
 
 ## What is an Agent?
 
 An agent is an independently configured LLM-powered assistant that can:
 
-- **Reason and plan** — Break down complex tasks into steps
-- **Take actions** — Execute tools, run code, query databases
-- **Remember context** — Maintain conversation history across sessions
-- **Connect anywhere** — Deploy to Telegram, WhatsApp, Discord, or web interfaces
-- **Learn from knowledge** — Access reference documents and custom knowledge bases
+- **Reason and plan**: Break down complex tasks into steps
+- **Take actions**: Execute tools, run code, query databases
+- **Remember context**: Maintain conversation history across sessions
+- **Connect anywhere**: Deploy to Telegram, WhatsApp, Discord, or web interfaces
+- **Learn from knowledge**: Access reference documents and custom knowledge bases
 
 ## Architecture
 
@@ -42,7 +42,7 @@ Response → Channel → User
 
 Each agent has a **workspace directory** (`agents/<agent_id>/workspace/`) for file operations. This is configurable per-agent in the General tab and provides an isolated filesystem context for tools like `runpy`, `bash`, and `write_file`.
 
-For agents that need to operate on remote machines or devices, assign a **Workplace** — a first-class execution environment that can be a local directory, an SSH server, or any device running [Evonet](/agents/evonet) (a lightweight Go connector). See [Workplaces](/agents/workplaces) for details.
+For agents that need to operate on remote machines or devices, assign a **Workplace**: a first-class execution environment that can be a local directory, an SSH server, or any device running [Evonet](/agents/evonet) (a lightweight Go connector). See [Workplaces](/agents/workplaces) for details.
 
 An agent is defined by a **slug ID** (e.g., `bookstore_bot`, `library_assistant`), a system prompt, an optional model override, and a set of assigned tools. Manage agents at `/agents` in the web UI.
 
@@ -95,5 +95,5 @@ See [Slash Commands](/agents/slash-commands) for full details.
 - [Setting up channels](/agents/channels)
 - [Agent state system](/agents/agent-state)
 - [Slash commands](/agents/slash-commands)
-- [Workplaces — execution environments](/agents/workplaces)
-- [Evonet — cloud workplace connector](/agents/evonet)
+- [Workplaces: execution environments](/agents/workplaces)
+- [Evonet: cloud workplace connector](/agents/evonet)

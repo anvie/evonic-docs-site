@@ -46,9 +46,9 @@ Uses a second LLM call to evaluate the response:
 ```
 
 Available template variables in `eval_prompt`:
-- `{response}` — the LLM's response
-- `{expected}` — the expected output from the test definition
-- `{prompt}` — the original prompt
+- `{response}`: the LLM's response
+- `{expected}`: the expected output from the test definition
+- `{prompt}`: the original prompt
 
 ### Hybrid
 
@@ -74,11 +74,11 @@ The LLM generates an evaluation, then the regex extracts the score.
 1. Go to **Settings** → **Evaluators** tab
 2. Click **+ Add Custom Evaluator**
 3. Fill in:
-   - **ID** — unique identifier
-   - **Name** — display name
-   - **Type** — regex, custom, or hybrid
-   - **Extraction Regex** — pattern (for regex/hybrid types)
-   - **Eval Prompt** — LLM prompt template (for custom/hybrid types)
+   - **ID**: unique identifier
+   - **Name**: display name
+   - **Type**: regex, custom, or hybrid
+   - **Extraction Regex**: pattern (for regex/hybrid types)
+   - **Eval Prompt**: LLM prompt template (for custom/hybrid types)
 4. Save
 
 ## Using in Tests
@@ -107,6 +107,6 @@ Custom evaluators are handled by `evaluator/custom_evaluator.py`:
 ## Tips
 
 - Test regex patterns at [regex101.com](https://regex101.com) before using
-- Keep eval prompts clear and specific — ambiguous prompts produce inconsistent scores
+- Keep eval prompts clear and specific: ambiguous prompts produce inconsistent scores
 - Use hybrid mode when you want both LLM reasoning and reliable numeric extraction
 - Set `uses_pass2: true` if you want the evaluator to work on an extracted answer rather than the raw response

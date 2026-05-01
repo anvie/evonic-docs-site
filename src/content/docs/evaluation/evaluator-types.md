@@ -5,7 +5,7 @@ sidebar:
   order: 4
 ---
 
-The evaluator system uses the Strategy Pattern — each evaluator inherits from `BaseEvaluator` and returns an `EvaluationResult` with a score (0.0-1.0), status, and details.
+The evaluator system uses the Strategy Pattern: each evaluator inherits from `BaseEvaluator` and returns an `EvaluationResult` with a score (0.0-1.0), status, and details.
 
 ## Keyword Evaluator
 
@@ -49,9 +49,9 @@ First pass gets the full response with reasoning. Second pass extracts just the 
 ```
 
 **Expected types:**
-- `numeric` — numeric comparison with tolerance
-- `string` — exact string match (case-insensitive)
-- `contains` — checks if expected appears in extracted answer
+- `numeric`: numeric comparison with tolerance
+- `string`: exact string match (case-insensitive)
+- `contains`: checks if expected appears in extracted answer
 
 ## SQL Executor Evaluator
 

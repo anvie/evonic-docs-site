@@ -3,7 +3,7 @@ title: Local Models Overview
 description: Why local-first, benefits, and use cases for running AI models locally.
 ---
 
-The Evonic AI is designed with a **local-first** philosophy. By running AI models locally, you gain full control over your data, privacy, and inference costs — while still accessing the latest open-source models.
+Evonic is designed with a **local-first** philosophy. By running AI models locally, you gain full control over your data, privacy, and inference costs: while still accessing the latest open-source models.
 
 ## Why Local-First?
 
@@ -29,7 +29,7 @@ The Evonic AI is designed with a **local-first** philosophy. By running AI model
 
 ## Supported Local Model Runners
 
-The Evonic AI supports multiple local model runners:
+Evonic supports multiple local model runners:
 
 | Runner | Best For | Hardware Requirements |
 |--------|----------|----------------------|
@@ -39,11 +39,11 @@ The Evonic AI supports multiple local model runners:
 
 ## Use Cases
 
-- **Internal Knowledge Bots** — Connect your team's documentation to AI agents
-- **Customer Support** — Deploy agents on-premise for sensitive customer data
-- **Research & Analysis** — Run models on proprietary datasets without sharing
-- **Edge Deployment** — Run agents on devices with limited connectivity
-- **Development & Testing** — Iterate quickly with local models before production
+- **Internal Knowledge Bots**: Connect your team's documentation to AI agents
+- **Customer Support**: Deploy agents on-premise for sensitive customer data
+- **Research & Analysis**: Run models on proprietary datasets without sharing
+- **Edge Deployment**: Run agents on devices with limited connectivity
+- **Development & Testing**: Iterate quickly with local models before production
 
 ## Managing Models via CLI
 
@@ -137,7 +137,7 @@ Model removed: gpt4o
 1. Choose your model runner (Ollama, llama.cpp, or vLLM)
 2. Install and configure the runner
 3. Select a model suitable for your hardware
-4. Configure the Evonic AI to connect to your local model
+4. Configure Evonic to connect to your local model
 5. Start building your agents!
 
 For detailed setup instructions, see the individual runner guides.

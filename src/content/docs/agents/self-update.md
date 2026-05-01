@@ -7,13 +7,13 @@ sidebar:
 
 ## Overview
 
-Evonic includes an update supervisor that pulls new releases from your Git remote, verifies their SSH signature, installs dependencies in an isolated environment, and swaps the active release atomically — with rollback if anything goes wrong.
+Evonic includes an update supervisor that pulls new releases from your Git remote, verifies their SSH signature, installs dependencies in an isolated environment, and swaps the active release atomically: with rollback if anything goes wrong.
 
 **Key properties:**
 
 - **Atomic**: no partial state is ever visible to the running daemon
 - **Rollback**: any failure (signature, deps, health check, monitoring) restores the previous release
-- **Isolated deps**: each release gets its own virtual environment — no shared-venv conflicts
+- **Isolated deps**: each release gets its own virtual environment: no shared-venv conflicts
 - **Zero pip dependencies in the supervisor**: the update engine is pure Python stdlib + system `git`
 - **Telegram notifications**: edit-in-place progress messages, separate failure alerts
 
@@ -54,7 +54,7 @@ evonic/
 │       └── ...
 ├── current → releases/v1.1.0/   # atomic symlink (POSIX)
 ├── current.slot                 # Windows: same pointer, text file
-├── rollback.slot                # "v1.0.0" — used by auto-rollback
+├── rollback.slot                # "v1.0.0": used by auto-rollback
 ├── supervisor/
 │   ├── supervisor.py            # stdlib-only update engine
 │   ├── migrate.py               # one-time migration script
@@ -68,7 +68,7 @@ evonic/
     └── .ssh/allowed_signers
 ```
 
-Each release worktree has symlinks pointing into `shared/` for all mutable data. `config.py`'s `BASE_DIR` resolves through these symlinks transparently — no application code changes are required.
+Each release worktree has symlinks pointing into `shared/` for all mutable data. `config.py`'s `BASE_DIR` resolves through these symlinks transparently: no application code changes are required.
 
 ---
 
@@ -181,7 +181,7 @@ nohup python3 supervisor/supervisor.py --config supervisor/config.json \
     >> supervisor/run/supervisor.log 2>&1 &
 ```
 
-**With systemd** — create `/etc/systemd/system/evonic-supervisor.service`:
+**With systemd**: create `/etc/systemd/system/evonic-supervisor.service`:
 
 ```ini
 [Unit]
@@ -244,7 +244,7 @@ When `telegram_bot_token` and `telegram_chat_id` are configured, the supervisor 
 
 ```
 [Update v1.0.0 → v1.1.0]
-████████░░░░░░░░ 50% — Installing dependencies
+████████░░░░░░░░ 50%: Installing dependencies
 Started: 14:32:01
 ```
 
@@ -252,7 +252,7 @@ On success the message is updated to:
 
 ```
 ✅ Update to v1.1.0 complete
-█████████████████ 100% — Done
+█████████████████ 100%: Done
 Started: 14:32:01
 ```
 
@@ -278,7 +278,7 @@ The supervisor probes `GET /api/health` before and after swapping the release. T
 }
 ```
 
-The endpoint is always accessible — it bypasses authentication and super-agent setup checks so the supervisor can reach it even on a fresh deployment.
+The endpoint is always accessible: it bypasses authentication and super-agent setup checks so the supervisor can reach it even on a fresh deployment.
 
 ---
 
@@ -300,6 +300,6 @@ File locking is avoided by design: the daemon is fully stopped before any files 
 ## Known limitations
 
 - **~2–5 second downtime** during the swap (daemon stop + pointer change + daemon start)
-- **Supervisor is not self-updating** — it is intentionally kept small and updated manually
-- **Single signing key** — if the key is compromised, all future tags will pass verification; rotate immediately if suspected
-- **Health check false positives** — `/api/health` returning 200 does not catch logic regressions in rarely-used code paths
+- **Supervisor is not self-updating**: it is intentionally kept small and updated manually
+- **Single signing key**: if the key is compromised, all future tags will pass verification; rotate immediately if suspected
+- **Health check false positives**: `/api/health` returning 200 does not catch logic regressions in rarely-used code paths
