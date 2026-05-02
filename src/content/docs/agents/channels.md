@@ -1,13 +1,13 @@
 ---
 title: Channels
-description: Connect agents to Telegram, WhatsApp, and other messaging platforms.
+description: Connect agents to Telegram, WhatsApp, Discord, Slack, and other messaging platforms.
 sidebar:
   order: 5
 ---
 
 ## Overview
 
-Channels act as the bridge between Evonic agents and external messaging platforms. They allow users to interact with agents through their preferred interface, such as Telegram, WhatsApp, or Discord.
+Channels act as the bridge between Evonic agents and external messaging platforms. They allow users to interact with agents through their preferred interface, such as Telegram, WhatsApp, Discord, or Slack.
 
 The architecture is fully modular: adding a new channel type requires implementing a standard interface, allowing Evonic to scale to any messaging protocol without changing the core agent runtime.
 
@@ -45,6 +45,7 @@ When a message is sent via a channel, the following flow occurs:
 | **Telegram** | ✅ Implemented | `python-telegram-bot` | Full support via bot tokens. |
 | **WhatsApp** | ⏳ Config UI ready |: | Integration in progress. |
 | **Discord** | ⏳ Config UI ready | `discord.py` | Integration in progress. |
+| **Slack** | ⏳ Planned | `slack-sdk` | Integration in progress. |
 
 ## Configuration
 
