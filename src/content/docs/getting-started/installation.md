@@ -30,7 +30,7 @@ The installer will:
 ## Clone and Install
 
 ```bash
-git clone <your-repo-url> evonic-ai-platform
+git clone https://github.com/anvie/evonic.git evonic-ai-platform
 cd evonic-ai-platform
 pip install -r requirements.txt
 ```
