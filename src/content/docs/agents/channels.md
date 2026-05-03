@@ -43,9 +43,9 @@ When a message is sent via a channel, the following flow occurs:
 | Type | Status | Library | Description |
 |---|---|---|---|
 | **Telegram** | ✅ Implemented | `python-telegram-bot` | Full support via bot tokens. |
-| **WhatsApp** | ⏳ Config UI ready |: | Integration in progress. |
-| **Discord** | ⏳ Config UI ready | `discord.py` | Integration in progress. |
-| **Slack** | ⏳ Planned | `slack-sdk` | Integration in progress. |
+| **WhatsApp** | ⏳ Planned | — | Coming soon. |
+| **Discord** | ⏳ Planned | `discord.py` | Coming soon. |
+| **Slack** | ⏳ Planned | `slack-sdk` | Coming soon. |
 
 ## Configuration
 
