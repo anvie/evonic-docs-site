@@ -1,6 +1,6 @@
 ---
 title: Design Philosophy
-description: The guiding principles and differentiating concepts behind Evonic's architecture.
+description: The guiding principles and differentiating concepts behind Evonic’s architecture.
 sidebar:
   order: 0
 ---
@@ -12,9 +12,41 @@ Evonic is built around five core principles and three differentiating concepts t
 
 ---
 
+## Core Principles
+
+Evonic is guided by five core principles that serve as the foundation for every architectural choice.
+
+### Open Model First
+
+Evonic is designed and optimized for open-source models, not proprietary APIs. We believe in avoiding vendor lock-in by supporting open models out of the box, giving you the freedom to choose and switch models without rewriting your system.
+
+### Minimal Dependencies
+
+We keep external dependencies to an absolute minimum to reduce supply-chain risk. Every library in the core is evaluated against the principle of simplicity: only what's necessary stays, everything else lives in plugins.
+
+### Safety by Design
+
+Safety is built into Evonic's architecture through two complementary layers, not bolted on as an afterthought.
+
+**Isolated Execution.** Every agent runs inside its own sandboxed workspace. File operations, process execution, and network access are strictly confined to the agent's designated environment, so no untrusted action can leak into the host system.
+
+**Heuristic Safety System.** Beyond isolation, every command is inspected through the multi-layer heuristic safety system before execution. Dangerous patterns are caught and blocked at checkpoints. When an agent's behavior drifts into unexpected territory, the system escalates to you for approval.
+
+These two layers together create a safety model where agents operate with real autonomy inside clear boundaries.
+
+### Fast & Reliable
+
+Performance and reliability aren't luxuries; they're the foundation. Evonic is designed for speed by default, with robust error handling and state management so your agents can execute consistently under load.
+
+### Modular by Design
+
+Everything in Evonic is modular. Models, tools, skills, channels, plugins, workplaces — each component follows a standard interface that can be swapped, extended, or replaced without affecting the rest of the system.
+
+---
+
 ## Three Differentiating Concepts
 
-Evonic's architecture is defined by three concepts that fundamentally set it apart from other agentic frameworks.
+Beyond the five core principles, three concepts fundamentally set Evonic apart from other agentic frameworks.
 
 ### 1. Workplace — Flexible Execution Environments
 
@@ -46,38 +78,6 @@ Autonomy without safety is dangerous. Evonic's **Heuristic Mal-activity Detectio
 - **Human escalation** — When the system detects behavior that falls outside safe boundaries, it escalates to you for approval rather than blindly executing. No silent failures.
 
 This safety layer operates automatically and transparently. It's what allows Evonic agents to work with real autonomy — you can trust them to act decisively while knowing the system will catch them if they drift.
-
----
-
-## Core Principles
-
-Beyond the three differentiating concepts, Evonic is guided by five core principles.
-
-### Open Model First
-
-Evonic is designed and optimized for open-source models, not proprietary APIs. We believe in avoiding vendor lock-in by supporting open models out of the box, giving you the freedom to choose and switch models without rewriting your system.
-
-### Minimal Dependencies
-
-We keep external dependencies to an absolute minimum to reduce supply-chain risk. Every library in the core is evaluated against the principle of simplicity: only what's necessary stays, everything else lives in plugins.
-
-### Safety by Design
-
-Safety is built into Evonic's architecture through two complementary layers, not bolted on as an afterthought.
-
-**Isolated Execution.** Every agent runs inside its own sandboxed workspace. File operations, process execution, and network access are strictly confined to the agent's designated environment, so no untrusted action can leak into the host system.
-
-**Heuristic Safety System.** Beyond isolation, every command is inspected through the multi-layer heuristic safety system before execution. Dangerous patterns are caught and blocked at checkpoints. When an agent's behavior drifts into unexpected territory, the system escalates to you for approval.
-
-These two layers together create a safety model where agents operate with real autonomy inside clear boundaries.
-
-### Fast & Reliable
-
-Performance and reliability aren't luxuries; they're the foundation. Evonic is designed for speed by default, with robust error handling and state management so your agents can execute consistently under load.
-
-### Modular by Design
-
-Everything in Evonic is modular. Models, tools, skills, channels, plugins, workplaces — each component follows a standard interface that can be swapped, extended, or replaced without affecting the rest of the system.
 
 ---
 
