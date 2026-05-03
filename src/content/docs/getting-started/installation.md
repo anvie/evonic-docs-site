@@ -23,6 +23,7 @@ The installer will:
 - Download the latest Evonic release for your platform
 - Set up Python dependencies automatically
 - Create any necessary directories and config files
+- Setup the configuration.
 - Print post-install instructions to get you started
 
 > **Note:** If you prefer a manual install, see the [Clone and Install](#clone-and-install) section below.
@@ -30,7 +31,7 @@ The installer will:
 ## Clone and Install
 
 ```bash
-git clone https://github.com/anvie/evonic.git evonic-ai-platform
+git clone https://github.com/anvie/evonic.git
 cd evonic-ai-platform
 pip install -r requirements.txt
 ```
