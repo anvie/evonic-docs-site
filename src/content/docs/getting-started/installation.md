@@ -10,7 +10,7 @@ description: How to install and set up Evonic.
 - **Git**: for cloning the repository
 - **Docker**: required for isolated `runpy` and `bash` tool execution (see [Docker Setup](#docker-setup))
 
-## Quick Install (Recommended)
+## Quick Install
 
 Install Evonic in one command:
 

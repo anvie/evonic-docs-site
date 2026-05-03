@@ -1,17 +1,18 @@
 ---
-title: "Evonic: Local-first agentic AI for open models"
-description: Evonic is a local-first, agent-native platform. Build AI agents with custom tools, knowledge bases, and real-time messaging, all powered by open LLMs.
+title: "Evonic: Local-First Agentic AI Platform for Open Models"
+description: Evonic is a local-first, agent-native platform for designing, deploying, and orchestrating AI agents. Build with custom models, tools, knowledge bases, channels, and skills — all running on open LLMs.
 ---
 
 import { Card, LinkCard } from '@astrojs/starlight/components';
 
 # Evonic
 
-Local-first, agent-native AI platform. Build, deploy, and manage AI agents with custom tools, knowledge bases, and real-time messaging, all powered by open LLMs.
+**Design AI agents from concept to production.** Evonic is a local-first, agent-native platform that lets you build, deploy, and orchestrate AI agents with full control over models, tools, knowledge bases, channels, and skills — all powered by open LLMs with zero vendor lock-in.
 
 <div style={{display: 'grid', gridTemplateColumns: '1fr', gap: '0.75rem', maxWidth: '720px'}}>
   <LinkCard href="/getting-started/installation" title="Quick Start" description="Install Evonic and get your first agent running in minutes." />
-  <LinkCard href="/agents/overview" title="Agents" description="Learn about the core platform: agents, tools, knowledge bases, and channels." />
+  <LinkCard href="/agents/overview" title="Agents" description="Learn about the core platform: agents, models, tools, knowledge bases, channels, and skills." />
+  <LinkCard href="/guides/use-cases" title="Use Cases" description="Explore real-world scenarios: customer service, multi-agent swarms, DevOps, AI workflows, and more." />
   <LinkCard href="/plugins" title="Plugins" description="Extend Evonic with custom plugins, events, and an SDK for building integrations." />
 </div>
 
@@ -20,15 +21,27 @@ Local-first, agent-native AI platform. Build, deploy, and manage AI agents with 
 ## Features
 
 <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem', maxWidth: '720px'}}>
-  <LinkCard href="/agents/overview" title="Agents" description="Build AI agents with custom tools and knowledge bases." />
-  <LinkCard href="/agents/workplaces" title="Workplaces" description="Run agents on remote servers or any device, no SSH or public IP needed." />
+  <LinkCard href="/agents/overview" title="Agents" description="Design AI agents with custom models, tools, and knowledge bases." />
+  <LinkCard href="/agents/workplaces" title="Workplaces" description="Run agents on local machines, remote servers, or cloud devices — no SSH or public IP needed." />
   <LinkCard href="/plugins" title="Plugins" description="Extend Evonic with custom plugins and events." />
-  <LinkCard href="/evaluation" title="Evaluation" description="Measure and improve agent performance with regex evaluators." />
+  <LinkCard href="/evaluation" title="Evaluation" description="Measure and improve agent performance with customizable evaluators." />
   <LinkCard href="/skills" title="Skills & Tools" description="Discover and manage skills and custom tools." />
-  <LinkCard href="/security/heuristic-code-safety" title="Security" description="Heuristic code safety and agent sandboxing." />
-  <LinkCard href="/guides/system-prompt-hierarchy" title="Guides" description="Update system, system prompt hierarchy, and more." />
+  <LinkCard href="/security/heuristic-code-safety" title="Security" description="Heuristic mal-activity detection and agent sandboxing." />
+  <LinkCard href="/guides/system-prompt-hierarchy" title="Guides" description="System prompt hierarchy, use cases, and more." />
   <LinkCard href="/cli/overview" title="CLI Reference" description="Command-line tools for managing Evonic." />
 </div>
+
+---
+
+## Three Differentiating Concepts
+
+Evonic stands apart from other agentic frameworks through three foundational design decisions:
+
+1. **Workplace** — Agents execute in isolated environments that can be local directories, remote SSH servers, or cloud devices connected via Evonet. No public IP or complex firewall configuration needed.
+
+2. **Agent-to-Agent Communication** — Agents communicate natively as a first-class protocol. Swarm orchestration, role-based delegation, and multi-step collaboration are built into the runtime, not bolted on.
+
+3. **Heuristic Mal-activity Detection System** — Every agent action is inspected through a multi-layer safety system before execution. Dangerous patterns are caught and blocked, and suspicious behavior escalates to human approval — no silent failures.
 
 ---
 
@@ -36,8 +49,9 @@ Local-first, agent-native AI platform. Build, deploy, and manage AI agents with 
 
 - [GitHub](https://github.com/evonic-ai/evonic)
 - [Community](https://t.me/evonicai)
-- [Update](/agents/self-update): auto-update agents
-- [System Prompt Hierarchy](/guides/system-prompt-hierarchy): organize prompts by priority
+- [Use Cases](/guides/use-cases): Explore real-world agent scenarios
+- [Update](/agents/self-update): Auto-update agents
+- [System Prompt Hierarchy](/guides/system-prompt-hierarchy): Organize prompts by priority
 
 ## Quick Start
 
@@ -55,4 +69,4 @@ Then:
 
 ## Next Steps
 
-Explore the [Getting Started](/getting-started/installation) guide, then dive into the [Agents](/agents/overview) section to learn about building and managing AI agents.
+Explore the [Getting Started](/getting-started/installation) guide, then dive into the [Agents](/agents/overview) section to learn about building and managing AI agents. Check out [Use Cases](/guides/use-cases) for detailed real-world examples.
