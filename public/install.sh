@@ -74,7 +74,7 @@ check_prereqs() {
     fi
 }
 
-# ── Step 2: Clone or update repository ─────────────────────────────────────
+# ── Step 2: Clone or update repository ──────────────────────────────────────
 clone_repo() {
     step "Step 2/6: Getting Evonic source code"
 
@@ -95,7 +95,7 @@ clone_repo() {
     fi
 }
 
-# ── Step 3: Create Python virtual environment ──────────────────────────────
+# ── Step 3: Create Python virtual environment ────────────────────────────────
 create_venv() {
     step "Step 3/6: Creating Python virtual environment"
 
@@ -122,7 +122,7 @@ install_deps() {
     ok "Dependencies installed"
 }
 
-# ── Step 5: Create CLI wrapper script ──────────────────────────────────────
+# ── Step 5: Create CLI wrapper script ────────────────────────────────────────
 create_wrapper() {
     step "Step 5/6: Creating evonic CLI wrapper"
 
@@ -146,7 +146,7 @@ EOF
     ok "Wrapper script created at $WRAPPER"
 }
 
-# ── Step 6: PATH prompt ────────────────────────────────────────────────────
+# ── Step 6: PATH prompt ─────────────────────────────────────────────────────
 prompt_path() {
     step "Step 6/6: Adding evonic to your PATH"
 
@@ -169,22 +169,23 @@ prompt_path() {
     ok "PATH updated. Restart your shell or run: source $profile"
 }
 
-# ── Main ────────────────────────────────────────────────────────────────────
+# ── Main ─────────────────────────────────────────────────────────────────────
 main() {
     banner
 
-    # Quick confirmation unless piped
+    # Quick confirmation — force prompt even when piped via curl | bash
+    printf '%sThis will install Evonic to: %s%s\n' "$bold" "$reset" "$EVONIC_HOME"
+    printf '%sContinue? [Y/n]%s ' "$bold" "$reset"
     if [ -t 0 ]; then
-        printf '%sThis will install Evonic to: %s%s\n' "$bold" "$reset" "$EVONIC_HOME"
-        printf '%sContinue? [Y/n]%s ' "$bold" "$reset"
         read -r reply
-        case "$reply" in
-            [nN]|[nN][oO]) die "Installation cancelled." ;;
-            *) info "Starting installation..." ;;
-        esac
     else
-        info "Starting installation..."
+        read -r reply < /dev/tty
     fi
+
+    case "$reply" in
+        [nN]|[nN][oO]) die "Installation cancelled." ;;
+        *) info "Starting installation..." ;;
+    esac
 
     check_prereqs
     clone_repo
@@ -214,6 +215,11 @@ EODONE
     "$WRAPPER" setup
 
     printf '\n%s  ──  Next step:%s\n' "$bold" "$reset"
+    if ! echo ":$PATH:" | grep -q ":$BIN_DIR:"; then
+        printf '%s     %sFirst, add evonic to your PATH:%s\n' "$bold" "$yellow" "$reset"
+        printf '%s     %ssource %s%s\n' "$bold" "$cyan" "$profile" "$reset"
+        printf '%s     %s(or restart your terminal)%s\n\n' "$bold" "$blue" "$reset"
+    fi
     printf '%s     %sevonic start -d    %s%s# start the platform as a daemon%s\n'         "$bold" "$cyan" "$reset" "$blue" "$reset"
     printf '\n'
 }
