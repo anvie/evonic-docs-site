@@ -43,7 +43,7 @@ When a message is sent via a channel, the following flow occurs:
 | Type | Status | Library | Description |
 |---|---|---|---|
 | **Telegram** | ✅ Implemented | `python-telegram-bot` | Full support via bot tokens. |
-| **WhatsApp** | ⏳ Planned | — | Coming soon. |
+| **WhatsApp** | ✅ Implemented | `@whiskeysockets/baileys` | WhatsApp Web via Node.js sidecar (Baileys bridge). |
 | **Discord** | ⏳ Planned | `discord.py` | Coming soon. |
 | **Slack** | ⏳ Planned | `slack-sdk` | Coming soon. |
 
