@@ -32,13 +32,15 @@ tool = Tool(
 
 ## Safety System
 
-The `runpy` and `bash` tools are protected by a **3-layer heuristic safety system**:
+The `runpy`, `bash`, `read_file`, and `write_file` tools are protected by a **multi-layer heuristic safety system** that uses a scoring-based approach:
 
-1. **Pattern Matching**: blocks dangerous regex patterns like `rm -rf /`, `dd if=`, etc.
-2. **Path Validation**: ensures file operations stay within the workspace directory
-3. **Command Whitelisting**: restricts allowed commands and flags
+1. **Pattern Matching** — scans commands against categorized regex patterns (destructive commands, sensitive files, SQLite access, etc.), each with a weight score
+2. **AST Analysis** (Python only) — parses code into an Abstract Syntax Tree to detect dangerous calls like `exec()`, `os.system()`, `socket.socket()`
+3. **Scoring & Decision** — combines all scores with contextual modifiers, then classifies as `safe`, `warning`, `requires_approval`, or `dangerous`
 
-The safety system is implemented in `backend/tools/lib/heuristic_safety.py` and is applied before any command is executed. If a command is blocked, the tool returns an error explaining which rule was violated.
+The safety system is implemented in `backend/tools/lib/heuristic_safety.py` and `backend/tools/safety_checker.py`, and is applied before any command is executed. If a command is blocked, the tool returns an error explaining which rule was violated.
+
+**Super agents** (`is_super: true`) bypass all heuristic safety checks entirely.
 
 See [Heuristic Code Safety](/security/heuristic-code-safety) for full details on the safety rules and configuration.
 
