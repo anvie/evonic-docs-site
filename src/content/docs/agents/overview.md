@@ -67,7 +67,7 @@ This makes multi-agent architectures natural rather than requiring custom middle
 
 ### 3. Heuristic Mal-activity Detection System
 
-Every agent action passes through a multi-layer heuristic safety system before execution:
+Every agent action passes through a multi-layer HMADS (Heuristic Mal-Activity Detection System) before execution:
 
 - **Pre-execution inspection** — Commands are analyzed for dangerous patterns (mass deletion, privilege escalation, remote code execution)
 - **Runtime interception** — Suspicious behavior is caught at checkpoints before it can cause damage
@@ -90,7 +90,7 @@ Agent Runtime
     ├─ Build messages (system prompt + history + new message)
     ├─ Call LLM
     ├─ Execute tool calls (if any)
-    ├─ Heuristic safety check on each action
+    ├─ HMADS check on each action
     ├─ Loop until final response
     └─ Save messages to session
     ↓

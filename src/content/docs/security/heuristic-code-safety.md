@@ -1,13 +1,13 @@
 ---
-title: Heuristic Code Safety
-description: Multi-layer safety system protecting runpy, bash, and file tools from dangerous operations.
+title: HMADS (Heuristic Mal-Activity Detection System)
+description: Multi-layer HMADS protecting runpy, bash, and file tools from dangerous operations.
 ---
 
 ## Overview
 
-The `runpy`, `bash`, `read_file`, and `write_file` tools are protected by a **3-layer heuristic safety system** that detects and prevents dangerous operations. The system is implemented in `backend/tools/lib/heuristic_safety.py` and `backend/tools/safety_checker.py`, and is applied before any command is executed.
+The `runpy`, `bash`, `read_file`, and `write_file` tools are protected by a **3-layer HMADS (Heuristic Mal-Activity Detection System)** that detects and prevents dangerous operations. The system is implemented in `backend/tools/lib/heuristic_safety.py` and `backend/tools/safety_checker.py`, and is applied before any command is executed.
 
-The safety system uses a **scoring-based** approach — instead of simple allow/block, it evaluates risk on a sliding scale and determines the appropriate response:
+HMADS uses a **scoring-based** approach — instead of simple allow/block, it evaluates risk on a sliding scale and determines the appropriate response:
 
 | Output Level | Score Range | Action |
 |---|---|---|
@@ -155,7 +155,7 @@ Accessing these always triggers `requires_approval`.
 
 ### Scoring
 
-The heuristic safety patterns for SQLite are tuned to stay **within the `requires_approval` range** (8–14) to prevent accidental spillover into `dangerous`:
+The HMADS patterns for SQLite are tuned to stay **within the `requires_approval` range** (8–14) to prevent accidental spillover into `dangerous`:
 
 | Pattern | Weight | Alone | Combined with sqlite_access |
 |---|---|---|---|
@@ -170,7 +170,7 @@ The heuristic safety patterns for SQLite are tuned to stay **within the `require
 
 ## Super Agent Exemption
 
-**Super agents** (`is_super: true`) bypass all heuristic safety checks entirely. This is because super agents own the system and are trusted to execute any command.
+**Super agents** (`is_super: true`) bypass all HMADS checks entirely. This is because super agents own the system and are trusted to execute any command.
 
 In `bash.py` and `runpy.py`, the safety check is skipped when:
 
@@ -178,7 +178,7 @@ In `bash.py` and `runpy.py`, the safety check is skipped when:
 if not agent.get('_skip_safety') and \
    agent.get('safety_checker_enabled', 1) and \
    not agent.get('is_super'):
-    # Run heuristic safety check
+    # Run HMADS check
 ```
 
 This means super agents can:
@@ -217,7 +217,7 @@ For `requires_approval` responses in file tools:
 
 ## Configuration
 
-The safety system is configured in two files:
+HMADS is configured in two files:
 
 ### Pattern Rules — `backend/tools/lib/heuristic_safety.py`
 
@@ -226,7 +226,7 @@ To add new patterns:
 1. Add the pattern to the appropriate list (`DESTRUCTIVE_PATTERNS`, `DANGEROUS_PATTERNS`, etc.)
 2. Provide a weight, category, and description
 3. Ensure the category is **unique** across pattern lists (or handled by deduplication)
-4. Test with the heuristic safety test suite
+4. Test with the HMADS test suite
 
 ### File-Level Safety — `backend/tools/safety_checker.py`
 
@@ -240,7 +240,7 @@ To add new file-level safety checks:
 
 ## Testing
 
-Run the heuristic safety tests:
+Run the HMADS tests:
 
 ```bash
 python3 tests/test_heuristic_safety.py

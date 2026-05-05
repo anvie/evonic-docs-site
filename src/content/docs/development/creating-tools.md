@@ -32,17 +32,17 @@ tool = Tool(
 
 ## Safety System
 
-The `runpy`, `bash`, `read_file`, and `write_file` tools are protected by a **multi-layer heuristic safety system** that uses a scoring-based approach:
+The `runpy`, `bash`, `read_file`, and `write_file` tools are protected by a **multi-layer HMADS (Heuristic Mal-Activity Detection System)** that uses a scoring-based approach:
 
 1. **Pattern Matching** — scans commands against categorized regex patterns (destructive commands, sensitive files, SQLite access, etc.), each with a weight score
 2. **AST Analysis** (Python only) — parses code into an Abstract Syntax Tree to detect dangerous calls like `exec()`, `os.system()`, `socket.socket()`
 3. **Scoring & Decision** — combines all scores with contextual modifiers, then classifies as `safe`, `warning`, `requires_approval`, or `dangerous`
 
-The safety system is implemented in `backend/tools/lib/heuristic_safety.py` and `backend/tools/safety_checker.py`, and is applied before any command is executed. If a command is blocked, the tool returns an error explaining which rule was violated.
+HMADS is implemented in `backend/tools/lib/heuristic_safety.py` and `backend/tools/safety_checker.py`, and is applied before any command is executed. If a command is blocked, the tool returns an error explaining which rule was violated.
 
-**Super agents** (`is_super: true`) bypass all heuristic safety checks entirely.
+**Super agents** (`is_super: true`) bypass all HMADS checks entirely.
 
-See [Heuristic Code Safety](/security/heuristic-code-safety) for full details on the safety rules and configuration.
+See [HMADS](/security/heuristic-code-safety) for full details on the safety rules and configuration.
 
 ## Registering a Tool
 
