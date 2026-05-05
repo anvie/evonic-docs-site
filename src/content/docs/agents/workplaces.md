@@ -133,6 +133,20 @@ Connector relay settings (in `.env`):
 | `CONNECTOR_PING_TIMEOUT` | `10` | Ping timeout in seconds before declaring disconnect |
 | `CONNECTOR_PAIRING_CODE_TTL` | `300` | Pairing code validity window in seconds |
 
+## Accessing Agent Home from Remote Workplaces
+
+When an agent uses a Remote or Cloud Workplace, its workspace is on a different machine. The agent can still access its own configuration, system prompt, and knowledge base files on the Evonic server using the `/_self/` virtual path prefix:
+
+```python
+# Read the agent's system prompt (on the Evonic server)
+read_file(file_path="/_self/SYSTEM.md")
+
+# Save a KB file (on the Evonic server)
+write_file(file_path="/_self/kb/notes.md", content="...")
+```
+
+The `/_self/` prefix works with all file tools and resolves on the Evonic host regardless of where the agent's workspace is located. See [Tools: The `/_self/` Virtual Path](/agents/tools#the-_self-virtual-path) for details.
+
 ## See Also
 
 - [Evonet: Cloud Workplace Connector](/agents/evonet): install and configure the Evonet binary
