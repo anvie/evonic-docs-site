@@ -113,6 +113,22 @@ curl -X PUT http://localhost:8080/api/agents/bookstore_bot/kb/faq.md \
 curl -X DELETE http://localhost:8080/api/agents/bookstore_bot/kb/faq.md
 ```
 
+## Agent Self-Management via `/_self/`
+
+Agents can manage their own KB files at runtime using the `/_self/kb/` virtual path with any file tool (`write_file`, `read_file`, `str_replace`). This path always resolves to the agent's KB directory on the Evonic server, regardless of where the agent's workspace is located.
+
+```python
+# Agent saves a new KB file
+write_file(file_path="/_self/kb/meeting-notes.md", content="...")
+
+# Agent reads its own KB file via file tool (alternative to the built-in read tool)
+read_file(file_path="/_self/kb/meeting-notes.md")
+```
+
+This is especially useful for sandboxed agents (where the workspace is `/workspace` inside Docker) and agents using remote or cloud [Workplaces](/agents/workplaces), where normal paths cannot reach the agent's home directory.
+
+See [Tools: The `/_self/` Virtual Path](/agents/tools#the-_self-virtual-path) for full details.
+
 ## Best Practices
 
 - **Keep files focused**: one topic per file (pricing, FAQ, policies, etc.)
