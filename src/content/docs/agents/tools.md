@@ -25,7 +25,7 @@ The Bash tool executes shell commands in an isolated container. It allows agents
 
 ### Safety
 
-The `runpy`, `bash`, `read_file`, and `write_file` tools are protected by a **multi-layer heuristic safety system** that uses a scoring-based approach:
+The `runpy`, `bash`, `read_file`, and `write_file` tools are protected by a **multi-layer HMADS (Heuristic Mal-Activity Detection System)** that uses a scoring-based approach:
 
 1. **Pattern Matching** — scans commands against categorized regex patterns (destructive commands, sensitive files, SQLite access, etc.), each with a weight score
 2. **AST Analysis** (Python only) — parses code into an Abstract Syntax Tree to detect dangerous calls like `exec()`, `os.system()`, `socket.socket()`
@@ -33,7 +33,7 @@ The `runpy`, `bash`, `read_file`, and `write_file` tools are protected by a **mu
 
 Additionally, `read_file` and `write_file` have a **dedicated SQLite path checker** that detects database file access and requires approval.
 
-See [Heuristic Code Safety](/security/heuristic-code-safety) for full details.
+See [HMADS](/security/heuristic-code-safety) for full details.
 
 ## Usage
 

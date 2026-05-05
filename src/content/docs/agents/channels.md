@@ -26,7 +26,7 @@ When a message arrives through a channel, the following flow occurs:
    - Identifies the correct session for that specific user on that specific channel
    - Constructs the conversation context (System Prompt + History + New Message)
    - Calls the LLM
-   - Executes any required tools through the heuristic safety system
+   - Executes any required tools through HMADS (Heuristic Mal-Activity Detection System)
 5. **Response**: The runtime returns a response string to the channel.
 6. **Delivery**: The channel sends the response back to the user on the original platform.
 

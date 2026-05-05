@@ -30,7 +30,7 @@ Safety is built into Evonic's architecture through two complementary layers, not
 
 **Isolated Execution.** Every agent runs inside its own sandboxed workspace. File operations, process execution, and network access are strictly confined to the agent's designated environment, so no untrusted action can leak into the host system.
 
-**Heuristic Safety System.** Beyond isolation, every command is inspected through the multi-layer heuristic safety system before execution. Dangerous patterns are caught and blocked at checkpoints. When an agent's behavior drifts into unexpected territory, the system escalates to you for approval.
+**HMADS (Heuristic Mal-Activity Detection System).** Beyond isolation, every command is inspected through the multi-layer HMADS before execution. Dangerous patterns are caught and blocked at checkpoints. When an agent's behavior drifts into unexpected territory, the system escalates to you for approval.
 
 These two layers together create a safety model where agents operate with real autonomy inside clear boundaries.
 
