@@ -34,9 +34,13 @@ Response → Channel → User
 
 Each agent has a **workspace directory** (`agents/<agent_id>/workspace/`) for file operations. This provides an isolated filesystem context for tools like `runpy`, `bash`, and `write_file`.
 
+### The `/_self/` Virtual Path
+
+Agents access their own home directory (`agents/<agent_id>/`) using the `/_self/` path prefix with any file tool. This resolves on the Evonic host regardless of whether the agent runs locally, in a Docker sandbox, or on a remote [Workplace](/agents/workplaces). See [Tools: The `/_self/` Virtual Path](/agents/tools#the-_self-virtual-path) for details.
+
 ### Knowledge Base
 
-Each agent has a filesystem directory (`agents/<agent_id>/kb/`) for storing reference documents (`.md` files). The agent can read these files using the built-in `read` tool during conversations.
+Each agent has a filesystem directory (`agents/<agent_id>/kb/`) for storing reference documents (`.md` files). The agent can read these files using the built-in `read` tool, or via `/_self/kb/` with any file tool during conversations.
 
 ### Tools
 

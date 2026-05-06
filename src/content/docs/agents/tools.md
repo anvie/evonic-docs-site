@@ -57,6 +57,45 @@ Both tools return structured output with:
 - `exit_code`: Return code
 - `error`: Error message (if the command was blocked)
 
+## The `/_self/` Virtual Path
+
+All file tools (`read_file`, `write_file`, `str_replace`, `patch`) support a special `/_self/` path prefix that always resolves to the agent's own directory on the Evonic server (`agents/<agent_id>/`), regardless of the agent's workspace location.
+
+This is essential because an agent's workspace can be:
+- A local directory outside the project root
+- `/workspace` inside a Docker sandbox
+- A remote directory on an SSH server or Cloud Workplace
+
+In all these cases, the agent cannot reach its own configuration files using normal paths. The `/_self/` prefix bridges this gap.
+
+### What's accessible via `/_self/`
+
+| Path | Maps to | Description |
+|------|---------|-------------|
+| `/_self/SYSTEM.md` | `agents/<id>/SYSTEM.md` | The agent's system prompt |
+| `/_self/kb/` | `agents/<id>/kb/` | Knowledge base files |
+| `/_self/sessions/` | `agents/<id>/sessions/` | Session data |
+
+### Examples
+
+```python
+# Read the agent's own system prompt
+read_file(file_path="/_self/SYSTEM.md")
+
+# Save a new KB file
+write_file(file_path="/_self/kb/notes.md", content="...")
+
+# Edit the system prompt
+str_replace(file_path="/_self/SYSTEM.md", old_str="...", new_str="...")
+```
+
+### Security
+
+- `/_self/` always resolves on the **Evonic host**, even when the agent runs in a sandbox or remote workplace
+- Path traversal is blocked: `/_self/../../etc/passwd` is rejected
+- Symlink attacks are prevented: the resolved path must stay within `agents/<agent_id>/`
+- The resolution happens **before** sandbox/workspace routing, so it works identically in all execution environments
+
 ## Best Practices
 
 - Always handle errors gracefully
