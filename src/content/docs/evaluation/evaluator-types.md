@@ -111,7 +111,7 @@ Custom evaluators support three modes:
 
 ### Regex-Only (`type: "regex"`)
 
-Matches response against a regex pattern. See [Regex Evaluators](/guides/regex-evaluators) for details.
+Matches response against a regex pattern. See [Regex Evaluators](/evaluation/regex-evaluators) for details.
 
 ### LLM-Prompt (`type: "custom"`)
 

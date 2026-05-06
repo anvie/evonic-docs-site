@@ -21,7 +21,7 @@ System prompts are resolved using a 3-layer hierarchy:
 Domain prompt → Level prompt → Test prompt
 ```
 
-Each layer can either **overwrite** (replace) or **append** (concatenate) the prompt from the layer above. See [System Prompt Hierarchy](/guides/system-prompt-hierarchy) for details.
+Each layer can either **overwrite** (replace) or **append** (concatenate) the prompt from the layer above. See [System Prompt Hierarchy](/evaluation/system-prompt-hierarchy) for details.
 
 ### 3. PASS 1: Full LLM Response
 
