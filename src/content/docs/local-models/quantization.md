@@ -63,7 +63,7 @@ Another GPU-friendly format:
 ### For Edge Devices
 - Use Q2_K or Q3_K_M (GGUF)
 - Prioritize speed over quality
-- Consider specialized models (e.g., Phi-3, Gemma)
+- Consider specialized edge-optimized models
 
 ## How to Convert Models
 
