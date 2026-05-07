@@ -5,37 +5,6 @@ sidebar:
   order: 4
 ---
 
-Plugins are event-driven extensions that respond to platform events. They run automatically when triggered by events and can perform actions like sending notifications, processing data, or integrating with external services.
+Plugins are event-driven extensions that respond to platform events (like `message_received`, `turn_complete`, or `message_sent`). They run automatically when triggered and can send notifications, process data, or integrate with external services. A plugin is a directory under `plugins/` containing a manifest (`plugin.json`) and a handler (`handler.py`), with optional Flask routes via `routes.py`.
 
-## How Plugins Fit In
-
-```
-Platform Event (message_received, turn_complete, etc.)
-    ↓
-Event Stream (pub/sub bus)
-    ↓
-Plugin System
-    ├── Plugin A: on_message_received()
-    ├── Plugin B: on_turn_complete()
-    └── Plugin C: on_message_sent()
-```
-
-## Plugin Structure
-
-A plugin is a directory under `plugins/` containing:
-
-```
-my_plugin/
-    ├── plugin.json    # Manifest: metadata, events, variables
-    └── handler.py     # Event handler functions
-```
-
-Plugins can also extend the platform with **Flask routes** (web pages and API endpoints) by providing a `routes.py` file with a `create_blueprint()` function.
-
-## Learn More
-
-- [Plugins: Full Reference](/plugins): complete documentation with structure, handler functions, and examples
-- [Events](/system/events): all supported platform events
-- [Plugin SDK](/plugins/sdk): available SDK methods
-- [Best Practices](/plugins/best-practices)
-- [Troubleshooting](/plugins/troubleshooting)
+For complete documentation: [Plugins: Full Reference](/plugins), [Events](/system/events), [Plugin SDK](/plugins/sdk), [Best Practices](/plugins/best-practices), and [Troubleshooting](/plugins/troubleshooting).
