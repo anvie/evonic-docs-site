@@ -41,39 +41,7 @@ When you design an agent in Evonic, you define these components:
 
 ## Three Differentiating Concepts
 
-Evonic's architecture is defined by three concepts that set it apart from other agent frameworks:
-
-### 1. Workplace — Flexible Execution Environments
-
-Agents don't have to run on your local machine. Each agent can be assigned a **Workplace**: a first-class execution environment that can be:
-
-- **Local** — The agent's workspace directory on the host machine
-- **Remote (SSH)** — Execute on a remote server via SSH
-- **Cloud (Evonet)** — Connect devices through Evonic's lightweight Go connector, no public IP or firewall configuration needed
-
-This means you can deploy an agent on a cloud VM, let it operate on an edge device, or keep everything local — without changing a single line of agent configuration.
-
-See [Workplaces](/agents/workplaces) for details.
-
-### 2. Agent-to-Agent Communication
-
-Communication between agents is a first-class protocol, not an afterthought. Each agent has its own role, tools, and knowledge base, and can:
-
-- Send messages to other agents natively
-- Delegate subtasks to specialized agents
-- Participate in swarm orchestration where agents collaborate on shared goals
-
-This makes multi-agent architectures natural rather than requiring custom middleware or external message buses.
-
-### 3. Heuristic Mal-activity Detection System
-
-Every agent action passes through a multi-layer HMADS (Heuristic Mal-Activity Detection System) before execution:
-
-- **Pre-execution inspection** — Commands are analyzed for dangerous patterns (mass deletion, privilege escalation, remote code execution)
-- **Runtime interception** — Suspicious behavior is caught at checkpoints before it can cause damage
-- **Human escalation** — When an agent's behavior drifts into unexpected territory, the system escalates to you for approval instead of blindly executing
-
-This allows agents to operate with real autonomy inside clear boundaries — no constant supervision required.
+Evonic's architecture is defined by three differentiating concepts — **Workplaces**, **Agent-to-Agent Communication**, and **HMADS (Heuristic Mal-activity Detection System)** — which are explained in detail on the [Design Philosophy](/design-philosophy/#three-differentiating-concepts) page.
 
 ---
 
@@ -149,10 +117,11 @@ Evonic agents excel in a wide range of scenarios. Here are some of the most comm
 |----------|----------|-------------|
 | Customer Service | Support Agent | Handle tickets, FAQs, refunds, and escalations |
 | Personal | Personal Companion | Daily tasks, reminders, research assistance |
-| Multi-Agent | Agentic Swarm | Multiple specialized agents collaborating |
-| DevOps | Automation Agent | Monitoring, deployments, incident response |
-| Research | Research Assistant | Literature review, data extraction, summarization |
-| Education | Tutor | Personalized learning and quizzes |
+| Multi-Agent | Agentic Swarm | Collaborative agents working together |
+| DevOps | Infrastructure Agent | Server monitoring, deployment automation |
+| Data | Research & Analyst Agent | Data extraction, summarization, reporting |
+| HR | Recruitment Agent | Candidate screening, interview scheduling |
+| Education | Tutor Agent | Personalized learning, Q&A, assessments |
 | Healthcare | Triage Agent | Symptom assessment and appointment scheduling |
 | E-Commerce | Shopping Assistant | Recommendations, order tracking, returns |
 | Finance | Financial Advisory | Portfolio analysis, market summaries |
