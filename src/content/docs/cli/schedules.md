@@ -84,4 +84,4 @@ Run at specific times (e.g., every weekday at 9 AM):
 
 - [Scheduler Overview](/scheduler/scheduler)
 - [Server Management](/cli/server)
-- [Overview](/cli)
+- [CLI Overview](/cli/server)

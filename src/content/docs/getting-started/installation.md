@@ -132,7 +132,7 @@ The CLI covers server management, agents, skills, skillsets, models, plugins, an
 - [Creating Agents](/agents/creating-agents): Create and manage agents
 - [Local Models](/local-models/overview): Manage LLM model configurations
 - [Skillsets](/skills/skillsets): Apply agent templates
-- [Scheduler](/guides/scheduler): Create scheduled jobs
+- [Scheduler](/scheduler/scheduler): Create scheduled jobs
 
 ## Starting the Server
 
