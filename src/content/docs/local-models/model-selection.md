@@ -3,82 +3,72 @@ title: Model Selection Guide
 description: How to choose the right model for your use case and hardware.
 ---
 
-Choosing the right model is critical for balancing performance, cost, and hardware requirements. This guide helps you select the best model for your needs.
+Choosing the right model is critical for balancing performance, cost, and hardware requirements. This guide helps you select the best **model size category** for your needs — keeping recommendations future-proof as new models are released.
 
 ## Quick Decision Matrix
 
-| Use Case | Recommended Model | Quantization | Runner |
-|----------|------------------|--------------|--------|
-| General Chat | Llama 3.2 3B | Q5_K_M | Ollama |
-| Code Generation | Codestral 22B | Q4_K_M | vLLM |
-| Math/Reasoning | Qwen 2.5 7B | Q5_K_M | Ollama |
-| SQL Generation | Llama 3 8B | Q4_K_M | llama.cpp |
-| Document Analysis | Mistral 7B | Q5_K_M | Ollama |
-| Edge Deployment | Phi-3 Mini 3.8B | Q4_K_M | llama.cpp |
-| High-Throughput | Llama 3 70B | AWQ INT4 | vLLM |
+| Use Case | Recommended Size | Quantization | Runner |
+|----------|-----------------|--------------|--------|
+| General Chat | Small (3–7B) | Q5_K_M | Ollama |
+| Code Generation | Medium (7–22B) | Q4_K_M | vLLM |
+| Math/Reasoning | Medium (7–9B) | Q5_K_M | Ollama |
+| SQL Generation | Medium (7–8B) | Q4_K_M | llama.cpp |
+| Document Analysis | Small–Medium (7B) | Q5_K_M | Ollama |
+| Edge Deployment | Small (3–4B) | Q4_K_M | llama.cpp |
+| High-Throughput | Large (70B+) | AWQ INT4 | vLLM |
 
-## Model Categories
+## Model Size Categories
 
 ### General Purpose
 Best for everyday tasks, chat, and general assistance.
 
-| Model | Size | Strengths |
-|-------|------|-----------|
-| Llama 3.2 3B | 3B parameters | Fast, good for most tasks |
-| Llama 3.2 11B | 11B parameters | Balanced performance |
-| Mistral 7B v0.3 | 7B parameters | Versatile, well-rounded |
-| Gemma 2 9B | 9B parameters | Strong reasoning |
+| Size Category | Parameter Range | Strengths |
+|---------------|----------------|-----------|
+| Small | 1–4B | Fast, minimal hardware, good for basic tasks |
+| Small–Medium | 7–9B | Balanced performance, versatile |
+| Medium | 11–14B | Strong reasoning, well-rounded |
 
 ### Code Generation
-Optimized for programming tasks.
+Optimized for programming tasks. Aim for a model in the **7–22B range** for the best balance of code quality and speed.
 
-| Model | Size | Strengths |
-|-------|------|-----------|
-| Codestral 22B | 22B parameters | Multi-language, strong code gen |
-| CodeLlama 7B | 7B parameters | Python, JavaScript, C++ |
-| StarCoder2 15B | 15B parameters | Multi-language, large codebase |
-| DeepSeek Coder 6.7B | 7B parameters | Strong code completion |
+| Size Category | Parameter Range | Strengths |
+|---------------|----------------|-----------|
+| Small | Up to 7B | Good for common languages (Python, JS, C++) |
+| Medium | 15–22B | Multi-language, strong code gen |
+| Large | 34B+ | Maximum capability, higher hardware requirements |
 
 ### Math & Reasoning
 Specialized for logical reasoning and mathematical tasks.
 
-| Model | Size | Strengths |
-|-------|------|-----------|
-| Qwen 2.5 7B | 7B parameters | Strong math and reasoning |
-| Llama 3 8B | 8B parameters | Good general reasoning |
-| Mistral 7B | 7B parameters | Solid logical reasoning |
-| Gemma 2 9B | 9B parameters | Strong analytical skills |
+| Size Category | Parameter Range | Strengths |
+|---------------|----------------|-----------|
+| Small–Medium | 7–9B | Solid math and reasoning capabilities |
+| Medium | 9–14B | Strong analytical skills |
 
 ### SQL & Data
 Optimized for SQL generation and data analysis.
 
-| Model | Size | Strengths |
-|-------|------|-----------|
-| Llama 3 8B | 8B parameters | Good SQL generation |
-| CodeLlama 7B | 7B parameters | Strong SQL and data queries |
-| Qwen 2.5 7B | 7B parameters | Good at structured data |
+| Size Category | Parameter Range | Strengths |
+|---------------|----------------|-----------|
+| Small–Medium | 7–8B | Good SQL generation and structured data handling |
 
 ## Hardware Requirements
 
 ### Consumer GPU (8GB VRAM)
-- Llama 3.2 3B (Q4+)
-- Mistral 7B (Q4)
-- Phi-3 Mini 3.8B (Q4+)
+- Small model (3–4B, Q4+)
+- Small–Medium model (7B, Q4)
 
-### Consumer GPU (12-16GB VRAM)
-- Llama 3 8B (Q4)
-- Qwen 2.5 7B (Q4+)
-- Gemma 2 9B (Q4)
+### Consumer GPU (12–16GB VRAM)
+- Small–Medium model (7–9B, Q4+)
 
 ### High-End GPU (24GB VRAM)
-- Llama 3 70B (Q4)
-- Mixtral 8x7B (Q4)
-- Codestral 22B (Q4)
+- Large model (70B, Q4)
+- Medium model (20–22B, Q4)
+- Mixture-of-Experts model (8x7B, Q4)
 
 ### CPU-Only
-- Phi-3 Mini 3.8B (Q4+)
-- Llama 3.2 3B (Q4+)
-- Qwen 2.5 1.5B (Q4+)
+- Small model (1–4B, Q4+)
+- Tiny model (1.5B, Q4+)
 
 ## Evaluation Criteria
 
@@ -108,51 +98,51 @@ Optimized for SQL generation and data analysis.
 Create a representative set of prompts for your use case.
 
 ### 2. Run Baseline
-Test against a known good model (e.g., GPT-4, Claude) for comparison.
+Test against a trusted baseline model (e.g., a cloud API) for comparison.
 
 ### 3. Run Local Model
 Test your local model with the same prompts.
 
 ### 4. Compare Results
-- Accuracy: Does the local model match the baseline?
-- Speed: Is the response time acceptable?
-- Quality: Is the output useful for your use case?
+- **Accuracy**: Does the local model match the baseline?
+- **Speed**: Is the response time acceptable?
+- **Quality**: Is the output useful for your use case?
 
 ### 5. Iterate
 - Try different quantizations
 - Adjust model parameters
-- Consider different models
+- Consider different models in the same size category
 
 ## Recommendations
 
 ### For Beginners
-Start with Llama 3.2 3B or Phi-3 Mini 3.8B on Ollama. These are fast, require minimal hardware, and perform well for most tasks.
+Start with a **small model (3–4B)** on Ollama. These are fast, require minimal hardware, and perform well for most everyday tasks.
 
 ### For Developers
-Use Codestral 22B or CodeLlama 7B for code generation tasks. vLLM is recommended for high-throughput development workflows.
+Use a **medium-sized model (7–22B)** for code generation tasks. Ollama or vLLM is recommended depending on your throughput needs.
 
 ### For Production
-Use Llama 3 8B or Qwen 2.5 7B with Q4_K_M quantization. These offer the best balance of quality and performance for production deployments.
+Use a **small–medium model (7–9B)** with Q4_K_M quantization. These offer the best balance of quality and performance for production deployments.
 
 ### For Research
-Use the largest model your hardware can handle. FP16 or Q8_0 quantization for maximum accuracy.
+Use the **largest model your hardware can handle**. FP16 or Q8_0 quantization for maximum accuracy.
 
 ## Troubleshooting
 
 ### Model Too Slow
-- Try a smaller model
+- Try a smaller model size category
 - Use more aggressive quantization
 - Enable GPU offloading
 - Reduce context length
 
 ### Poor Quality
-- Try a larger model
+- Try a larger model size category
 - Use less aggressive quantization
 - Adjust temperature and other parameters
 - Consider a model specialized for your use case
 
 ### Out of Memory
-- Use a smaller model
+- Use a smaller model size category
 - Increase quantization
 - Reduce context length
 - Enable more GPU offloading
