@@ -47,6 +47,12 @@ export default defineConfig({
           autogenerate: { directory: 'agents' },
         },
         {
+          label: 'Evonet',
+          items: [
+            { label: 'Overview', slug: 'evonet' },
+          ],
+        },
+        {
           label: 'Plugins',
           items: [
             { label: 'Overview', slug: 'plugins' },

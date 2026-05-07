@@ -1,8 +1,6 @@
 ---
 title: "Evonet: Cloud Workplace Connector"
 description: A lightweight Go binary that connects any device to Evonic over WebSocket, enabling remote agent execution without SSH or a public IP.
-sidebar:
-  order: 8
 ---
 
 **Evonet** is a lightweight Go binary that runs on a target device and connects it to an Evonic server over WebSocket. Once connected, agents can execute bash scripts, Python code, and file operations on that device: without SSH, port forwarding, or a public IP address.
