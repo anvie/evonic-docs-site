@@ -5,7 +5,7 @@ description: Protect public-facing login pages with Cloudflare Turnstile — a p
 
 ## Overview
 
-Evonic supports **Cloudflare Turnstile** — a privacy-first captcha alternative to Google reCAPTCHA that's invisible by default and respects user privacy. Turnstile is applied on the **admin login page** (`/login`) and is **optional but highly recommended** if your Evonic instance is exposed to the public internet.
+Evonic supports **Cloudflare Turnstile** — a privacy-first captcha alternative to Google reCAPTCHA that’s invisible by default and respects user privacy. Turnstile is applied on the **admin login page** (`/login`) and is **optional but highly recommended** if your Evonic instance is exposed to the public internet.
 
 Without Turnstile, your login page is unprotected against brute-force and automated attacks. With it, you get:
 
@@ -67,7 +67,7 @@ export TURNSTILE_SITE_KEY="0x4AAAAAA...your-site-key"
 export TURNSTILE_SECRET_KEY="0x4AAAAAA...your-secret-key"
 ```
 
-> **Pro tip:** Use `envcrypt` (Evonic's built-in encrypted env loader) if you want to keep your secret key encrypted at rest. See the [Configuration](/getting-started/configuration/) guide for details.
+> **Pro tip:** Use `envcrypt` (Evonic’s built-in encrypted env loader) if you want to keep your secret key encrypted at rest. See the [Configuration](/getting-started/configuration/) guide for details.
 
 ### Step 3: Restart Evonic
 
@@ -77,76 +77,7 @@ Turnstile config is read at startup. Restart your Evonic server to pick up the n
 ./evonic server
 ```
 
-That's it. The Turnstile widget will **automatically appear** on the login page the next time you visit `/login`.
-
-## How It's Implemented
-
-### Configuration (`config.py`)
-
-```python
-# Authentication
-TURNSTILE_SITE_KEY = os.getenv("TURNSTILE_SITE_KEY", "")
-TURNSTILE_SECRET_KEY = os.getenv("TURNSTILE_SECRET_KEY", "")
-```
-
-Both keys default to empty strings — Turnstile is **disabled by default** and activates automatically when keys are provided.
-
-### Server-Side Verification (`routes/auth.py`)
-
-When a user submits the login form, Evonic checks if Turnstile is configured. If `TURNSTILE_SECRET_KEY` is set, it verifies the token before checking the password:
-
-```python
-# Verify Turnstile if configured
-if config.TURNSTILE_SECRET_KEY:
-    ts_res = requests.post(
-        'https://challenges.cloudflare.com/turnstile/v0/siteverify',
-        data={
-            'secret': config.TURNSTILE_SECRET_KEY,
-            'response': turnstile_token,
-            'remoteip': request.remote_addr,
-        },
-        timeout=10
-    )
-    ts_data = ts_res.json()
-    if not ts_data.get('success'):
-        return render_template('login.html', error='Captcha verification failed.')
-```
-
-If verification fails, the user sees an error message and can retry. The password is **never checked** until the captcha passes — this prevents attackers from even attempting brute-force.
-
-### Client-Side Template (`templates/login.html`)
-
-The template loads the Turnstile API script **only when** `turnstile_site_key` is set:
-
-```html
-{% if turnstile_site_key %}
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-{% endif %}
-```
-
-And renders the widget in the login form:
-
-```html
-{% if turnstile_site_key %}
-<div class="cf-turnstile" id="turnstile-widget"
-     data-sitekey="{{ turnstile_site_key }}"
-     data-theme="light"></div>
-{% endif %}
-```
-
-### Dark Mode Support
-
-Turnstile automatically detects the page theme. Evonic also includes a small script that switches the widget theme to dark mode when the user has dark mode enabled:
-
-```javascript
-var isDark = document.documentElement.classList.contains('dark');
-var widget = document.getElementById('turnstile-widget');
-if (widget && isDark) {
-    widget.setAttribute('data-theme', 'dark');
-}
-```
-
-This means the captcha widget blends in seamlessly whether you're in light or dark mode.
+That’s it. The Turnstile widget will **automatically appear** on the login page the next time you visit `/login`.
 
 ## Verification
 
@@ -154,9 +85,9 @@ To confirm Turnstile is working:
 
 1. Visit `/login` in your browser
 2. You should see the Turnstile widget (a small checkbox or badge) above the **Sign In** button
-3. Open your browser's DevTools → Network tab and submit the form
+3. Open your browser’s DevTools → Network tab and submit the form
 4. You should see a POST request to `challenges.cloudflare.com/turnstile/v0/siteverify`
-5. Try submitting an empty form — you'll get a "Captcha verification failed" error
+5. Try submitting an empty form — you’ll get a "Captcha verification failed" error
 
 ## When to Enable Turnstile
 
@@ -173,7 +104,7 @@ To confirm Turnstile is working:
 
 | Symptom | Likely Cause | Fix |
 |---|---|---|
-| Widget doesn't show on login page | `TURNSTILE_SITE_KEY` not set or empty | Check your `.env` file and restart the server |
-| "Captcha verification failed" every time | `TURNSTILE_SECRET_KEY` doesn't match the site key | Double-check both keys in your Cloudflare dashboard |
-| "Captcha verification error" | Network issue or Cloudflare outage | Check your server's internet connection, try again later |
+| Widget doesn’t show on login page | `TURNSTILE_SITE_KEY` not set or empty | Check your `.env` file and restart the server |
+| "Captcha verification failed" every time | `TURNSTILE_SECRET_KEY` doesn’t match the site key | Double-check both keys in your Cloudflare dashboard |
+| "Captcha verification error" | Network issue or Cloudflare outage | Check your server’s internet connection, try again later |
 | Widget looks wrong in dark mode | Script runs before DOM is ready | Reload the page — the theme switch script runs on first paint |
