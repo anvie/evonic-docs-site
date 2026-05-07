@@ -5,65 +5,8 @@ sidebar:
   order: 2
 ---
 
-Agents are the core building blocks of Evonic. Each agent is an independently configured LLM-powered assistant that can reason, plan, take actions, and communicate through channels.
+Agents are the core building blocks of Evonic — independently configured LLM-powered assistants that can reason, plan, take actions, and communicate through channels.
 
-## Agent Runtime
+The **Agent Runtime** orchestrates each message lifecycle: loading config, creating/resuming sessions, building context, calling the LLM, executing tool calls, and looping until a final response. Each agent has an isolated workspace directory, a knowledge base for reference docs, and access to tools via `/_self/` virtual paths. Agents operate in Plan or Execute mode with persisted state, and connect to external platforms (Telegram, WhatsApp, Discord, web chat) through channels.
 
-When a user sends a message, the agent runtime orchestrates the full lifecycle:
-
-```
-User Message
-    ↓
-Channel (Telegram, Web, etc.)
-    ↓
-Agent Runtime
-    ├── Load agent config (system prompt, model, tools)
-    ├── Load/create session (per-user persistence)
-    ├── Build messages (system prompt + history + new message)
-    ├── Call LLM
-    ├── Execute tool calls (if any)
-    ├── Loop until final response
-    └── Save messages to session
-    ↓
-Response → Channel → User
-```
-
-## Key Concepts
-
-### Agent Workspace
-
-Each agent has a **workspace directory** (`agents/<agent_id>/workspace/`) for file operations. This provides an isolated filesystem context for tools like `runpy`, `bash`, and `write_file`.
-
-### The `/_self/` Virtual Path
-
-Agents access their own home directory (`agents/<agent_id>/`) using the `/_self/` path prefix with any file tool. This resolves on the Evonic host regardless of whether the agent runs locally, in a Docker sandbox, or on a remote [Workplace](/agents/workplaces). See [Tools: The `/_self/` Virtual Path](/agents/tools#the-_self-virtual-path) for details.
-
-### Knowledge Base
-
-Each agent has a filesystem directory (`agents/<agent_id>/kb/`) for storing reference documents (`.md` files). The agent can read these files using the built-in `read` tool, or via `/_self/kb/` with any file tool during conversations.
-
-### Tools
-
-Agents use tools from the tool registry. In production mode, tools call real Python backend implementations located in `backend/tools/`. The built-in `read` tool is always available and scoped to the agent's KB directory.
-
-### Agent State
-
-Agents operate in one of two modes: **Plan** or **Execute**. The agent state is persisted across conversation turns and survives LLM context summarization. Agents always start in **Plan** mode on a new session. See [Agent State](/agents/agent-state) for details.
-
-### Sessions
-
-Conversations are persisted per-user, per-agent, per-channel. The same user can have separate conversations with different agents. Session history is used as context for each LLM call.
-
-### Channels
-
-Channels connect agents to external messaging platforms (Telegram, WhatsApp, Discord, web chat). Each channel type implements a common interface, and multiple channels can be connected to the same agent.
-
-## Learn More
-
-- [Agents: Core Platform](/agents/overview): full introduction
-- [Creating and configuring agents](/agents/creating-agents)
-- [Knowledge Base](/agents/knowledge-base)
-- [Tools](/agents/tools)
-- [Channels](/agents/channels)
-- [Agent State](/agents/agent-state)
-- [Slash Commands](/agents/slash-commands)
+For full documentation: [Agents: Core Platform](/agents/overview), [Creating Agents](/agents/creating-agents), [Knowledge Base](/agents/knowledge-base), [Tools](/agents/tools), [Channels](/agents/channels), [Agent State](/agents/agent-state), and [Slash Commands](/agents/slash-commands).
