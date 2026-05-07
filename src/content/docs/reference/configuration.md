@@ -66,7 +66,7 @@ Settings for the isolated Docker container used by the `runpy` and `bash` tools.
 
 ## Cloud Workplace Connector (Evonet)
 
-Settings for the [Evonet](/agents/evonet) WebSocket relay server that enables Cloud Workplaces.
+Settings for the [Evonet](/evonet) WebSocket relay server that enables Cloud Workplaces.
 
 | Variable | Default | Description |
 |---|---|---|

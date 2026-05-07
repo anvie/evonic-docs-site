@@ -22,7 +22,7 @@ Without a Workplace, each agent gets an isolated local workspace directory. This
 Workplaces solve this:
 
 - **Remote workplaces** auto-connect via SSH using stored credentials. No more `sshc` calls to set up a session manually.
-- **Cloud workplaces** use [Evonet](/agents/evonet), a lightweight Go binary, to create a persistent outbound tunnel. The device can be behind NAT, a home router, or a corporate firewall with no configuration needed.
+- **Cloud workplaces** use [Evonet](/evonet), a lightweight Go binary, to create a persistent outbound tunnel. The device can be behind NAT, a home router, or a corporate firewall with no configuration needed.
 - **Shared workplaces** allow multiple agents to operate in the same environment (useful for team workflows).
 
 ## Creating a Workplace
@@ -58,7 +58,7 @@ Connection management:
 
 ### Cloud
 
-A device running the [Evonet](/agents/evonet) binary. Evonet makes an outbound WebSocket connection to Evonic, so the device needs no open ports, public IP, or firewall rules.
+A device running the [Evonet](/evonet) binary. Evonet makes an outbound WebSocket connection to Evonic, so the device needs no open ports, public IP, or firewall rules.
 
 Cloud workplaces are **1:1 with an agent**; each Cloud Workplace can only be assigned to one agent at a time.
 
@@ -149,6 +149,6 @@ The `/_self/` prefix works with all file tools and resolves on the Evonic host r
 
 ## See Also
 
-- [Evonet: Cloud Workplace Connector](/agents/evonet): install and configure the Evonet binary
+- [Evonet: Cloud Workplace Connector](/evonet): install and configure the Evonet binary
 - [Creating Agents](/agents/creating-agents): agent setup guide
 - [Tools](/agents/tools): tools that use the execution environment (bash, runpy, read_file, write_file)

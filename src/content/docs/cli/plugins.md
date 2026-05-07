@@ -63,4 +63,4 @@ Plugin uninstalled: my_plugin
 ## Next Steps
 
 - [Server Management](/cli/server)
-- [Overview](/cli)
+- [CLI Overview](/cli/server)

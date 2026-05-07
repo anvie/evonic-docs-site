@@ -185,5 +185,5 @@ For detailed walkthroughs of each use case, see the [Use Cases](/guides/use-case
 - [Agent state system](/agents/agent-state)
 - [Slash commands](/agents/slash-commands)
 - [Workplaces: execution environments](/agents/workplaces)
-- [Evonet: cloud workplace connector](/agents/evonet)
+- [Evonet: cloud workplace connector](/evonet)
 - [Use Cases](/guides/use-cases): Real-world scenarios and examples

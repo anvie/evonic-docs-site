@@ -19,7 +19,7 @@ my_plugin/
 
 That's it. No `setup.py`, no `backend/` subdirectory. Just two files at the root of the plugin directory.
 
-Plugins can also extend the platform with **Flask routes** (web pages and API endpoints) by providing a `routes.py` file with a `create_blueprint()` function. See [Route Registration](/docs/cli/route-registration) for a complete guide.
+Plugins can also extend the platform with **Flask routes** (web pages and API endpoints) by providing a `routes.py` file with a `create_blueprint()` function. See the Route Registration guide for details.
 
 ```
 my_plugin/
