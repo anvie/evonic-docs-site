@@ -59,6 +59,8 @@ Settings for the isolated Docker container used by the `runpy` and `bash` tools.
 
 ## Logging
 
+These variables control the live evaluation log display. For the full logging system — file output, rotation, per-module routing, and the web UI log viewer — see the [Logging guide](/development/logging).
+
 | Variable | Default | Description |
 |---|---|---|
 | `LOG_FULL_THINKING` | `0` | Include full LLM thinking content in live log output |
