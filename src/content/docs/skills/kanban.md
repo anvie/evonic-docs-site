@@ -1,6 +1,6 @@
 ---
 title: Kanban
-description: "Kanban plugin for task management: permissions, comment monitoring, and task workflows."
+description: "Kanban plugin for task management: permissions, skill-based notifications, comment monitoring, and task workflows."
 sidebar:
   order: 9
 ---
@@ -25,12 +25,26 @@ The Kanban plugin supports fine-grained permission controls. For each agent, you
 
 These permissions are configured per-agent in the agent's **Tools** tab (or equivalent skill assignment interface). A disabled permission prevents the agent from performing the corresponding action.
 
+## Skill-Based Notifications
+
+:::note[Changed in v0.2.0]
+Previously, notifications were configured via a manual `ELIGIBLE_AGENTS` list in the plugin config. Starting from v0.2.0, eligibility is **automatically determined by the kanban skill**.
+:::
+
+Agent notifications (stale task reminders, follow-up alerts, new task assignments) are now sent to agents that **have the Kanban skill assigned**. No manual configuration needed:
+
+- **Kanban skill assigned** → agent receives notifications
+- **Kanban skill removed** → agent stops receiving notifications
+- **Super agent** → always eligible regardless of skill assignment
+
+This replaces the old `ELIGIBLE_AGENTS` config field, which is now deprecated and kept only for backward compatibility.
+
 ## Comment Follow-up Monitor
 
 When the Kanban plugin is active, the platform automatically monitors comments on tasks for follow-up activity:
 
 - **Auto-clear on task pick**: When a task is moved to *In Progress*, its prior comment context is automatically cleared so the agent starts fresh when picking up the task.
-- **Follow-up alerts**: If a task receives a new comment after being picked up, the monitor detects the follow-up and can trigger an alert or notification to relevant agents or users.
+- **Follow-up alerts**: If a task receives a new comment after being picked up, the monitor detects the follow-up and triggers a notification to eligible agents (those with the kanban skill).
 
 This ensures agents don't get stale context when starting work on a task, and that new discussion on tasks doesn't go unnoticed.
 
