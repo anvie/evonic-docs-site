@@ -82,6 +82,25 @@ The platform ships with the following built-in skillsets:
 | **Tools** | `bash`, `read_file`, `write_file`, `str_replace`, `patch`, `runpy`, `calculator`, `sshc` (8 tools) |
 | **Skills** | None |
 
+### customer_service
+
+:::note[New in v0.2.0]
+The Customer Service skillset is a new addition for handling customer-facing interactions.
+:::
+
+**Customer service agent** for handling inquiries, bookings, order lookups, and customer notifications. Designed with a professional, empathetic tone and strict data privacy rules.
+
+| Field | Value |
+|-------|-------|
+| **Tools** | `get_order`, `check_price`, `create_booking`, `send_notification`, `get_current_date`, `api_call`, `read_file`, `calculator` (8 tools) |
+| **Skills** | `kanban`, `scheduler` |
+
+The customer service skillset includes built-in best practices for:
+
+- **Data privacy** — never exposes full PII, requires verification before disclosing details
+- **Escalation** — clear guidelines for when to escalate to a human supervisor
+- **Case tracking** — leverages the Kanban skill for case management and the Scheduler skill for follow-up reminders
+
 ## How to Use
 
 ### Via API: `apply_skillset`
@@ -130,13 +149,15 @@ evonic skillset list
 **Output:**
 
 ```
-ID                Name                  Description                                                                                                               Tools  Skills
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-coder             Coder                 General-purpose coding agent for building, debugging, and refactoring software...       7       0
-data_analyst      Data Analyst          Data analysis agent for statistical analysis, data processing, visualization...         7       1
-devops            DevOps Engineer       DevOps and infrastructure agent for managing CI/CD pipelines...                       8       0
-pentester         Penetration Tester    Penetration testing agent for security assessment...                                 5       0
-sysadmin          System Administrator  System administration agent for server management...                                  8       0
+ID                   Name                     Description                                                                                                       Tools  Skills
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+coder                Coder                    General-purpose coding agent for building, debugging, and refactoring software...       7       0
+customer_service     Customer Service         Customer service agent for handling inquiries, bookings, order lookups...             8       2
+data_analyst         Data Analyst             Data analysis agent for statistical analysis, data processing, visualization...       5       0
+devops               DevOps Engineer          DevOps and infrastructure agent for managing CI/CD pipelines...                       8       0
+pentester            Penetration Tester       Penetration testing agent for security assessment...                                 5       0
+reverse_engineer     Reverse Engineer         Reverse engineering agent for binary analysis, malware research...                   5       0
+sysadmin             System Administrator     System administration agent for server management...                                  8       0
 ```
 
 **Get skillset details:**
