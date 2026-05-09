@@ -78,7 +78,7 @@ All log files live under the `logs/` directory in the project root.
 | `logs/evonic.log.2` | Rotation | Rotated backup |
 | `logs/evonic.log.3` | Rotation | Rotated backup (newest) |
 | `logs/agent.log` | Route: `backend.agent_runtime.*` | Agent runtime and state logs |
-| `logs/channels.log` | Route: `backend.channels.*` | Channel (Telegram, etc.) logs |
+| `logs/channels.log` | Route: `backend.channels.*` | All channel implementations (WhatsApp, Telegram, etc.) |
 | `logs/evaluator.log` | Route: `evaluator.*` | Evaluation engine logs |
 | `logs/events.log` | Event stream | Structured event bus log (see [Events](/system/events)) |
 
@@ -96,6 +96,153 @@ For example:
 [INFO] [backend.agent_runtime] Processing message #42 from user_alice
 [WARNING] [evaluator.engine] No evaluator registered for domain 'math', falling back to keyword
 [ERROR] [routes.agents] LLM request failed after 3 retries: Connection timeout
+```
+
+## Channel Log Routing
+
+All channel implementations (WhatsApp, Telegram, and any future channel types) log
+through their module loggers under the `backend.channels.*` namespace. Because the
+default route `backend.channels.*` catches every channel module, you get a single
+`logs/channels.log` file with all channel activity in one place.
+
+### WhatsApp Channel Logging
+
+The WhatsApp channel lives in `backend/channels/whatsapp.py` and uses a module-level
+logger:
+
+```python
+_logger = logging.getLogger(__name__)  # → "backend.channels.whatsapp"
+```
+
+This means all WhatsApp log records match the `backend.channels.*` route pattern
+and get written to `logs/channels.log` **in addition to** the main `logs/evonic.log`.
+
+**Key log events in the WhatsApp lifecycle:**
+
+| Event | Level | Example log line |
+|---|---|---|
+| Channel start | `INFO` | `[INFO] [backend.channels.whatsapp] WhatsApp channel wa-1 starting (bridge port 3001)` |
+| Bridge process start | `INFO` | `[INFO] [backend.channels.whatsapp] WhatsApp bridge started for channel wa-1 on port 3001` |
+| Bridge stdout | `DEBUG` | `[DEBUG] [backend.channels.whatsapp] [bridge] [whatsapp-bridge] Connected to WhatsApp` |
+| Incoming message | `INFO` | `[INFO] [backend.channels.whatsapp] WhatsApp message received from 628123456789 (channel wa-1)` |
+| Outgoing message | `INFO` | `[INFO] [backend.channels.whatsapp] WhatsApp message sent to 628123456789 (channel wa-1)` |
+| Image processing error | `ERROR` | `[ERROR] [backend.channels.whatsapp] WhatsApp image conversion failed: ...` |
+| Send failure | `ERROR` | `[ERROR] [backend.channels.whatsapp] WhatsApp send failed to 628123456789: ...` |
+| Bridge crash | `WARNING` | `[WARNING] [backend.channels.whatsapp] WhatsApp bridge process exited unexpectedly for channel wa-1 (port 3001)` |
+| Typing indicator failure | `WARNING` | `[WARNING] [backend.channels.whatsapp] WhatsApp typing indicator failed for 628123456789: ...` |
+| Channel stop | `INFO` | `[INFO] [backend.channels.whatsapp] WhatsApp channel wa-1 stopped` |
+
+**How to filter WhatsApp logs:**
+
+```bash
+# All WhatsApp activity in channels.log
+grep "backend.channels.whatsapp" logs/channels.log
+
+# Only ERROR-level WhatsApp messages
+grep "ERROR.*backend.channels.whatsapp" logs/channels.log
+
+# Messages from a specific user
+grep "628123456789" logs/channels.log
+
+# All incoming messages across every channel
+grep "message received from" logs/channels.log
+```
+
+### Telegram Channel Logging
+
+The Telegram channel (`backend/channels/telegram.py`) follows the exact same pattern:
+
+- Logger: `backend.channels.telegram` → routes to `logs/channels.log`
+- Common log events: connection status, incoming messages, errors, conflict detection
+
+```txt
+[INFO] [backend.channels.telegram] Telegram channel tg-1 connecting (agent: ag-1)...
+[ERROR] [backend.channels.telegram] Error handling message from chat 123456: ...
+```
+
+### Custom Route Example: Separate WhatsApp & Telegram Logs
+
+Want WhatsApp and Telegram in their own files? Override `EVONIC_LOG_ROUTES`:
+
+```txt
+EVONIC_LOG_ROUTES=logs/agent.log:backend.agent_runtime.*,backend.agent_state;\
+                  logs/whatsapp.log:backend.channels.whatsapp;\
+                  logs/telegram.log:backend.channels.telegram;\
+                  logs/evaluator.log:evaluator.*
+```
+
+## Notification & Mention Routing
+
+Beyond channel message logs, Evonic has a centralized notification system that
+routes system-tagged messages to agents. Every notification is logged so you can
+track who got notified, when, and why.
+
+### `notify_agent()` Logging Pattern
+
+The `notify_agent()` function in `backend/agent_runtime/notifier.py` is the single
+entry point for all system notifications. It emits these key log records:
+
+```txt
+# Routing resolution
+[INFO] [backend.agent_runtime.notifier] notify_agent: agent=ag-1 tag=SYSTEM NOTIFICATION trigger_llm=True external_user_id=__system__ channel_id=none session_id=auto dedup=True.
+
+# Session resolution
+[INFO] [backend.agent_runtime.notifier] notify_agent: resolved target_session_id='sess_abc123' for agent='ag-1'.
+
+# Duplicate suppression
+[INFO] [backend.agent_runtime.notifier] notify_agent: dedup — skipping duplicate [SYSTEM NOTIFICATION] notification for agent 'ag-1' in session 'sess_abc123'.
+
+# LLM triggering
+[INFO] [backend.agent_runtime.notifier] notify_agent: triggering LLM for agent='ag-1' via handle_message (session='sess_abc123', channel=none).
+
+# Fallback warning (no active channel)
+[WARNING] [backend.agent_runtime.notifier] notify_agent: no active channel session for agent 'ag-1' (channel_type=telegram), falling back to web session.
+
+# Error
+[ERROR] [backend.agent_runtime.notifier] notify_agent: failed to notify agent 'ag-1' (session='sess_abc123'): ...
+```
+
+### Super Agent Notifications
+
+The `super_agent_notifier.py` module subscribes to critical platform events and
+routes them as system notifications to the super agent. It uses the same
+`notify_agent()` path above, so all these logs appear in `logs/agent.log` under
+`backend.agent_runtime.notifier`.
+
+**Events that trigger super agent notifications:**
+- **Tool execution errors** — when a tool call fails with an error
+- **Channel errors** — when a channel disconnects or encounters a failure
+- **System errors** — generic component-level errors
+
+Each notification is rate-limited (60 seconds per category) to prevent flooding.
+
+```txt
+[INFO] [backend.agent_runtime.notifier] notify_agent: agent=sa-1 tag=SYSTEM NOTIFICATION trigger_llm=False ...
+```
+
+### Mention Detection
+
+WhatsApp does not have a built-in mention detection in the Baileys bridge — all
+incoming messages from approved users are forwarded to the agent. However, the
+system uses the `[SYSTEM/...]` tag pattern in message text for structured mentions:
+
+| Pattern | Source | Description |
+|---|---|---|
+| `[SYSTEM/Task]` | `super_agent_notifier` | Task assignments routed via `notify_agent()` |
+| `[SYSTEM NOTIFICATION]` | `super_agent_notifier` | Critical platform alerts |
+| `[SYSTEM]` | Agent messaging tool | Agent-to-agent messages |
+
+When debugging mention delivery, look in `logs/channels.log` and `logs/agent.log`:
+
+```bash
+# Find all system notifications going to agents
+grep "notify_agent:" logs/agent.log
+
+# Find all incoming WhatsApp messages (any user)
+grep "WhatsApp message received" logs/channels.log
+
+# Check if a notification was deduplicated
+grep "dedup" logs/agent.log
 ```
 
 ## Using the Logger in Code
