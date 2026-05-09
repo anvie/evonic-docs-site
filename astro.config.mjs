@@ -11,6 +11,7 @@ export default defineConfig({
       title: 'Evonic',
       description: 'Documentation for Evonic \u2014 Local-first agentic AI for open models',
       customCss: ['./src/styles/custom.css'],
+      favicon: '/favicon.svg',
       head: [
         {
           tag: 'meta',
@@ -19,6 +20,14 @@ export default defineConfig({
         {
           tag: 'meta',
           attrs: { property: 'twitter:card', content: 'summary_large_image' },
+        },
+        {
+          tag: 'link',
+          attrs: { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon.png' },
+        },
+        {
+          tag: 'link',
+          attrs: { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
         },
       ],
       sidebar: [
