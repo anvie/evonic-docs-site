@@ -1,6 +1,6 @@
 ---
 title: Slash Commands
-description: Quick actions for agents via slash commands including /clear, /help, and /summary.
+description: Quick actions for agents via slash commands including /clear, /help, /summary, /status, and more.
 sidebar:
   order: 6
 ---
@@ -18,19 +18,32 @@ Clears the current conversation history for the active session. The agent starts
 **Behavior:**
 - Deletes all messages from the current session
 - Resets the session summary
+- Truncates the agent's `llm.log` and `sessrecap.log` files
+- Resets agent state to fresh plan mode
+- Emits a `session_clear` event
 - The agent responds with a confirmation message
+
+**Example:**
+```
+/clear
+> History cleared.
+```
+
+---
 
 ### `/help`
 
-Displays a list of available slash commands with brief descriptions.
+Displays a list of available slash commands with brief descriptions. Certain commands (e.g. `/restart`) are hidden from non-super agents.
 
 **Response format:**
 ```
 Available commands:
-• /clear: Clear conversation history
-• /help: Show this help message
-• /summary: Summarize conversation
+- /clear — Clear chat history for this session
+- /help — Show available commands
+- /summary — Force regenerate session summary
 ```
+
+---
 
 ### `/summary`
 
@@ -41,15 +54,196 @@ Triggers conversation summarization for the current session. This compresses the
 - Replaces the full message history with a summary
 - The agent responds with a confirmation
 
+**Example:**
+```
+/summary
+> Session summary has been regenerated.
+```
+
+---
+
+### `/stop`
+
+Stops the agent's current processing loop immediately. Use this when the agent is stuck in a long-running response or you want to cancel an ongoing operation.
+
+**Behavior:**
+- Sends a stop signal to the agent runtime
+- The current processing loop is interrupted
+- The agent responds with a confirmation
+
+**Example:**
+```
+/stop
+> Stop signal sent.
+```
+
+---
+
+### `/cwd`
+
+Displays the current workspace directory the agent is operating in.
+
+**Behavior:**
+- Reads the agent's configured workspace path from the database
+- Returns the absolute path
+
+**Example:**
+```
+/cwd
+> Current workspace: /workspace
+```
+
+---
+
+### `/cd`
+
+Changes the agent's workspace directory to a new path. Directory traversal via `..` is blocked for security.
+
+**Permission:** All agents (super-agent restriction has been lifted).
+
+**Behavior:**
+- Updates the agent's workspace path in the database
+- Destroys the existing Docker container so the new workspace is mounted on the next tool use
+- Returns the new workspace path
+
+**Example:**
+```
+/cd /workspace/projects/evonic
+> Workspace changed to: /workspace/projects/evonic
+```
+
+**Error cases:**
+```
+/cd /nonexistent/path
+> Error: directory does not exist: /nonexistent/path
+```
+
+```
+/cd ../etc
+> Error: path contains '..' which is not allowed: /workspace/../etc
+```
+
+---
+
+### `/restart`
+
+Restarts the entire Evonic service. This command replaces the running process in-place, preserving the original execution mode (foreground stays foreground, daemon stays daemon).
+
+**Permission:** Super agent only.
+
+**Behavior:**
+- Validates the caller is the super agent
+- Persists caller info so the new process can send a "ready" notification
+- Stops all channels cleanly (releasing Telegram long-poll)
+- Closes inherited file descriptors
+- Resolves the correct restart target (release or dev mode)
+- Replaces the current process via `os.execv`
+
+**Example:**
+```
+/restart
+> Restarting...
+```
+
+The new process will send a notification to the caller once boot is complete.
+
+---
+
+### `/plan`
+
+Switches the agent to plan mode. In plan mode, the agent enters a deliberate planning phase with write tools blocked.
+
+**Behavior:**
+- Creates a fresh AgentState in plan mode
+- Persists the state to the database
+- The agent responds with a confirmation
+
+**Example:**
+```
+/plan
+> Switched to plan mode.
+```
+
+---
+
+### `/unfocus`
+
+Clears the agent's focus mode, allowing it to accept messages from all sessions again. When an agent is focused on a specific session, other sessions are ignored.
+
+**Behavior:**
+- Checks if focus mode is currently active
+- If active, clears the focus and focus reason
+- Returns information about what was cleared
+- If focus mode was already off, returns a notification
+
+**Example:**
+```
+/unfocus
+> Focus mode cleared (was: working on task #183). Agent sekarang bisa menerima semua session.
+```
+
+---
+
+### `/status`
+
+Displays detailed status information about the agent, including model, mode, workplace, workspace, toggles, tools, skills, and channels.
+
+**Behavior:**
+- Queries the agent's full configuration and state from the database
+- Returns structured information including:
+
+| Field | Description |
+|-------|-------------|
+| **Model** | Active LLM model (agent-specific or override) |
+| **Mode** | Current agent mode (`plan` or `execute`) |
+| **Focus** | Whether focus mode is active (and reason) |
+| **Plan file** | Active plan file path (if any) |
+| **Workplace** | Workplace name, type, and connection status |
+| **Workspace** | Workspace directory path |
+| **Toggles** | Sandbox, Safety Checker, Vision, Agent Messaging |
+| **Tools** | Number of tools configured |
+| **Skills** | Number of skills configured |
+| **Channels** | Connected channels and their status |
+
+**Example:**
+```
+/status
+> **Status — Adit**
+>
+> Model: Claude Sonnet 4 (claude-sonnet-4-20250514)
+>
+> Mode: execute
+>
+> Focus: yes — working on task #183
+>
+> Plan file: plan/kanban-task-183.md
+>
+> Workplace: Main Office (local, connected)
+>
+> Workspace: /workspace/docs-site
+>
+> Toggles:
+>   Sandbox: enabled
+>   Safety Checker: enabled
+>   Vision: enabled
+>   Agent Messaging: enabled
+>
+> Tools: 12
+>
+> Skills: 3
+```
+
 ## How Commands Are Processed
 
 When a message starts with `/`, the agent runtime intercepts it before sending to the LLM:
 
-1. Parse the command name (text after `/`, before any space)
-2. Match against known commands (`clear`, `help`, `summary`)
-3. Execute the corresponding action
-4. If the command is unknown, pass the message to the LLM normally
+1. **Parse** the command name (text after `/`, before any space)
+2. **Match** against known commands in the registry
+3. **Execute** the corresponding handler and return the response
+4. If the command is **unknown**, pass the message to the LLM normally
 
 ## Implementation
 
-Slash commands are implemented in `backend/slash_commands.py` and integrated into the agent runtime (`backend/agent_runtime.py`) and Telegram channel (`backend/channels/telegram.py`).
+Slash commands are implemented in `backend/slash_commands.py` using a registry pattern (`SlashCommandRegistry`) and integrated into the agent runtime (`backend/agent_runtime.py`). The command parsing uses regex (`^/(\w+)(?:\s+(.*))?$`) to extract command name and optional arguments.
+
+New commands can be added by registering a handler function with `command_registry.register(name, handler, description)`. Each handler receives `(session_id, agent_id, external_user_id, channel_id, args)` and returns a response string.
