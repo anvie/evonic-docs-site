@@ -83,6 +83,10 @@ export default defineConfig({
           autogenerate: { directory: 'local-models' },
         },
         {
+          label: 'CLI',
+          autogenerate: { directory: 'cli' },
+        },
+        {
           label: 'Reference',
           autogenerate: { directory: 'reference' },
         },
