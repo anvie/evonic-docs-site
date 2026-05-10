@@ -35,7 +35,7 @@ sudo mv evonet /usr/local/bin/
 Requires Go 1.21+.
 
 ```bash
-git clone <evonic-repo>
+git clone https://github.com/anvie/evonic
 cd evonet/
 make build           # current platform
 make build-linux     # Linux amd64
