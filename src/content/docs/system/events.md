@@ -197,20 +197,6 @@ Every `emit()` call writes a timestamped line to the event log file:
 
 Configure the path with `EVENT_LOG_FILE` in `.env` (default: `logs/events.log`). Follow live: `tail -f logs/events.log`
 
-## SSE Improvements
-
-### Replay Gap-Filling
-
-When a client reconnects to the SSE stream (e.g., after a page refresh), the server detects the gap by comparing sequence numbers and replays any missed events. This ensures no events are lost during brief disconnections.
-
-### Reasoning State Recovery
-
-If the LLM was in the middle of generating reasoning content when a disconnection occurs, the server recovers the reasoning state and resumes the stream from where it left off. The client receives the complete reasoning content without gaps.
-
-### Intermediate Response Bubbles
-
-When `send_intermediate_responses` is enabled, the agent produces intermediate text responses during the tool loop (e.g., partial answers before executing a tool). These are emitted as `llm_response_chunk` events with `is_final=false` and are rendered as separate bubbles in the chat UI, interleaved with thinking bubbles.
-
 ## Plugin Integration
 
 Plugins do **not** call `event_stream` directly. They declare subscriptions in `plugin.json`:
