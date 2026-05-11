@@ -48,6 +48,98 @@ When the Kanban plugin is active, the platform automatically monitors comments o
 
 This ensures agents don't get stale context when starting work on a task, and that new discussion on tasks doesn't go unnoticed.
 
+## Kanban Tools
+
+Agents with the Kanban skill can use the following tools to interact with the board programmatically:
+
+### Task Management Tools
+
+| Tool | Description |
+|------|-------------|
+| `kanban_search_tasks` | Search and list tasks with filters (assignee, status, query) |
+| `kanban_get_task` | Retrieve a single task by its ID |
+| `kanban_create_task` | Create a new task on the board |
+| `kanban_update_task` | Update a task's status, assignee, title, description, or priority |
+| `kanban_delete_task` | Delete a task (super agents can delete directly; regular agents need approval) |
+
+### Comment Tools
+
+| Tool | Description |
+|------|-------------|
+| `kanban_add_comment` | Add a progress note or comment to a task |
+| `kanban_get_comments` | Retrieve paginated comments from a task |
+
+#### `kanban_add_comment`
+
+Adds a progress note, sub-step result, or finding to a Kanban task. Comments are visible on the board and can trigger follow-up notifications.
+
+```
+kanban_add_comment(task_id: "183", content: "Started data collection phase")
+```
+
+**Parameters:**
+
+| Parameter | Required | Description |
+|-----------|----------|-------------|
+| `task_id` | Yes | The ID of the task to comment on |
+| `content` | Yes | The comment content (text) |
+
+#### `kanban_get_comments`
+
+*Introduced in v0.2.6.*
+
+Retrieves comments from a Kanban task with pagination support. Comments are ordered newest first.
+
+```
+kanban_get_comments(task_id: "183", limit: 10, offset: 0)
+```
+
+**Parameters:**
+
+| Parameter | Required | Default | Description |
+|-----------|----------|---------|-------------|
+| `task_id` | Yes | — | The ID of the task to retrieve comments from |
+| `limit` | No | `10` | Maximum number of comments to return (max: `100`) |
+| `offset` | No | `0` | Number of comments to skip (for pagination) |
+
+**Example — first page:**
+
+```
+kanban_get_comments(task_id: "183", limit: 5, offset: 0)
+```
+
+**Returns:**
+
+```json
+{
+  "comments": [
+    {
+      "id": 441,
+      "task_id": 183,
+      "content": "Started data collection phase",
+      "author": "adit",
+      "created_at": "2026-05-11T10:00:00Z"
+    },
+    {
+      "id": 440,
+      "task_id": 183,
+      "content": "Task assigned for review",
+      "author": "system",
+      "created_at": "2026-05-11T09:55:00Z"
+    }
+  ],
+  "total": 12,
+  "limit": 5,
+  "offset": 0
+}
+```
+
+**Example — next page:**
+
+```
+kanban_get_comments(task_id: "183", limit: 5, offset: 5)
+```
+
 ## API Endpoints
 
 The Kanban plugin exposes REST endpoints for programmatic access. See the [Plugin SDK](/plugins/sdk) for details on available endpoints and request/response formats.

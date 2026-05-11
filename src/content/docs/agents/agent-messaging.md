@@ -69,6 +69,18 @@ The messaging system enforces several layers of protection against abuse and inf
 - **Fan-out limit**: Maximum **5 unique targets** per 5-second window (one LLM turn)
 - **Depth limit**: Maximum **3 hops** in a chain (A→B→C→stop) to prevent cascading loops
 
+### Inter-Agent Restart Requires Approval
+
+*Introduced in v0.2.6.*
+
+When an agent sends a message to another agent that triggers a **platform restart** (e.g., the target agent calls `/restart` or triggers a self-update), the restart is **not executed automatically**. Instead:
+
+1. The restart action is held pending **explicit user approval**
+2. The calling agent receives a notification: *"Agent <target> wants to restart the platform. Approve?"*
+3. The user must confirm via the approval flow before the restart proceeds
+
+This prevents a cascading scenario where a sub-agent or delegated task accidentally triggers a platform-wide restart without human oversight.
+
 ### Loop prevention: passive reply pattern
 
 The most dangerous failure mode in multi-agent systems is a **ping-pong loop**: where two agents keep messaging each other indefinitely:

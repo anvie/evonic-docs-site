@@ -170,6 +170,62 @@ def on_turn_complete(event, sdk):
     sdk.log(f"Turn complete notification sent for session {session_id}")
 ```
 
+## Export a Plugin as ZIP
+
+*Introduced in v0.2.0.*
+
+You can export any installed plugin as a ZIP archive directly from the Web UI. This is useful for:
+
+- **Sharing plugins** with other Evonic instances
+- **Backing up** your custom plugins
+- **Distributing** plugins to team members
+
+### Via Web UI
+
+1. Go to **Plugins** (`/plugins`)
+2. Find the plugin you want to export
+3. Click the **Export** button (download icon)
+4. The browser downloads a `.zip` file containing the plugin's directory
+
+### Via CLI
+
+```bash
+evonic plugin export <plugin_id> [--output ./my-plugin.zip]
+```
+
+**Example:**
+
+```bash
+evonic plugin export my_plugin --output ./backups/my_plugin_v1.zip
+```
+
+### What's Included
+
+The ZIP archive contains the full plugin directory:
+
+```
+my_plugin.zip
+├── plugin.json    # Manifest with metadata, events, and variables
+├── handler.py     # Event handler functions
+└── routes.py      # Flask route handlers (if present)
+```
+
+Plugin configuration variables and user settings are **not** exported — only the plugin code and manifest.
+
+### Importing a Plugin
+
+To install a plugin from a ZIP file:
+
+1. Go to **Plugins** → **Import** (`/plugins/import`)
+2. Upload the ZIP file
+3. The plugin is extracted to `plugins/<plugin_id>/` and registered automatically
+
+Or via CLI:
+
+```bash
+evonic plugin import ./backups/my_plugin_v1.zip
+```
+
 ## Quick Links
 
 - [Plugin SDK](/plugins/sdk): Available methods and helpers

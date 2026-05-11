@@ -128,6 +128,40 @@ Error: Staged release failed health check on port 18080
 
 ---
 
+## Real-Time Update Notifications
+
+*Introduced in v0.2.6.*
+
+When a new Evonic release is available, the platform displays a **real-time notification** in the Web UI. This replaces the previous polling-based check that required manual trigger via `evonic update --check`.
+
+### How It Works
+
+1. The update supervisor periodically checks the Git remote for new tags
+2. When a new tag is found (version > current), a notification is emitted via the **event bus**
+3. The Web UI listens for these events and displays a banner at the top of the page
+4. Clicking the banner triggers the update flow
+
+### UI Notification
+
+The banner appears on all pages and shows:
+
+```
+📦 Update available: v1.2.0 → v1.3.0
+[View Changelog] [Update Now] [Dismiss]
+```
+
+- **View Changelog** — opens the release notes for the new version
+- **Update Now** — triggers the update flow immediately
+- **Dismiss** — hides the notification (reappears on next page load if not dismissed permanently)
+
+### Disabling Notifications
+
+Set the following in `.env` to disable automatic update checks:
+
+```env
+UPDATE_CHECK_ENABLED=0
+```
+
 ## Health check endpoint
 
 The supervisor probes `GET /api/health` before and after swapping the release. This endpoint is built into Evonic and returns:

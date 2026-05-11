@@ -250,6 +250,50 @@ You can disable the safety checker per agent to enable **full autopilot mode**, 
 Disabling the safety checker means the agent will execute code and system commands without any approval gate. Only disable this for agents you fully trust.
 :::
 
+## Cloning an Agent
+
+*Introduced in v0.2.0.*
+
+Instead of configuring a new agent from scratch, you can **clone an existing agent** to create a copy with the same configuration. This is useful when you want to:
+
+- Create multiple agents with similar settings
+- Duplicate an agent as a template for a new role
+- Experiment with config changes without modifying the original
+
+### Via Web UI
+
+1. Go to `/agents`
+2. Find the agent you want to clone
+3. Click the **Clone** button (or use the dropdown menu)
+4. Enter a new **Agent ID** and **Name** for the clone
+5. Click **Clone** — all settings (tools, skills, channels, system prompt) are copied
+
+### Via CLI
+
+```bash
+evonic agent clone <source_agent_id> --id <new_agent_id> --name "New Agent Name"
+```
+
+**Example:**
+
+```bash
+evonic agent clone bookstore_bot --id bookstore_bot_staging --name "Bookstore Bot (Staging)"
+```
+
+**What gets copied:**
+
+| Setting | Copied? | Notes |
+|---------|---------|-------|
+| System prompt | ✅ Yes | Exact copy |
+| Tool assignments | ✅ Yes | Same tools enabled |
+| Skill assignments | ✅ Yes | Same skills enabled |
+| Channel connections | ✅ Yes | But the clone still needs to be added to channel allowlists |
+| Safety checker setting | ✅ Yes | Preserved as-is |
+| Model override | ✅ Yes | Preserved as-is |
+| Workspace directory | ✅ Yes | Preserved as-is |
+| Chat history | ❌ No | Starts fresh |
+| Agent state | ❌ No | Starts fresh |
+
 ## Enabling and Disabling Agents
 
 ### Enable an Agent

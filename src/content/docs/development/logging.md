@@ -33,6 +33,7 @@ All logging behaviour is controlled via environment variables in your `.env` fil
 | `EVONIC_LOG_BACKUPS` | `3` | Number of rotated backup files to keep |
 | `EVONIC_LOG_QUIET` | *(empty)* | Comma-separated list of module names to silence (raises their level to `WARNING`) |
 | `EVONIC_LOG_ROUTES` | *(see below)* | Semicolon-separated routing rules for dedicated log files |
+| `EVONIC_LOG_CONSOLE_QUIET` | `apscheduler.*` | Comma-separated fnmatch patterns to suppress from console output. For example: `httpx,urllib3,openai` |
 
 ### Live Log Content
 
@@ -46,9 +47,9 @@ These are separate from `logging_config.py` and control what appears in the eval
 ### Default Routes
 
 ```txt
-EVONIC_LOG_ROUTES=logs/agent.log:backend.agent_runtime.*,backend.agent_state;\
+EVONIC_LOG_ROUTES=logs/agents/agent.log:backend.agent_runtime.*
                   logs/channels.log:backend.channels.*;\
-                  logs/evaluator.log:evaluator.*
+                  logs/eval/evaluator.log:evaluator.*
 ```
 
 Each entry is `file_path:pattern1,pattern2` where patterns are [fnmatch](https://docs.python.org/3/library/fnmatch.html) globs matched against logger names. Log records matching the pattern are written to that dedicated file **in addition to** the main log.
@@ -64,7 +65,7 @@ EVONIC_LOG_MAX_BYTES=10485760
 EVONIC_LOG_BACKUPS=7
 
 # Pipe agent runtime logs to their own file
-EVONIC_LOG_ROUTES=logs/agent.log:backend.agent_runtime.*
+EVONIC_LOG_ROUTES=logs/agents/agent.log:backend.agent_runtime.*
 ```
 
 ## Log File Locations
@@ -77,9 +78,11 @@ All log files live under the `logs/` directory in the project root.
 | `logs/evonic.log.1` | Rotation | Rotated backup (oldest) |
 | `logs/evonic.log.2` | Rotation | Rotated backup |
 | `logs/evonic.log.3` | Rotation | Rotated backup (newest) |
-| `logs/agent.log` | Route: `backend.agent_runtime.*` | Agent runtime and state logs |
+| `logs/agents/agent.log` | Route: `backend.agent_runtime.*` | Agent runtime and state logs *(moved from `logs/agent.log` in v0.2.0)* |
+| `logs/agents/supervisor.log` | Supervisor | Update supervisor logs |
 | `logs/channels.log` | Route: `backend.channels.*` | All channel implementations (WhatsApp, Telegram, etc.) |
-| `logs/evaluator.log` | Route: `evaluator.*` | Evaluation engine logs |
+| `logs/eval/evaluator.log` | Route: `evaluator.*` | Evaluation engine logs *(moved from `logs/evaluator.log` in v0.2.6)* |
+| `logs/eval/` | Evaluation runs | Per-evaluation-run log files |
 | `logs/events.log` | Event stream | Structured event bus log (see [Events](/system/events)) |
 
 ### Log Format
@@ -165,10 +168,10 @@ The Telegram channel (`backend/channels/telegram.py`) follows the exact same pat
 Want WhatsApp and Telegram in their own files? Override `EVONIC_LOG_ROUTES`:
 
 ```txt
-EVONIC_LOG_ROUTES=logs/agent.log:backend.agent_runtime.*,backend.agent_state;\
+EVONIC_LOG_ROUTES=logs/agents/agent.log:backend.agent_runtime.*
                   logs/whatsapp.log:backend.channels.whatsapp;\
                   logs/telegram.log:backend.channels.telegram;\
-                  logs/evaluator.log:evaluator.*
+                  logs/eval/evaluator.log:evaluator.*
 ```
 
 ## Notification & Mention Routing
@@ -206,7 +209,7 @@ entry point for all system notifications. It emits these key log records:
 
 The `super_agent_notifier.py` module subscribes to critical platform events and
 routes them as system notifications to the super agent. It uses the same
-`notify_agent()` path above, so all these logs appear in `logs/agent.log` under
+`notify_agent()` path above, so all these logs appear in `logs/agents/agent.log` under
 `backend.agent_runtime.notifier`.
 
 **Events that trigger super agent notifications:**
@@ -232,17 +235,17 @@ system uses the `[SYSTEM/...]` tag pattern in message text for structured mentio
 | `[SYSTEM NOTIFICATION]` | `super_agent_notifier` | Critical platform alerts |
 | `[SYSTEM]` | Agent messaging tool | Agent-to-agent messages |
 
-When debugging mention delivery, look in `logs/channels.log` and `logs/agent.log`:
+When debugging mention delivery, look in `logs/channels.log` and `logs/agents/agent.log`:
 
 ```bash
 # Find all system notifications going to agents
-grep "notify_agent:" logs/agent.log
+grep "notify_agent:" logs/agents/agent.log
 
 # Find all incoming WhatsApp messages (any user)
 grep "WhatsApp message received" logs/channels.log
 
 # Check if a notification was deduplicated
-grep "dedup" logs/agent.log
+grep "dedup" logs/agents/agent.log
 ```
 
 ## Using the Logger in Code
@@ -271,7 +274,7 @@ The log viewer is built right into the Evonic dashboard.
 
 **Where to find it:**
 
-1. Open the **Settings** page at `/settings`
+1. Open the **System** page at `/system`
 2. Click the **Logs** tab
 
 The log viewer gives you:
@@ -300,7 +303,7 @@ The Web UI talks to these REST endpoints — you can use them directly too:
 curl 'http://localhost:8080/api/logs/search?file=evonic.log&level=ERROR'
 
 # Search for a specific term across all levels
-curl 'http://localhost:8080/api/logs/search?file=agent.log&query=timeout'
+curl 'http://localhost:8080/api/logs/search?file=agents/agent.logfile=agent.log&query=timeoutquery=timeout'
 ```
 
 ## Troubleshooting
