@@ -238,6 +238,122 @@ To add new file-level safety checks:
 
 ---
 
+## Safety Pipeline Architecture
+
+*Introduced in v0.2.0. Restructured in v0.2.6.*
+
+The safety system follows a **pipeline architecture** where each check runs in sequence. If any check fails, the pipeline short-circuits and returns the result immediately:
+
+```
+Input command
+      │
+      ▼
+┌─────────────────┐
+│ CustomRuleChecker│── check custom rules first
+└────────┬────────┘
+         │ (pass)
+         ▼
+┌─────────────────┐
+│  Layer 1: Pattern │── regex pattern matching
+│     Matching      │
+└────────┬────────┘
+         │ (pass)
+         ▼
+┌─────────────────┐
+│ Layer 2: AST    │── Python AST analysis
+│   Analysis       │
+└────────┬────────┘
+         │ (pass)
+         ▼
+┌─────────────────┐
+│ Layer 3: Scoring│── combine scores + modifiers
+│  & Decision      │
+└────────┬────────┘
+         │
+         ▼
+    Final decision
+ (safe / warning / requires_approval / dangerous)
+```
+
+### CustomRuleChecker
+
+*Introduced in v0.2.0.*
+
+The `CustomRuleChecker` sits at the **front of the safety pipeline** and checks user-defined custom safety rules before any built-in patterns are evaluated. This allows you to:
+
+- **Add organization-specific rules** — block or warn on internal tooling patterns
+- **Whitelist known safe operations** — bypass HMADS for trusted workflows
+- **Override default weights** — increase or decrease severity for specific patterns
+
+Custom rules are defined in `config/custom_safety_rules.json`:
+
+```json
+{
+  "rules": [
+    {
+      "pattern": "rm -rf /data/archive",
+      "action": "allow",
+      "description": "Allow cleanup of archive directory"
+    },
+    {
+      "pattern": "kubectl delete",
+      "action": "require_approval",
+      "description": "Kubernetes delete operations need approval"
+    }
+  ]
+}
+```
+
+Each rule has:
+- **`pattern`**: regex pattern to match against the command
+- **`action`**: `allow`, `warn`, `require_approval`, or `block`
+- **`description`**: explanation logged when the rule matches
+
+Rules are checked in order. The **first matching rule** wins — if a rule matches, all subsequent HMADS layers are skipped.
+
+### Sensitive System Path Check
+
+*Introduced in v0.2.0. Updated in v0.2.6.*
+
+The safety system includes a dedicated check for **sensitive system paths** that should never be accessed by regular agents. This is enforced at the file tool level (read/write operations):
+
+| Path Pattern | Risk | Action |
+|---|---|---|
+| `/etc/shadow` | Critical | Blocked |
+| `/etc/sudoers` | Critical | Blocked |
+| `/root/` | High | Requires approval |
+| `~/.ssh/` | High | Requires approval |
+| `.env` files | High | Requires approval |
+| `/var/log/auth.log` | Medium | Warning |
+
+#### .env File Safety Check
+
+*Introduced in v0.2.6.*
+
+Access to `.env` files is now explicitly checked with a dedicated rule. This prevents agents from reading environment variables containing API keys, secrets, and database credentials:
+
+- **Read access** to `.env` files → `requires_approval`
+- **Write access** to `.env` files → `requires_approval`
+- **Pattern**: matches `*.env`, `.env`, `.env.*`, and `env` directory references
+
+The check is context-aware: it only triggers for files that look like environment configuration, not for unrelated files containing `env` in their name.
+
+#### Improved SQL False Positive Reduction
+
+*Introduced in v0.2.6.*
+
+The SQLite access detection patterns have been refined to reduce **false positives**. The following changes were made:
+
+| Before | After | Effect |
+|--------|-------|--------|
+| `sqlite3` command → `dangerous` (15) | → `requires_approval` (8) | Legitimate SQL queries no longer trigger dangerous |
+| `import sqlite3` → `dangerous` (15) | → `requires_approval` (8) | Python SQLite usage gets a fairer score |
+| `chat.db` ref + `sqlite_access` → 20+ | → 14 (capped) | Combined patterns stay in approval range |
+
+The scoring was also capped to prevent certain pattern combinations from exceeding the `dangerous` threshold when they should remain at `requires_approval`.
+
+---
+
 ## Testing
 
 Run the HMADS tests:

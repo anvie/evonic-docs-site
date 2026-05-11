@@ -18,13 +18,45 @@ Install Evonic in one command:
 curl -fsSL https://evonic.dev/install.sh | bash
 ```
 
-The installer will:
+### Auto-Detection of Latest Release
 
-- Download the latest Evonic release for your platform
-- Set up Python dependencies automatically
-- Create any necessary directories and config files
-- Setup the configuration.
-- Print post-install instructions to get you started
+*Updated in v0.2.6.*
+
+The installation script now **automatically detects the latest stable release** from the GitHub repository. When you run `install.sh`, it:
+
+1. Fetches the latest stable tag from `https://github.com/anvie/evonic`
+2. Validates the tag format (semantic versioning)
+3. Downloads the matching release archive
+4. Verifies the checksum
+5. Extracts and installs
+
+No need to specify a version — just run the script and it picks the right one.
+
+### Install a Specific Version
+
+To install a specific version instead of the latest:
+
+```bash
+curl -fsSL https://evonic.dev/install.sh | bash -s -- --tag v1.2.0
+```
+
+### Offline / Air-Gapped Install
+
+If your server has no internet access, download the release archive manually and pass it to the installer:
+
+```bash
+curl -fsSL https://evonic.dev/install.sh | bash -s -- --archive ./evonic-v1.2.0.tar.gz
+```
+
+### What the Installer Does
+
+- Detects your platform (Linux/macOS) and architecture (amd64/arm64)
+- Fetches the latest stable release tag from GitHub
+- Downloads and verifies the release archive
+- Sets up Python dependencies automatically
+- Creates necessary directories and config files
+- Sets up the configuration
+- Prints post-install instructions to get you started
 
 > **Note:** If you prefer a manual install, see the [Clone and Install](#clone-and-install) section below.
 

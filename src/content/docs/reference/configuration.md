@@ -120,6 +120,43 @@ The relay server starts automatically on application boot. Ensure port `8081` (o
 | `message_buffer_seconds` | `2` | Inbound message buffering window in seconds |
 | `primary_channel_id` | *(none)* | Channel ID used for agent-to-agent communication routing |
 
+### Agent Queue Workers
+
+*Introduced in v0.2.6.*
+
+Controls how many agent conversations can be processed concurrently. This is a server-wide setting in `.env`:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `AGENT_QUEUE_MAX_WORKERS` | `5` | Maximum number of agent conversations processed in parallel. Higher values increase throughput but also increase CPU/memory usage. |
+
+When the number of active conversations exceeds `AGENT_QUEUE_MAX_WORKERS`, additional messages are queued and processed as workers become available.
+
+### Max Tool Iterations
+
+*Introduced in v0.2.6.*
+
+Controls how many tool calls an agent can make in a single conversation turn before the runtime forces a response. This prevents infinite tool-calling loops.
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `AGENT_MAX_TOOL_ITERATIONS` | `15` | Maximum tool calls per turn. If the agent exceeds this limit, the runtime interrupts and generates a response with whatever results are available. |
+
+This is a per-agent setting configurable in the **General** tab:
+
+```bash
+evonic agent update my_agent --max-tool-iterations 25
+```
+
+**When to adjust:**
+
+| Scenario | Recommended Value | Reason |
+|----------|------------------|--------|
+| Simple Q&A | `10` | Most queries need 1-3 tool calls |
+| Complex multi-step tasks | `20` | Research, data analysis pipelines |
+| Agent-to-agent delegation | `25` | Messaging adds extra rounds |
+| Debugging tool-calling agents | `30` | Allow exploration without interruption |
+
 ## Channel Configuration
 
 *Introduced in v0.2.0.* Each channel stores its configuration as a JSON object in the database. You can edit these via the **Channel Detail Modal** in the Web UI or through the API.

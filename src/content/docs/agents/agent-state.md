@@ -62,12 +62,42 @@ The plan file contains:
 4. On session resume, the agent restores its previous mode
 5. The plan file (if exists) is loaded into context
 
+## Task Complexity Classifier
+
+*Introduced in v0.2.6.*
+
+The agent runtime includes an automatic **task complexity classifier** that determines whether a full planning phase is necessary before execution. For trivial or simple tasks, the classifier skips the planning step entirely, speeding up response time.
+
+### How It Works
+
+When a user sends a message, the classifier evaluates it before the agent enters Plan mode:
+
+1. **Analyze** the message for complexity signals (length, technical terms, multi-step indicators, tool requirements)
+2. **Classify** as `trivial`, `simple`, or `complex`
+3. **Decide** whether planning is needed
+
+| Classification | Planning | Example |
+|----------------|----------|---------|
+| **Trivial** | Skipped | "What time is it?", "Hello" |
+| **Simple** | Skipped | "Tell me a joke", "Search for evonic on GitHub" |
+| **Complex** | Full plan generated | "Research competitor pricing, summarize findings, and generate a report" |
+
+### Benefits
+
+- **Faster response times** — trivial tasks skip the planning overhead
+- **Reduced token usage** — no unnecessary plan generation
+- **Smarter behavior** — the agent doesn't over-plan simple requests
+
+### Configuration
+
+The classifier is enabled by default. You can disable it per-agent in the **General** tab by toggling the **Task Complexity Classifier** setting (`task_complexity_classifier: 0`).
+
 ## Configuration
 
 The agent mode can be influenced by:
 - The system prompt (instructions about planning behavior)
-- The task complexity (complex tasks benefit from Plan mode)
-- User preference (explicit mode requests)
+- The task complexity classifier (automatic mode selection)
+- User preference (explicit mode requests via `/plan` and `/execute`)
 
 ## API Reference
 

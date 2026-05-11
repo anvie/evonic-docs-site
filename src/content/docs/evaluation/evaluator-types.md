@@ -139,6 +139,53 @@ Combines LLM evaluation with regex score extraction:
 }
 ```
 
+## Qwen XML Tool Call Format Support
+
+*Introduced in v0.2.6.*
+
+The Tool Call evaluator now supports **Qwen-style XML tool call format** in addition to the standard JSON function-calling format. This enables evaluation of models that use Qwen's XML-based tool invocation syntax.
+
+### Qwen XML Format
+
+Qwen models represent tool calls as XML blocks instead of JSON:
+
+```xml
+<tool_call>
+<tool_name>get_order</tool_name>
+<parameters>
+<order_id>12345</order_id>
+</parameters>
+</tool_call>
+```
+
+### How the Evaluator Handles It
+
+The Tool Call evaluator automatically detects whether the response uses JSON or XML format:
+
+| Format | Detection | Example |
+|--------|-----------|---------|
+| **JSON** | Standard `{"name": "...", "arguments": {...}}` | Standard OpenAI-style |
+| **Qwen XML** | `<tool_call><tool_name>...</tool_name>` blocks | Auto-detected and parsed |
+
+The evaluator extracts tool names and parameters from the XML structure and validates them against the expected tools, just like with JSON format.
+
+### Configuration
+
+No additional configuration is needed. The evaluator automatically detects and parses both formats. If you want to explicitly test Qwen XML format:
+
+```json
+{
+  "evaluator_id": "tool_call",
+  "expected": {
+    "tools": ["get_order", "send_notification"],
+    "chain": true,
+    "format": "qwen_xml"
+  }
+}
+```
+
+Setting `"format": "qwen_xml"` tells the evaluator to expect the Qwen XML format specifically (useful when the model might produce ambiguous output).
+
 ## Creating Custom Evaluators
 
 Via the Settings UI or by creating JSON files in `test_definitions/evaluators/`:
