@@ -68,7 +68,7 @@ The two-pass system first asks the LLM to reason about a problem, then makes a s
 |---|---|---|
 | `HOST` | `0.0.0.0` | Server bind address |
 | `PORT` | `8080` | Server port |
-| `DEBUG` | `1` | Enable Flask debug mode |
+| `DEBUG` | `0` | Enable Flask debug mode. Disabled by default — only enable in development. |
 | `SECRET_KEY` | `dev-secret-key-...` | Flask secret key (change in production) |
 
 ## Logging
