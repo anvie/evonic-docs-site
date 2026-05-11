@@ -63,7 +63,7 @@ Settings for the isolated Docker container used by the `runpy` and `bash` tools.
 |---|---|---|
 | `HOST` | `0.0.0.0` | Server bind address |
 | `PORT` | `8080` | Server port |
-| `DEBUG` | `1` | Enable Flask debug mode (`1` or `0`) |
+| `DEBUG` | `0` | Enable Flask debug mode (`1` or `0`). Disabled by default — only enable in development. |
 | `SECRET_KEY` | `dev-secret-key-...` | Flask session secret. Auto-generated and persisted to `.env` on first boot. Change in production. |
 
 ## Authentication
