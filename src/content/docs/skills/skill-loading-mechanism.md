@@ -1,26 +1,26 @@
 ---
-title: Skill Loading Mechanism
-description: "Bagaimana Evonic mengelola lazy-loading dan non-lazy skill, dari skill.json hingga inject ke LLM context."
+title: Overview
+description: "How Evonic manages lazy-loading and non-lazy skills, from skill.json to LLM context injection."
 sidebar:
   order: 5
 ---
 
 ## Overview
 
-Setiap skill di Evonic punya dua mode loading yang dikontrol lewat satu field di `skill.json`: **`lazy_tools`**. Mode ini menentukan **kapan** tool definitions dan system prompt skill masuk ke context agent.
+Every skill in Evonic has two loading modes controlled by a single field in `skill.json`: **`lazy_tools`**. This mode determines **when** tool definitions and system prompts enter the agent's context.
 
-| Mode | `lazy_tools` | Tool definitions masuk | System prompt skill masuk |
+| Mode | `lazy_tools` | Tool definitions enter | System prompt enters |
 |------|-------------|----------------------|--------------------------|
-| **Non-lazy** | `false` | Langsung saat agent start | Lewat `_build_static_prompt` |
-| **Lazy** | `true` | Hanya setelah agent panggil `use_skill()` | Lewat `use_skill()` → inject mid-turn |
+| **Non-lazy** | `false` | Immediately at agent start | Via `_build_static_prompt` |
+| **Lazy** | `true` | Only after the agent calls `use_skill()` | Via `use_skill()` → mid-turn injection |
 
 ---
 
 ## Non-Lazy Skill (`lazy_tools: false`)
 
-Cara ini adalah mode klasik: skill-nya berasa kayak built-in tool biasa. Tool definitions dan system prompt-nya udah siap sejak agent pertama kali ngobrol.
+This is the classic mode — the skill feels like a regular built-in tool. Its tool definitions and system prompt are ready from the moment the agent starts conversing.
 
-### Contoh: Scheduler Skill
+### Example: Scheduler Skill
 
 ```json
 // skills/scheduler/skill.json
@@ -31,26 +31,26 @@ Cara ini adalah mode klasik: skill-nya berasa kayak built-in tool biasa. Tool de
 }
 ```
 
-### Flow-nya gimana?
+### How the Flow Works
 
-1. **Agent start** → `build_tools()` dipanggil
-2. `build_tools()` manggil `tool_registry.get_all_tool_defs()`
-3. `get_all_tool_defs()` manggil `skills_manager.get_all_skill_tool_defs()`
-   - Fungsi ini **skip** skill yang `lazy_tools: true`
-   - Ambil tool definitions dari skill yang `lazy_tools: false`
-4. Tool definitions langsung masuk ke array `tools` yang dikirim ke LLM
+1. **Agent start** → `build_tools()` is called
+2. `build_tools()` calls `tool_registry.get_all_tool_defs()`
+3. `get_all_tool_defs()` calls `skills_manager.get_all_skill_tool_defs()`
+   - This function **skips** skills with `lazy_tools: true`
+   - It picks up tool definitions from skills with `lazy_tools: false`
+4. Tool definitions are directly added to the `tools` array sent to the LLM
 
-Buat system prompt-nya:
+For the system prompt:
 
 1. **Agent start** → `build_system_prompt()` → `_build_static_prompt()`
-2. `_build_static_prompt()` manggil `tool_registry.get_all_tool_defs()`
-3. Tool definitions yang punya field `system_prompt` bakal di-inject ke bagian tengah system prompt
-4. System prompt skill muncul di bagian **## Available Knowledge Files** dan info **## Skills**
+2. `_build_static_prompt()` calls `tool_registry.get_all_tool_defs()`
+3. Tool definitions that have a `system_prompt` field get injected into the middle of the system prompt
+4. Skill system prompts show up in the **## Available Knowledge Files** and **## Skills** sections
 
 ```python
 # backend/agent_runtime/context.py — _build_static_prompt
 
-# Inject system_prompt dari assigned tool definitions
+# Inject system_prompt from assigned tool definitions
 assigned_ids = set(db.get_agent_tools(eid))
 if assigned_ids:
     for tool_def in tool_registry.get_all_tool_defs():
@@ -59,23 +59,23 @@ if assigned_ids:
             parts.append(tool_prompt)
 ```
 
-### Kelebihan & Kekurangan
+### Pros & Cons
 
-**Kelebihan:**
-- Tool langsung bisa dipake, tanpa waiting time
-- Cocok buat skill yang pasti selalu dipake (kayak scheduler, file tools)
+**Pros:**
+- Tools are ready to use immediately, no waiting time
+- Great for skills that are always needed (like scheduler, file tools)
 
-**Kekurangan:**
-- Tool definitions numpuk di context dari awal
-- Bikin prompt lebih panjang walaupun skill belum tentu dipake
+**Cons:**
+- Tool definitions pile up in the context from the start
+- Makes the prompt longer even if the skill isn't actually used
 
 ---
 
 ## Lazy Skill (`lazy_tools: true`)
 
-Mode ini bikin skill-nya **"tidur"** sampai agent butuh. Tool definitions dan system prompt cuma di-load setelah agent manggil `use_skill({id: '...'})`.
+This mode keeps the skill **"asleep"** until the agent needs it. Tool definitions and system prompts are only loaded after the agent calls `use_skill({id: '...'})`.
 
-### Contoh: Kanban Skill
+### Example: Kanban Skill
 
 ```json
 // skills/kanban/skill.json
@@ -86,31 +86,31 @@ Mode ini bikin skill-nya **"tidur"** sampai agent butuh. Tool definitions dan sy
 }
 ```
 
-### Flow Lengkap use_skill()
+### Complete use_skill() Flow
 
 ```
-Agent manggil use_skill({id: 'kanban'})
+Agent calls use_skill({id: 'kanban'})
         │
         ▼
 use_skill.py execute()
         │
-        ├── Cek enabled di DB
-        ├── Cek allowlist per-agent
-        ├── Cek super_only restriction
-        ├── Baca SYSTEM.md dari disk
+        ├── Check enabled in DB
+        ├── Check per-agent allowlist
+        ├── Check super_only restriction
+        ├── Read SYSTEM.md from disk
         │
-        ├── Kalau lazy_tools: true
-        │     ├── Ambil tool definitions dari skills_manager.get_skill_tool_defs()
+        ├── If lazy_tools: true
+        │     ├── Get tool definitions from skills_manager.get_skill_tool_defs()
         │     └── Return { system_md, inject_tools: [...] }
         │
-        └── Kalau lazy_tools: false (tapi skill ini lazy)
+        └── If lazy_tools: false (but skill is lazy)
               └── Return { system_md }
 ```
 
-Kembali ke `llm_loop.py` — di loop utama:
+Back in `llm_loop.py` — the main loop:
 
 ```python
-# backend/agent_runtime/llm_loop.py — di tool execution handler
+# backend/agent_runtime/llm_loop.py — in tool execution handler
 
 # Lazy tool injection: use_skill returned tool defs to inject mid-turn
 if fn_name == 'use_skill' and isinstance(tool_result, dict) and 'inject_tools' in tool_result:
@@ -124,7 +124,7 @@ if fn_name == 'use_skill' and isinstance(tool_result, dict) and 'inject_tools' i
             injected_fns.append(fn)
     if loaded_sid and injected_fns:
         _loaded_lazy_skills[loaded_sid] = injected_fns
-        # Persist ke session_skill_tools
+        # Persist to session_skill_tools
         session_skill_tools.setdefault(session_id, {})[loaded_sid] = [...]
 
 # Persistent skill context: capture system_md for re-injection each iteration
@@ -132,30 +132,30 @@ if fn_name == 'use_skill' and isinstance(tool_result, dict) and tool_result.get(
     loaded_sid = tool_result.get('id', '')
     if loaded_sid:
         _skill_system_mds[loaded_sid] = tool_result['system_md']
-        # Persist ke session_skill_mds
+        # Persist to session_skill_mds
         session_skill_mds.setdefault(session_id, {})[loaded_sid] = tool_result['system_md']
 ```
 
-### Apa yang terjadi setelah inject?
+### What Happens After Injection?
 
-**Tool definitions** langsung nempel ke array `tools` yang dikirim ke LLM di iterasi loop selanjutnya. Agent bisa langsung manggil tool-tool skill tersebut.
+**Tool definitions** are appended to the `tools` array sent to the LLM on the next loop iteration. The agent can immediately call that skill's tools.
 
-**System prompt** skill juga disimpan di `_skill_system_mds` dan di-reinject tiap iterasi loop:
+**System prompts** for skills are stored in `_skill_system_mds` and re-injected every loop iteration:
 
 ```python
-# llm_loop.py — di setiap iterasi loop
+# llm_loop.py — on every loop iteration
 for sk_id, sk_content in _skill_system_mds.items():
     marker = f'## Skill Context: {sk_id}'
     sk_msg = {"role": "system", "content": f"{marker}\n\n{sk_content}"}
-    # Cari atau sisipkan di messages array
+    # Find or insert in messages array
 ```
 
-Ini penting karena di percakapan panjang, system message bisa kena summarization. Dengan reinject tiap iterasi, skill context tetap terjaga.
+This is important because in long conversations, system messages can get lost to summarization. By re-injecting every iteration, the skill context stays intact.
 
 ### Unload Skill
 
 ```python
-# llm_loop.py — di tool execution handler
+# llm_loop.py — in tool execution handler
 
 # Lazy tool removal
 if fn_name == 'unload_skill' and isinstance(tool_result, dict) and tool_result.get('remove_tools'):
@@ -172,26 +172,26 @@ if fn_name == 'unload_skill' and isinstance(tool_result, dict):
     session_skill_mds.get(session_id, {}).pop(unload_sid, None)
 ```
 
-Yang di-unload:
-1. **Tool definitions** — dihapus dari array `tools`, skill tools gak bisa dipanggil lagi
-2. **System prompt** — dihapus dari `_skill_system_mds`, gak di-reinject di iterasi berikutnya
-3. **Persisted state** — dihapus dari `session_skill_tools` dan `session_skill_mds`
+What gets unloaded:
+1. **Tool definitions** — removed from the `tools` array, skill tools can no longer be called
+2. **System prompt** — removed from `_skill_system_mds`, no longer re-injected in subsequent iterations
+3. **Persisted state** — removed from `session_skill_tools` and `session_skill_mds`
 
-### Kelebihan & Kekurangan
+### Pros & Cons
 
-**Kelebihan:**
-- Context LLM lebih hemat — tool definitions & system prompt cuma nongol pas butuh
-- Cocok buat skill yang jarang dipake sekaligus berat tool-nya banyak (kayak Kanban, Subagent)
+**Pros:**
+- Saves LLM context — tool definitions & system prompt only appear when needed
+- Great for optional or rarely-used skills
 
-**Kekurangan:**
-- Agent harus tau skill mana yang available (didaftarkan di system prompt bagian ## Skills)
-- Butuh 1-2 extra turn untuk load skill sebelum bisa pake tool-nya
+**Cons:**
+- Adds one round-trip: agent must call `use_skill()` first before using the tools
+- Slightly more complex to debug
 
 ---
 
-## System Prompt: Bagian ## Skills
+## Skill Awareness in System Prompt
 
-Biar agent tau skill apa aja yang available, Evonic otomatis nge-list skill yang punya SYSTEM.md di bagian ## Skills dari system prompt:
+Skills get an **awareness entry** in the system prompt via `_build_static_prompt`, regardless of their lazy status:
 
 ```python
 # context.py — _build_static_prompt
@@ -202,7 +202,7 @@ if skills_with_system_md:
         parts.append(f"- `{skill_id}` - {desc}")
 ```
 
-Hasilnya di system prompt kira-kira gini:
+The result in the system prompt looks like this:
 
 ```
 ## Skills
@@ -212,15 +212,15 @@ You have these skills that can be loaded using `use_skill` tool:
 - `plugin_creator` - Create, validate, and manage plugin packages...
 ```
 
-Ini berlaku untuk **semua** skill (lazy & non-lazy). Bedanya:
-- **Non-lazy skill**: tools-nya udah ada, tinggal pake aja
-- **Lazy skill**: tools-nya belum ada, agent harus `use_skill()` dulu
+This applies to **all** skills (lazy & non-lazy). The difference:
+- **Non-lazy skill**: tools are already there, ready to use
+- **Lazy skill**: tools aren't loaded yet — the agent must call `use_skill()` first
 
 ---
 
-## Detail Implementasi
+## Implementation Details
 
-### 1. `skills_manager.py` — Gatekeeper Lazy Tools
+### 1. `skills_manager.py` — Lazy Tools Gatekeeper
 
 ```python
 # backend/skills_manager.py
@@ -232,7 +232,7 @@ def get_all_skill_tool_defs(self) -> List[Dict[str, Any]]:
     for skill in self.list_skills():
         if skill.get('lazy_tools', False):
             continue  # ← Skip lazy skills!
-        # ... ambil tool definitions dari skill non-lazy ...
+        # ... collect tool definitions from non-lazy skills ...
     return all_defs
 ```
 
@@ -266,9 +266,9 @@ return {
 }
 ```
 
-### 4. `registry.py` — Factory untuk Built-in Tools
+### 4. `registry.py` — Factory for Built-in Tools
 
-`use_skill` dan `unload_skill` sendiri adalah built-in tools yang dibuat factory-style:
+`use_skill` and `unload_skill` themselves are built-in tools created factory-style:
 
 ```python
 # backend/tools/registry.py — ToolRegistry.__init__
@@ -276,22 +276,22 @@ self._builtins['builtin:use_skill'] = _builtin_use_skill_factory
 self._builtins['builtin:unload_skill'] = _builtin_unload_skill_factory
 ```
 
-Factory functions ini selalu available untuk semua agent, jadi `use_skill` & `unload_skill` bisa dipanggil kapan aja.
+These factory functions are always available to every agent, so `use_skill` & `unload_skill` can be called anytime.
 
 ### 5. `llm_loop.py` — Session Persistence
 
-Skill state di-persist per session supaya gak ilang antar turn:
+Skill state is persisted per session so it doesn't get lost between turns:
 
 ```python
 def run_tool_loop(agent, agent_context, messages, tools, session_id, ...,
                   session_skill_mds: dict,     # Persisted skill SYSTEM.md content per session
                   session_skill_tools: dict,   # Persisted skill tool definitions per session
                   ...):
-    # Restore dari persisted state
+    # Restore from persisted state
     _skill_system_mds = dict(session_skill_mds.get(session_id, {}))
     _loaded_lazy_skills = {...}
     
-    # Re-inject persisted skill tools ke turn ini
+    # Re-inject persisted skill tools into this turn
     for _sk_tds in session_skill_tools.get(session_id, {}).values():
         for td in _sk_tds:
             fn = td.get('function', {}).get('name', '')
@@ -299,65 +299,65 @@ def run_tool_loop(agent, agent_context, messages, tools, session_id, ...,
                 tools.append(td)
 ```
 
-Ini penting: kalau agent `use_skill` di turn 1, skill-nya tetep ada di turn 2, 3, dan seterusnya sampai di-`unload_skill`.
+This is crucial: if an agent calls `use_skill` in turn 1, the skill stays available in turns 2, 3, and beyond — until `unload_skill` is called.
 
 ---
 
-## Ringkasan Visual
+## Visual Summary
 
 ```
-                    ┌─────────────────────────────────────────┐
+                    ┌───────────────────────────────────────┐
                     │           Agent Start                    │
-                    └────────────┬────────────────────────────┘
-                                 │
-                    ┌────────────▼────────────┐
+                    └──────────────────┬──────────────────────┘
+                                       │
+                    ┌──────────────────▼──────────────────┐
                     │   build_tools()          │
                     │   build_system_prompt()  │
-                    └────────────┬────────────┘
-                                 │
-                    ┌────────────▼────────────┐
+                    └──────────────────┬──────────────────┘
+                                       │
+                    ┌──────────────────▼──────────────────┐
                     │  SkillsManager           │
                     │  .get_all_skill_tool_defs│
-                    └────────────┬────────────┘
-                                 │
-                    ┌────────────▼────────────┐
+                    └──────────────────┬──────────────────┘
+                                       │
+                    ┌──────────────────▼──────────────────┐
                     │  lazy_tools: false?      │
-                    │     → Inject tools       │──── Langsung masuk tools[]
+                    │     → Inject tools       │────── Inject directly into tools[]
                     │  lazy_tools: true?       │
-                    │     → Skip               │──── Tunggu use_skill()
-                    └──────────────────────────┘
+                    │     → Skip               │────── Wait for use_skill()
+                    └───────────────────────────────────┘
 
-                    ┌─────────────────────────────────────────┐
-                    │           Agent panggil use_skill()       │
-                    └────────────┬────────────────────────────┘
-                                 │
-                    ┌────────────▼────────────┐
+                    ┌───────────────────────────────────────┐
+                    │           Agent calls use_skill()       │
+                    └──────────────────┬──────────────────────┘
+                                       │
+                    ┌──────────────────▼──────────────────┐
                     │  use_skill.py execute()  │
-                    │  → Baca SYSTEM.md        │
-                    │  → Ambil tool defs       │
-                    └────────────┬────────────┘
-                                 │
-                    ┌────────────▼────────────┐
+                    │  → Read SYSTEM.md        │
+                    │  → Get tool defs         │
+                    └──────────────────┬──────────────────┘
+                                       │
+                    ┌──────────────────▼──────────────────┐
                     │  llm_loop.py             │
-                    │  → inject_tools ke tools[]│
+                    │  → inject_tools into tools[]│
                     │  → _skill_system_mds     │
                     │  → session_skill_tools   │
-                    └────────────┬────────────┘
-                                 │
-                    ┌────────────▼────────────┐
-                    │  Tiap iterasi:           │
-                    │  → Reinject system_md    │
-                    │  → Tool udah siap pake   │
-                    └──────────────────────────┘
+                    └──────────────────┬──────────────────┘
+                                       │
+                    ┌──────────────────▼──────────────────┐
+                    │  Each iteration:          │
+                    │  → Re-inject system_md    │
+                    │  → Tools are ready to use │
+                    └───────────────────────────────────┘
 ```
 
 ---
 
 ## Key Takeaways
 
-1. **`lazy_tools`** di `skill.json` nentuin kapan skill tools masuk ke LLM context
-2. **Non-lazy** (`false`): tools langsung ada dari agent start — cocok buat skill inti
-3. **Lazy** (`true`): tools cuma ada setelah `use_skill()` dipanggil — hemat context
-4. **System prompt skill** di-reinject tiap iterasi loop biar gak ilang kena summarization
-5. **State persist** per session: sekali load, skill bertahan antar turn sampai di-unload
-6. **Built-in tools** (`use_skill`, `unload_skill`) dibuat via factory pattern di `registry.py` dan selalu tersedia
+1. **`lazy_tools`** in `skill.json` determines when skill tools enter the LLM context
+2. **Non-lazy** (`false`): tools are available immediately from agent start — ideal for core skills
+3. **Lazy** (`true`): tools are only available after `use_skill()` is called — saves context
+4. **Skill system prompts** are re-injected every loop iteration so they don't get lost to summarization
+5. **State persists per session**: once loaded, a skill stays active across turns until it's unloaded
+6. **Built-in tools** (`use_skill`, `unload_skill`) are created via the factory pattern in `registry.py` and are always available
