@@ -5,8 +5,6 @@ sidebar:
   order: 5
 ---
 
-## Overview
-
 Every skill in Evonic has two loading modes controlled by a single field in `skill.json`: **`lazy_tools`**. This mode determines **when** tool definitions and system prompts enter the agent's context.
 
 | Mode | `lazy_tools` | Tool definitions enter | System prompt enters |
