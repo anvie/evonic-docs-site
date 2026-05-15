@@ -22,6 +22,34 @@ The plugin creates an OpenAI-compatible API layer that maps external model names
 3. The request is forwarded to the mapped agent
 4. The agent processes the request and returns a response in OpenAI-compatible format
 
+## Session Behavior
+
+*Introduced in v0.3.43.*
+
+The Agent API is **stateless by default** — each request is treated as an independent conversation. The agent does not remember previous requests, and no conversation history is preserved between calls.
+
+### Stateful Sessions
+
+To enable **stateful sessions** (where the agent remembers the conversation), include the `X-Session-Id` header with a unique session identifier:
+
+```
+X-Session-Id: <your-session-id>
+```
+
+When you use a session ID:
+- The agent maintains the conversation history across requests
+- Each request appends to the same conversation, so the agent remembers previous messages
+- The session persists until explicitly cleared or expired
+
+This is useful for multi-turn conversations, like chatbots that need to remember context from earlier messages.
+
+### Stateless Usage (Default)
+
+Without a session ID, each request is isolated — the agent has no memory of previous calls. This is ideal for:
+- One-off queries where context isn't needed
+- Load-balanced scenarios where requests may go to different instances
+- Simple API integrations that only need a single response
+
 ## Configuration
 
 ### Model → Agent Mapping
@@ -48,6 +76,7 @@ Send a chat completion request to an agent.
 ```
 Authorization: Bearer <api_token>
 Content-Type: application/json
+X-Session-Id: <session-id>         # Optional — enables stateful session
 ```
 
 **Request body:**
@@ -117,7 +146,11 @@ Each token can have an optional usage quota, limiting how many requests it can m
 
 ## Example: Using the Agent API
 
-### With cURL
+### Stateless Request (Default)
+
+Each request is independent — the agent has no memory of previous calls.
+
+#### With cURL
 
 ```bash
 curl -X POST https://your-evonic-instance.com/plugin/agentapi/v1/chat/completions \
@@ -131,7 +164,7 @@ curl -X POST https://your-evonic-instance.com/plugin/agentapi/v1/chat/completion
   }'
 ```
 
-### With Python
+#### With Python
 
 ```python
 import requests
@@ -149,6 +182,74 @@ response = requests.post(
 )
 
 print(response.json())
+```
+
+### Stateful Request (with `X-Session-Id`)
+
+Include the `X-Session-Id` header to maintain conversation history across requests. The agent will remember previous messages in the same session.
+
+#### With cURL
+
+```bash
+# First message
+curl -X POST https://your-evonic-instance.com/plugin/agentapi/v1/chat/completions \
+  -H "Authorization: Bearer evo_abc123def456" \
+  -H "Content-Type: application/json" \
+  -H "X-Session-Id: my-chat-session-1" \
+  -d '{
+    "model": "gpt-4-assistant",
+    "messages": [
+      {"role": "user", "content": "My name is Alice."}
+    ]
+  }'
+
+# Second message — the agent remembers "Alice" from the first call
+curl -X POST https://your-evonic-instance.com/plugin/agentapi/v1/chat/completions \
+  -H "Authorization: Bearer evo_abc123def456" \
+  -H "Content-Type: application/json" \
+  -H "X-Session-Id: my-chat-session-1" \
+  -d '{
+    "model": "gpt-4-assistant",
+    "messages": [
+      {"role": "user", "content": "What is my name?"}
+    ]
+  }'
+```
+
+#### With Python
+
+```python
+import requests
+
+session_id = "my-chat-session-1"
+base_url = "https://your-evonic-instance.com/plugin/agentapi/v1/chat/completions"
+headers = {
+    "Authorization": "Bearer evo_abc123def456",
+    "Content-Type": "application/json",
+    "X-Session-Id": session_id,
+}
+
+# First message
+response = requests.post(
+    base_url,
+    headers=headers,
+    json={
+        "model": "gpt-4-assistant",
+        "messages": [{"role": "user", "content": "My name is Alice."}],
+    },
+)
+print(response.json())
+
+# Second message — the agent remembers the conversation
+response = requests.post(
+    base_url,
+    headers=headers,
+    json={
+        "model": "gpt-4-assistant",
+        "messages": [{"role": "user", "content": "What is my name?"}],
+    },
+)
+print(response.json())  # The agent should reply "Alice"
 ```
 
 ## Security
