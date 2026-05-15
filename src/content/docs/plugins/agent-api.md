@@ -17,7 +17,7 @@ The plugin is available as a built-in plugin under `plugins/agentapi/`. Enable i
 
 The plugin creates an OpenAI-compatible API layer that maps external model names to your internal Evonic agents:
 
-1. External client calls `/v1/chat/completions` with a model name like `gpt-4-assistant`
+1. External client calls `/plugin/agentapi/v1/chat/completions` with a model name like `gpt-4-assistant`
 2. The plugin looks up the model → agent mapping to find which Evonic agent to use
 3. The request is forwarded to the mapped agent
 4. The agent processes the request and returns a response in OpenAI-compatible format
@@ -40,7 +40,7 @@ Each key is a public-facing model name (used in API requests), and each value is
 
 ## API Endpoints
 
-### POST `/v1/chat/completions`
+### POST `/plugin/agentapi/v1/chat/completions`
 
 Send a chat completion request to an agent.
 
@@ -69,7 +69,7 @@ Content-Type: application/json
 | `messages` | Yes | Array of message objects with `role` and `content` |
 | `temperature` | No | Sampling temperature (passed to the underlying model) |
 
-### GET `/v1/models`
+### GET `/plugin/agentapi/v1/models`
 
 List all available model names (agent mappings).
 
@@ -120,7 +120,7 @@ Each token can have an optional usage quota, limiting how many requests it can m
 ### With cURL
 
 ```bash
-curl -X POST https://your-evonic-instance.com/v1/chat/completions \
+curl -X POST https://your-evonic-instance.com/plugin/agentapi/v1/chat/completions \
   -H "Authorization: Bearer evo_abc123def456" \
   -H "Content-Type: application/json" \
   -d '{
@@ -137,7 +137,7 @@ curl -X POST https://your-evonic-instance.com/v1/chat/completions \
 import requests
 
 response = requests.post(
-    "https://your-evonic-instance.com/v1/chat/completions",
+    "https://your-evonic-instance.com/plugin/agentapi/v1/chat/completions",
     headers={
         "Authorization": "Bearer evo_abc123def456",
         "Content-Type": "application/json",
