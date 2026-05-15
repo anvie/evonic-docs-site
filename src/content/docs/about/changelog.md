@@ -5,6 +5,24 @@ description: Release history and updates for Evonic.
 
 # Changelog
 
+## v0.3.49 — 2026
+
+*7 commits*
+
+### Enhancements (2)
+
+- **Git pull --ff-only at start of update** — ensures the update process fetches the latest changes before applying updates.
+- **Remove Node.js tooling** — cleaned up `package.json`, `node_modules`, and reorganized `tailwind-input.css` for a leaner project structure.
+
+### Bug Fixes (4)
+
+- **Sandbox toggle propagation** — fixed the sandbox enabled setting not propagating to local workplace backends (#240)
+- **Dual avatar display** — removed `inline-flex` from the avatar initials fallback span to prevent duplicate avatars (#242)
+- **Legacy config migration** — migrated old `~/.evonic/.env` files to the shared config directory during update (#238)
+- **Local workplace file I/O** — added missing file operation methods to `LocalWorkplaceBackend` for reliable file tool usage in local workplace mode (#237)
+
+For the complete list of commits, see the [GitHub release](https://github.com/anvie/evonic/releases/tag/v0.3.49).
+
 ## v0.3.43 — 2026
 
 *24 commits*
