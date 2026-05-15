@@ -87,10 +87,6 @@ Once paired, Evonet reconnects automatically on restart using credentials saved 
 3. Select a Workplace; the dropdown shows type badges and live status dots
 4. Save, and the agent will use the selected Workplace for all tool executions
 
-:::tip[Auto-refresh]
-After saving a valid workspace directory path in the agent settings, the page auto-refreshes to reflect the change. This eliminates the need to manually reload the page.
-:::
-
 When a Workplace is assigned:
 - The agent's workspace becomes the Workplace's `workspace_path`
 - Remote Workplaces auto-connect on first use
