@@ -1,6 +1,6 @@
 ---
 title: Agent State
-description: Plan/execute mode system and plan file persistence.
+description: Plan/execute mode system, session state, and plan file persistence.
 sidebar:
   order: 7
 ---
@@ -42,6 +42,38 @@ The agent state is stored in the database and persists across:
 
 This means the agent remembers its mode even after the conversation context has been compressed.
 
+## Session State
+
+*Updated in v0.3.19 — mode, plan file, and task tracking have been migrated from Agent State to a dedicated **Session State**.*
+
+Beginning in v0.3.19, each active chat session maintains its own **Session State** that tracks:
+
+| Component | Description |
+|-----------|-------------|
+| **Mode** | Whether the agent is in Plan or Execute mode for this session |
+| **Plan File** | The current plan (if any) stored in the agent's workspace |
+| **Tasks** | The current task list being tracked |
+| **Namespace** | Active workflow namespaces (e.g., kanban task state) |
+
+### Session State Panel
+
+The Session State is displayed in the chat UI's right panel with:
+
+- **Mode badge** — Shows "Plan" or "Execute" at a glance so you always know what mode the agent is in
+- **Task list** — Rendered as formatted markdown for easy reading
+- **Plan file display** — Shows the current plan content if one exists
+- **Namespace states** — Active workflow states (like kanban task tracking) are visible
+
+### What Changed
+
+Previously, mode, plan file, and task tracking were part of the **Agent State** (scoped to the agent itself). Starting in v0.3.19, they are now scoped to the **session**, meaning:
+
+- Different conversations with the same agent can have different modes
+- Plan files are session-specific
+- Task tracking is per-session
+
+This change replaced the old "Session Recap" panel with the more informative **Session State** panel.
+
 ## Plan File
 
 When an agent is in Plan mode, it can create a **plan file** that persists across conversation turns. The plan file is stored in the agent's workspace directory and survives summarization.
@@ -58,7 +90,7 @@ The plan file contains:
 
 1. When a new session starts, the agent begins in **Plan** mode
 2. The agent can transition to **Execute** mode when appropriate
-3. The state is saved to the database after each turn
+3. The session state is saved to the database after each turn
 4. On session resume, the agent restores its previous mode
 5. The plan file (if exists) is loaded into context
 

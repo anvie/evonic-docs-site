@@ -226,6 +226,58 @@ Or via CLI:
 evonic plugin import ./backups/my_plugin_v1.zip
 ```
 
+## Export/Import as .evop Archive
+
+*Introduced in v0.3.19.*
+
+Starting in v0.3.19, plugins can be packaged and distributed as **.evop** (Evonic Plugin) archives. This is a portable format designed specifically for sharing plugins between Evonic instances.
+
+A `.evop` file is a renamed `.zip` archive with the same internal structure, making it recognizable as an Evonic plugin package at a glance.
+
+### How It Works
+
+Exporting a plugin as `.evop` follows the same process as the ZIP export, but the file is saved with the `.evop` extension:
+
+```bash
+# Export a plugin as .evop
+evonic plugin export my_plugin --output ./dist/my_plugin.evop
+```
+
+### Importing a .evop File
+
+Import works the same as importing any plugin archive:
+
+```bash
+# Import from .evop
+evonic plugin import ./dist/my_plugin.evop
+```
+
+Or via the Web UI:
+
+1. Go to **Plugins** → **Import** (`/plugins/import`)
+2. Select and upload the `.evop` file
+3. The plugin is extracted and registered
+
+### What's in a .evop File
+
+The `.evop` archive contains the exact same structure as the ZIP export:
+
+```
+my_plugin.evop
+├── plugin.json    # Manifest with metadata, events, and variables
+├── handler.py     # Event handler functions
+└── routes.py      # Flask route handlers (if present)
+```
+
+Configuration variables and user settings are **not** included — only the plugin code and manifest.
+
+### When to Use .evop vs ZIP
+
+- **Use `.evop`** when distributing plugins to other Evonic users — the extension makes the purpose clear
+- **Use `.zip`** for general archiving or when the recipient expects a standard ZIP format
+
+Both formats are interchangeable — you can rename a `.evop` to `.zip` and it will work just as well.
+
 ## Quick Links
 
 - [Plugin SDK](/plugins/sdk): Available methods and helpers

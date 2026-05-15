@@ -328,15 +328,17 @@ The safety system includes a dedicated check for **sensitive system paths** that
 
 #### .env File Safety Check
 
-*Introduced in v0.2.6.*
+*Introduced in v0.2.6. Hardened in v0.3.19.*
 
-Access to `.env` files is now explicitly checked with a dedicated rule. This prevents agents from reading environment variables containing API keys, secrets, and database credentials:
+Access to `.env` files is checked with a dedicated rule. This prevents agents from reading environment variables containing API keys, secrets, and database credentials:
 
 - **Read access** to `.env` files → `requires_approval`
 - **Write access** to `.env` files → `requires_approval`
 - **Pattern**: matches `*.env`, `.env`, `.env.*`, and `env` directory references
 
 The check is context-aware: it only triggers for files that look like environment configuration, not for unrelated files containing `env` in their name.
+
+In v0.3.19, `.env` file protection was extended to cover **all file operation tools** (`read_file`, `write_file`, `patch`, `str_replace`) with additional path normalization checks to prevent bypass attempts through symlinks, relative paths, or encoded characters.
 
 #### Improved SQL False Positive Reduction
 
@@ -351,6 +353,45 @@ The SQLite access detection patterns have been refined to reduce **false positiv
 | `chat.db` ref + `sqlite_access` → 20+ | → 14 (capped) | Combined patterns stay in approval range |
 
 The scoring was also capped to prevent certain pattern combinations from exceeding the `dangerous` threshold when they should remain at `requires_approval`.
+
+---
+
+## v0.3.19 Security Audit & Hardening
+
+*Introduced in v0.3.19.*
+
+The v0.3.19 release includes fixes for findings from a **production readiness security audit**:
+
+| Finding | Severity | Fix |
+|---------|----------|-----|
+| C-1 | Critical | Path traversal in skill installation — prevents arbitrary file overwrite during install |
+| C-2 | Critical | Command injection in update manager — prevents code injection via crafted version strings |
+| H-5 | High | Improved version comparison — handles pre-release versions safely with backward compatibility |
+| M-4 | Medium | Additional input sanitization in file operation tools |
+| M-6 | Medium | Strengthened regex boundaries in pattern matching |
+| M-7 | Medium | Better error handling for edge cases in safety pipeline |
+
+### Path Traversal Prevention (Skill Installation)
+
+Skill installation now validates that extracted files stay within the target skill directory. Attempts to use `../` or absolute paths in archive entries are rejected:
+
+```python
+# Before: archive entry "../../etc/hack" could overwrite system files
+# After:  entry is normalized and rejected if it escapes the install directory
+```
+
+### Command Injection Prevention (Update Manager)
+
+The update manager now sanitizes version strings before passing them to shell commands, preventing injection attacks via crafted version tags.
+
+### .env File Protection
+
+In addition to the existing `.env` checks, v0.3.19 adds:
+
+- **Broader tool coverage** — protection extended to `patch` and `str_replace` tools
+- **Path normalization** — resolves symlinks and relative paths before checking
+- **Encoded path detection** — catches URL-encoded and Unicode-normalized bypass attempts
+- **Additional tool-level checks** — prevents `.env` manipulation through indirect paths
 
 ---
 

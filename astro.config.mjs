@@ -34,6 +34,7 @@ export default defineConfig({
         {
           label: 'Getting Started',
           items: [
+            { label: 'Overview', slug: 'getting-started/overview' },
             { label: 'Installation', slug: 'getting-started/installation' },
             { label: 'Configuration', slug: 'getting-started/configuration' },
             { label: 'Quick Start', slug: 'getting-started/quickstart' },
@@ -67,6 +68,8 @@ export default defineConfig({
           items: [
             { label: 'Overview', slug: 'plugins' },
             { label: 'Setup', slug: 'plugins/setup' },
+            { label: 'GitHub Webhook', slug: 'plugins/webhook' },
+            { label: 'Agent API', slug: 'plugins/agent-api' },
             { label: 'SDK', slug: 'plugins/sdk' },
             { label: 'Best Practices', slug: 'plugins/best-practices' },
             { label: 'Troubleshooting', slug: 'plugins/troubleshooting' },
@@ -103,6 +106,13 @@ export default defineConfig({
         {
           label: 'Development',
           autogenerate: { directory: 'development' },
+        },
+        {
+          label: 'About',
+          items: [
+            { label: 'License', slug: 'about/license' },
+            { label: 'Changelog', slug: 'about/changelog' },
+          ],
         },
       ],
     }),

@@ -54,6 +54,19 @@ EVONIC_LOG_ROUTES=logs/agents/agent.log:backend.agent_runtime.*
 
 Each entry is `file_path:pattern1,pattern2` where patterns are [fnmatch](https://docs.python.org/3/library/fnmatch.html) globs matched against logger names. Log records matching the pattern are written to that dedicated file **in addition to** the main log.
 
+### Agent Messaging Route
+
+*Added in v0.3.19.*
+
+The agent-to-agent messaging tool (`send_agent_message`) now logs through its dedicated module logger, which is included in the agent route pattern `backend.agent_runtime.*`. This means all agent messaging activity is captured in `logs/agents/agent.log` alongside other agent runtime logs.
+
+```txt
+[INFO] [backend.agent_runtime.messaging] Agent linus sent message to agent siwa: "Task update: data collection phase complete"
+[INFO] [backend.agent_runtime.messaging] Agent siwa received message from agent linus: "Task update: data collection phase complete"
+```
+
+This makes it easy to trace inter-agent communication during debugging.
+
 ### Example `.env` Snippet
 
 ```txt
@@ -78,7 +91,7 @@ All log files live under the `logs/` directory in the project root.
 | `logs/evonic.log.1` | Rotation | Rotated backup (oldest) |
 | `logs/evonic.log.2` | Rotation | Rotated backup |
 | `logs/evonic.log.3` | Rotation | Rotated backup (newest) |
-| `logs/agents/agent.log` | Route: `backend.agent_runtime.*` | Agent runtime and state logs *(moved from `logs/agent.log` in v0.2.0)* |
+| `logs/agents/agent.log` | Route: `backend.agent_runtime.*` | Agent runtime, state, and messaging logs *(moved from `logs/agent.log` in v0.2.0; agent messaging added in v0.3.19)* |
 | `logs/agents/supervisor.log` | Supervisor | Update supervisor logs |
 | `logs/channels.log` | Route: `backend.channels.*` | All channel implementations (WhatsApp, Telegram, etc.) |
 | `logs/eval/evaluator.log` | Route: `evaluator.*` | Evaluation engine logs *(moved from `logs/evaluator.log` in v0.2.6)* |
