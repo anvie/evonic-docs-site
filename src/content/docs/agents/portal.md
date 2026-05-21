@@ -19,7 +19,7 @@ Without portals, agents can only access files within their assigned workplace di
 
 - **Mount external directories** — Give an agent access to a shared folder, a project directory, or a config folder
 - **Access remote filesystems** — Use SSH portals to reach files on remote servers
-- **Connect cloud devices** — Use Evonet portals to access files on devices in your Evonet mesh
+- **Connect tunnel devices** — Use Evonet portals to access files on devices in your Evonet mesh
 
 ## How It Works
 
@@ -106,7 +106,7 @@ An Evonet portal connects to a device in your Evonet mesh network. The device mu
 }
 ```
 
-> **Note:** Evonet portals require the target cloud workplace to be in a `connected` state.
+> **Note:** Evonet portals require the target tunnel workplace to be in a `connected` state.
 
 ## Managing Portals
 

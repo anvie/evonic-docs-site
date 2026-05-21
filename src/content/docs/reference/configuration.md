@@ -87,9 +87,9 @@ These variables control the live evaluation log display. For the full logging sy
 | `EVENT_LOG_FILE` | `logs/events.log` | Path for agent runtime event logs (processing, tool execution, etc.) |
 | `EVONIC_LOG_CONSOLE_QUIET` | `apscheduler.*` | Comma-separated fnmatch patterns to suppress from console output |
 
-## Cloud Workplace Connector (Evonet)
+## Tunnel Workplace Connector (Evonet)
 
-Settings for the [Evonet](/evonet) WebSocket relay server that enables Cloud Workplaces.
+Settings for the [Evonet](/evonet) WebSocket relay server that enables Tunnel Workplaces.
 
 | Variable | Default | Description |
 |---|---|---|

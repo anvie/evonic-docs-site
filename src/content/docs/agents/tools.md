@@ -64,7 +64,7 @@ All file tools (`read_file`, `write_file`, `str_replace`, `patch`) support a spe
 This is essential because an agent's workspace can be:
 - A local directory outside the project root
 - `/workspace` inside a Docker sandbox
-- A remote directory on an SSH server or Cloud Workplace
+- A remote directory on an SSH server or Tunnel Workplace
 
 In all these cases, the agent cannot reach its own configuration files using normal paths. The `/_self/` prefix bridges this gap.
 

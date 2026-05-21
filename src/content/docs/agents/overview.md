@@ -19,7 +19,7 @@ An agent is an independently configured, LLM-powered assistant that can:
 - **Communicate** — Talk to other agents natively via the agent-to-agent protocol
 - **Connect anywhere** — Deploy to Telegram, WhatsApp, Discord, or web interfaces
 - **Learn from knowledge** — Access reference documents and custom knowledge bases
-- **Operate anywhere** — Run on local machines, remote SSH servers, or cloud devices via Workplaces
+- **Operate anywhere** — Run on local machines, remote SSH servers, or tunnel devices via Workplaces
 
 ---
 
@@ -154,5 +154,5 @@ For detailed walkthroughs of each use case, see the [Use Cases](/guides/use-case
 - [Agent state system](/agents/agent-state)
 - [Slash commands](/agents/slash-commands)
 - [Workplaces: execution environments](/agents/workplaces)
-- [Evonet: cloud workplace connector](/evonet)
+- [Evonet: Tunnel Workplace Connector](/evonet)
 - [Use Cases](/guides/use-cases): Real-world scenarios and examples

@@ -54,7 +54,7 @@ Agents need to operate where the work is. Evonic's **Workplace** abstraction let
 
 - **Local** — The agent runs in its workspace directory on the host machine. Perfect for development, testing, and single-machine deployments.
 - **Remote (SSH)** — The agent executes on a remote server via SSH. Useful for managing production infrastructure or accessing resources in different network zones.
-- **Cloud (Evonet)** — Connect devices through Evonic's lightweight Go connector (Evonet). No public IP, no SSH setup, no complex firewall rules — just a secure tunnel to any device running the Evonet agent.
+- **Tunnel (Evonet)** — Connect devices through Evonic's lightweight Go connector (Evonet). No public IP, no SSH setup, no complex firewall rules — just a secure tunnel to any device running the Evonet agent.
 
 This means you can design one agent and deploy it anywhere, from a Raspberry Pi at the edge to a cloud VM running your enterprise stack.
 

@@ -1,11 +1,11 @@
 ---
-title: "Evonet: Cloud Workplace Connector"
+title: "Evonet: Tunnel Workplace Connector"
 description: A lightweight Go binary that connects any device to Evonic over WebSocket, enabling remote agent execution without SSH or a public IP.
 ---
 
 **Evonet** is a lightweight Go binary that runs on a target device and connects it to an Evonic server over WebSocket. Once connected, agents can execute bash scripts, Python code, and file operations on that device: without SSH, port forwarding, or a public IP address.
 
-It's the backend for **Cloud Workplaces**. See [Workplaces](/agents/workplaces) for the Evonic-side setup.
+It's the backend for **Tunnel Workplaces**. See [Workplaces](/agents/workplaces) for the Evonic-side setup.
 
 ## How It Works
 
@@ -47,7 +47,7 @@ make build-windows   # Windows amd64
 
 **1. Pair with your Evonic server**
 
-In the Evonic UI, open a Cloud Workplace → click **Generate Pairing Code** → copy the 6-character code.
+In the Evonic UI, open a Tunnel Workplace → click **Generate Pairing Code** → copy the 6-character code.
 
 On the device:
 
@@ -106,7 +106,7 @@ workspace_path: /home/user/workspace
 ```ini
 # /etc/systemd/system/evonet.service
 [Unit]
-Description=Evonet Cloud Workplace Connector
+Description=Evonet Tunnel Workplace Connector
 After=network.target
 
 [Service]

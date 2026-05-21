@@ -125,7 +125,7 @@ write_file(file_path="/_self/kb/meeting-notes.md", content="...")
 read_file(file_path="/_self/kb/meeting-notes.md")
 ```
 
-This is especially useful for sandboxed agents (where the workspace is `/workspace` inside Docker) and agents using remote or cloud [Workplaces](/agents/workplaces), where normal paths cannot reach the agent's home directory.
+This is especially useful for sandboxed agents (where the workspace is `/workspace` inside Docker) and agents using remote or tunnel [Workplaces](/agents/workplaces), where normal paths cannot reach the agent's home directory.
 
 See [Tools: The `/_self/` Virtual Path](/agents/tools#the-_self-virtual-path) for full details.
 
