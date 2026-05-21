@@ -11,7 +11,7 @@ A **Workplace** is a first-class execution environment for an agent. It replaces
 |------|-----------------|-----------------|
 | **Local** | Same machine as Evonic | Direct filesystem/process access |
 | **Remote** | SSH server | Auto-connect via stored SSH credentials |
-| **Cloud** | Any device running Evonet | Outbound WebSocket relay, no public IP needed |
+| **Tunnel** | Any device running Evonet | Outbound WebSocket relay, no public IP needed |
 
 Workplaces are managed at `/workplaces` in the web UI.
 
@@ -22,13 +22,13 @@ Without a Workplace, each agent gets an isolated local workspace directory. This
 Workplaces solve this:
 
 - **Remote workplaces** auto-connect via SSH using stored credentials. No more `sshc` calls to set up a session manually.
-- **Cloud workplaces** use [Evonet](/evonet), a lightweight Go binary, to create a persistent outbound tunnel. The device can be behind NAT, a home router, or a corporate firewall with no configuration needed.
+- **Tunnel workplaces** use [Evonet](/evonet), a lightweight Go binary, to create a persistent outbound tunnel. The device can be behind NAT, a home router, or a corporate firewall with no configuration needed.
 - **Shared workplaces** allow multiple agents to operate in the same environment (useful for team workflows).
 
 ## Creating a Workplace
 
 1. Navigate to `/workplaces` → **+ New Workplace**
-2. Select the type (Local, Remote, or Cloud)
+2. Select the type (Local, Remote, or Tunnel)
 3. Fill in the type-specific config (see below)
 4. Save, and the Workplace appears in the list with a status indicator
 
@@ -56,16 +56,16 @@ Connection management:
 - Use the **Connect** / **Disconnect** buttons on the Workplace detail page to test the connection.
 - Evonic reconnects automatically when an agent uses the Workplace if the SSH session has dropped.
 
-### Cloud
+### Tunnel
 
 A device running the [Evonet](/evonet) binary. Evonet makes an outbound WebSocket connection to Evonic, so the device needs no open ports, public IP, or firewall rules.
 
-Cloud workplaces are **1:1 with an agent**; each Cloud Workplace can only be assigned to one agent at a time.
+Tunnel workplaces are **1:1 with an agent**; each Tunnel Workplace can only be assigned to one agent at a time.
 
 Config:
 - **Workspace path**: working directory on the remote device (optional; defaults to the directory containing the Evonet binary)
 
-#### Pairing a Cloud Workplace
+#### Pairing a Tunnel Workplace
 
 **Step 1**: On the Workplace detail page, click **Generate Pairing Code**. A 6-character code (e.g., `X7KQ2M`) is shown with a 5-minute countdown.
 
@@ -90,7 +90,7 @@ Once paired, Evonet reconnects automatically on restart using credentials saved 
 When a Workplace is assigned:
 - The agent's workspace becomes the Workplace's `workspace_path`
 - Remote Workplaces auto-connect on first use
-- Cloud Workplaces show a connection overlay in the chat UI if Evonet is offline
+- Tunnel Workplaces show a connection overlay in the chat UI if Evonet is offline
 
 To remove a Workplace, set the dropdown back to **None (use workspace)**.
 
@@ -98,7 +98,7 @@ To remove a Workplace, set the dropdown back to **None (use workspace)**.
 
 **Local** and **Remote** workplaces can be assigned to multiple agents simultaneously. Each agent operates in the same filesystem context, which is useful when agents collaborate on the same codebase.
 
-**Cloud** workplaces are restricted to one agent at a time.
+**Tunnel** workplaces are restricted to one agent at a time.
 
 ## Status Indicators
 
@@ -113,10 +113,10 @@ The status is updated in real-time via SSE events (`workplace_status_changed`, `
 
 ## Connection Overlay
 
-When an agent is using a Remote or Cloud Workplace and the connection is not yet established, a yellow banner appears above the chat input:
+When an agent is using a Remote or Tunnel Workplace and the connection is not yet established, a yellow banner appears above the chat input:
 
 - **Remote**: "Connecting to [workplace]..." with a spinner, meaning Evonic is opening the SSH connection
-- **Cloud**: "Waiting for Evonet..." (the device hasn't connected yet)
+- **Tunnel**: "Waiting for Evonet..." (the device hasn't connected yet)
 - **Error**: "Workplace disconnected" with a **Retry** button
 
 The overlay clears automatically once the connection is established.
@@ -135,7 +135,7 @@ Connector relay settings (in `.env`):
 
 ## Accessing Agent Home from Remote Workplaces
 
-When an agent uses a Remote or Cloud Workplace, its workspace is on a different machine. The agent can still access its own configuration, system prompt, and knowledge base files on the Evonic server using the `/_self/` virtual path prefix:
+When an agent uses a Remote or Tunnel Workplace, its workspace is on a different machine. The agent can still access its own configuration, system prompt, and knowledge base files on the Evonic server using the `/_self/` virtual path prefix:
 
 ```python
 # Read the agent's system prompt (on the Evonic server)
@@ -149,6 +149,6 @@ The `/_self/` prefix works with all file tools and resolves on the Evonic host r
 
 ## See Also
 
-- [Evonet: Cloud Workplace Connector](/evonet): install and configure the Evonet binary
+- [Evonet: Tunnel Workplace Connector](/evonet): install and configure the Evonet binary
 - [Creating Agents](/agents/creating-agents): agent setup guide
 - [Tools](/agents/tools): tools that use the execution environment (bash, runpy, read_file, write_file)

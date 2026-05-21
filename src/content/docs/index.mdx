@@ -22,7 +22,7 @@ import { Card, LinkCard } from '@astrojs/starlight/components';
 
 <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem', maxWidth: '720px'}}>
   <LinkCard href="/agents/overview" title="Agents" description="Design AI agents with custom models, tools, and knowledge bases." />
-  <LinkCard href="/agents/workplaces" title="Workplaces" description="Run agents on local machines, remote servers, or cloud devices — no SSH or public IP needed." />
+  <LinkCard href="/agents/workplaces" title="Workplaces" description="Run agents on local machines, remote servers, or tunnel devices — no SSH or public IP needed." />
   <LinkCard href="/plugins" title="Plugins" description="Extend Evonic with custom plugins and events." />
   <LinkCard href="/evaluation/overview" title="Evaluation" description="Measure and improve agent performance with customizable evaluators." />
   <LinkCard href="/skills/skills" title="Skills & Tools" description="Discover and manage skills and custom tools." />
@@ -37,7 +37,7 @@ import { Card, LinkCard } from '@astrojs/starlight/components';
 
 Evonic stands apart from other agentic frameworks through three foundational design decisions:
 
-1. **Workplace** — Agents execute in isolated environments that can be local directories, remote SSH servers, or cloud devices connected via Evonet. No public IP or complex firewall configuration needed.
+1. **Workplace** — Agents execute in isolated environments that can be local directories, remote SSH servers, or tunnel devices connected via Evonet. No public IP or complex firewall configuration needed.
 
 2. **Agent-to-Agent Communication** — Agents communicate natively as a first-class protocol. Swarm orchestration, role-based delegation, and multi-step collaboration are built into the runtime, not bolted on.
 
