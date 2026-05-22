@@ -33,6 +33,7 @@ When you design an agent in Evonic, you define these components:
 | **System Prompt** | The agent's personality, role, and behavioral guidelines |
 | **Tools** | Executable capabilities (bash, runpy, web search, custom API tools) |
 | **Knowledge Base** | Reference files the agent can read during conversations |
+| **Artifacts** | Persistent file output system for saving work results across sessions |
 | **Channels** | Messaging platforms the agent connects through (Telegram, WhatsApp, etc.) |
 | **Skills** | Installable packages that bundle tool definitions with Python backends |
 | **Workplace** | Execution environment — local directory, SSH server, or Evonet-connected device |
@@ -78,6 +79,10 @@ An agent is defined by a **slug ID** (e.g., `bookstore_bot`, `library_assistant`
 ### Knowledge Base
 
 Each agent has a filesystem directory (`agents/<agent_id>/kb/`) for storing `.md` reference files. The agent can read these files using the built-in `read` tool during conversations. This keeps knowledge files editable and version-controllable.
+
+### Artifacts
+
+Each agent has its own artifacts directory (`agents/<agent_id>/artifacts/`) for persisting work outputs across sessions. Agents use the `save_artifact` tool to store reports, images, or any generated files. Artifacts survive session deletion and are accessible through the web UI. See [Artifacts](/agents/artifacts) for details.
 
 ### Tools
 
@@ -151,6 +156,7 @@ For detailed walkthroughs of each use case, see the [Use Cases](/guides/use-case
 - [Creating and configuring agents](/agents/creating-agents)
 - [Managing the knowledge base](/agents/knowledge-base)
 - [Assigning tools](/agents/tools)
+- [Managing artifacts](/agents/artifacts)
 - [Setting up channels](/agents/channels)
 - [Agent state system](/agents/agent-state)
 - [Slash commands](/agents/slash-commands)
