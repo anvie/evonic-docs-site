@@ -7,6 +7,8 @@ description: A lightweight Go binary that connects any device to Evonic over Web
 
 It's the backend for **Tunnel Workplaces**. See [Workplaces](/agents/workplaces) for the Evonic-side setup.
 
+![Evonet GUI on macOS](/img/evonet-gui-mac.jpg)
+
 ## How It Works
 
 ```
