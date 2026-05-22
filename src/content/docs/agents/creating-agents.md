@@ -16,7 +16,7 @@ When you first set up Evonic, **the very first agent you create is automatically
 The Super Agent is the **platform administrator**. It has elevated privileges that regular agents don't:
 
 | Privilege | Super Agent | Regular Agent |
-|---|---|---|---|
+|---|---|---|
 | Can be disabled? | ❌ No | ✅ Yes |
 | Apply skillsets to create new agents | ✅ Yes | ❌ No |
 | Create tasks on Kanban (`create_task_super_only`) | ✅ Yes | ❌ No |
