@@ -82,6 +82,16 @@ evonet unpair                                 Clear credentials
 --workdir <path>   Override working directory
 ```
 
+## GUI Improvements
+
+*Introduced in v0.5.0.*
+
+The Evonet GUI has been enhanced for a better user experience:
+
+- **Clear button** — a Clear button in the toolbar lets you clear the current output without restarting the application (#343)
+- **Version in window title** — the Evonet version number is now displayed in the application window title, making it easy to verify which version is running
+- **macOS metadata** — a `FyneApp.toml` configuration file provides proper macOS app metadata (app name, version, icon) when building for macOS
+
 ## Configuration
 
 Config is resolved in priority order (highest wins):

@@ -278,6 +278,34 @@ scheduler.create_schedule(
 | `event_name` | string | Yes | Name of the event to emit |
 | `payload` | dict | No | Arbitrary JSON payload |
 
+### `session_prompt`: Trigger a full LLM session
+
+*Introduced in v0.5.0.*
+
+Triggers a full agent session with tool access from a scheduled job. The agent receives the message and can use its tools to respond, just like a normal conversation.
+
+```python
+scheduler.create_schedule(
+    name='Daily report',
+    trigger_type='cron',
+    trigger_config={'hour': 9, 'minute': 0},
+    action_type='session_prompt',
+    action_config={
+        'agent_id': 'report_bot',
+        'message': 'Generate today\'s status report',
+    },
+)
+```
+
+**Config fields:**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `agent_id` | string | Yes | Target agent ID |
+| `message` | string | Yes | Message to send to the agent |
+
+Unlike `agent_message` (which sends a static message), `session_prompt` gives the agent full tool access so it can run code, query databases, read files, or perform any other action as part of the scheduled job.
+
 ### `webhook`: Fire an HTTP request
 
 Sends an HTTP request to an external endpoint.
@@ -337,7 +365,7 @@ result = scheduler.create_schedule(
 | `owner_id` | string | Yes | Owner's ID |
 | `trigger_type` | string | Yes | One of: `date`, `interval`, `cron` |
 | `trigger_config` | dict | Yes | Trigger parameters (see Trigger Types above) |
-| `action_type` | string | Yes | One of: `agent_message`, `emit_event`, `webhook` |
+| `action_type` | string | Yes | One of: `agent_message`, `emit_event`, `session_prompt`, `webhook` |
 | `action_config` | dict | Yes | Action parameters (see Action Types above) |
 | `max_runs` | int | No | Maximum number of executions (default: unlimited; auto-set to 1 for `date` triggers) |
 | `metadata` | dict | No | Arbitrary metadata stored with the schedule |

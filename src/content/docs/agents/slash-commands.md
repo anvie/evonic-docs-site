@@ -166,6 +166,25 @@ Switches the agent to plan mode. In plan mode, the agent enters a deliberate pla
 
 ---
 
+### `/exec`
+
+*Introduced in v0.5.0.*
+
+Switches the agent to execute mode. In execute mode, write tools are unlocked and the agent can take actions.
+
+**Behavior:**
+- Creates a fresh AgentState in execute mode
+- Persists the state to the database
+- The agent responds with a confirmation
+
+**Example:**
+```
+/exec
+> Switched to execute mode.
+```
+
+---
+
 ### `/unfocus`
 
 Clears the agent's focus mode, allowing it to accept messages from all sessions again. When an agent is focused on a specific session, other sessions are ignored.
