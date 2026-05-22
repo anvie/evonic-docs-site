@@ -16,11 +16,13 @@ When you first set up Evonic, **the very first agent you create is automatically
 The Super Agent is the **platform administrator**. It has elevated privileges that regular agents don't:
 
 | Privilege | Super Agent | Regular Agent |
-|---|---|---|
+|---|---|---|---|
 | Can be disabled? | ❌ No | ✅ Yes |
 | Apply skillsets to create new agents | ✅ Yes | ❌ No |
 | Create tasks on Kanban (`create_task_super_only`) | ✅ Yes | ❌ No |
 | Bypass super-agent setup checks (update endpoint) | ✅ Yes | ❌ No |
+| `assign_skills` / `unassign_skill` tools | ✅ Yes | ❌ No |
+| Delete other agents' memories (`forget_memory`) | ✅ Yes | ❌ No |
 
 ### Role & Responsibilities
 
@@ -92,6 +94,7 @@ evonic agent add dev_bot --name "Dev Bot" --skillset coder --description "Coding
 | `--name` | Yes | Display name for the agent |
 | `--description` | No | Short description |
 | `--model` | No | Model override |
+| `--model-fallback` | No | Fallback model chain (comma-separated) |
 | `--skillset` | No | Skillset template ID (pre-configures tools & prompt) |
 
 ## Listing Agents
@@ -198,6 +201,24 @@ Or use a remote model:
 # For cloud models:
 meta-llama/Llama-3-8b-Instruct
 ```
+
+### Model Fallback
+
+*Introduced in v0.5.0.*
+
+You can configure a **fallback chain** of models in case the primary model fails. The agent automatically retries with the next model in the chain if the primary model times out or returns an error.
+
+Configure fallbacks in the **Model Fallback** field, comma-separated:
+
+```
+gpt-4, gpt-4-mini, llama3.2:3b
+```
+
+**Behavior:**
+- Each model in the chain is tried in order (1 retry per model)
+- The fallback chain persists across sessions
+- A badge in the UI shows which fallback model is currently active
+- If all models in the chain fail, the agent returns a timeout error
 
 ### Workspace Directory
 

@@ -144,6 +144,18 @@ Agents access portals through their normal file I/O tools. Here's what happens s
 
 The same flow works for `write_file`, `patch`, and `str_replace`.
 
+### `portal_copy` Tool
+
+*Introduced in v0.5.0.*
+
+The `portal_copy` tool lets agents copy files between workspaces, portals, or across different paths in a single operation. This is useful for transferring files between different execution environments without manual staging.
+
+```python
+portal_copy(src="/_portal/shared_docs/report.md", dst="/workspace/report.md")
+```
+
+The source and destination paths accept any file tool path including `/_self/`, `/_portal/`, and regular workspace paths. The tool resolves both paths through the PortalManager and handles binary and text files transparently.
+
 ## Security Considerations
 
 - **Portals are scoped to their backend** — an agent can only access what the portal's backend allows

@@ -104,6 +104,7 @@ Agents support slash commands for quick actions. These work in both the web chat
 | `/clear` | Clear the current conversation history |
 | `/help` | Display available slash commands |
 | `/summary` | Trigger conversation summarization |
+| `/exec` | Switch from plan mode to execute mode |
 
 See [Slash Commands](/agents/slash-commands) for full details.
 

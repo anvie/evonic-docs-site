@@ -5,6 +5,79 @@ description: Release history and updates for Evonic.
 
 # Changelog
 
+## v0.5.0 — 2026
+
+*255 commits, 110 changes*
+
+### New Features (11)
+
+- **Agent Artifacts** — persistent file output system with `save_artifact` tool, artifact modal viewer, `read_attachment` tool with cross-agent isolation, and attachment cleanup on session delete
+- **RTK Token Compressor** — 8-stage modular compression pipeline with TOML schema, Python and Rust builtin filters, agent-specific and project-level filter overrides via KB, and token savings tracking API
+- **Thinking Budget Cap** — per-model round-based budget enforcement for small model efficiency
+- **Quality Monitor with Auto-Correction** — automatic correction and output parser for improved response quality
+- **Long-running command guardrail** — detects build/compile commands and suggests tmux/screen alternatives
+- **`/exec` slash command** — switch agent mode from plan to execute directly via chat
+- **`forget_memory` tool** — long-term memory deletion for soft-deleting stale or irrelevant memories
+- **`assign_skills` / `unassign_skill` super-agent tools** — assign and remove skills from agents programmatically
+- **Evonic Backup System** — CLI-based backup, restore, and verification with `evonic backup` command
+- **File upload in web chat UI** — upload files directly from the chat interface
+- **Per-agent model fallback** — configurable fallback chain with 1 retry, persistence across sessions, and UI badge indicator
+
+### Plugin Features (2)
+
+- **Model-router plugin** — per-model base system prompts, model list endpoint, and token widget UI overhaul
+- **Plugin widget mechanism** — auto-load `*_widget.html` in plugin detail page for custom UI
+
+### Enhancements (53 — highlights)
+
+- **`portal_copy` tool** — binary file transfer between workspaces and portals
+- **Write-vs-Edit guard** — `write_file` now refuses to overwrite existing files, guiding agents to use `str_replace` or `patch` for surgical edits
+- **Improved `patch` tool** — tiered fuzzy matching with exact, indent-tolerant, and unescape-tolerant fallback tiers
+- **Dynamic edit tool suggestion** — writes overwrite guard dynamically suggests the best edit tool based on assigned tools
+- **Search bars on /plugins and /skills pages** — client-side filtering for quick navigation (#362, #365)
+- **Compact plugin and skill cards** — redesigned to match /agents card pattern with compact layout (#361, #364)
+- **Token list SVG icons** — replaced text Edit/Delete buttons with SVG icons in API token list (#333)
+- **Prompt-only skill badges** — show skills without tools as badges with divider line between Tasks and Skills
+- **State API with loaded skills** — `/api/state` now exposes `loaded_skills` with skill badges rendered in sessions page (#359)
+- **SSE bridge state-change trigger** — add `use_skill`/`unload_skill` to SSE state-change trigger list (#358)
+- **Remove `Regular` category badge** — removed from non-system plugin cards
+- **Evonet GUI improvements** — Clear button in toolbar (#343), version number in window title, FyneApp.toml for macOS metadata
+- **Intent-based Skill Injection** — dynamic tool guidance by injecting relevant skill context based on agent intent
+- **Process tracker** — immediate `/stop` interrupt for running tool executions via PID-based process tracking
+- **Scheduler `session_prompt` action type** — trigger full LLM sessions from scheduled jobs with tool access
+- **Scheduler detail modal** — display `static_message` content in scheduler detail view
+- **Channel user identity injection** — inject channel user identity into agent context for personalized responses
+- **Dynamic enabled-agent roster injection** — inject live list of enabled agents into super agent system prompt
+- **Sanitize Docker/container language** — remove container terminology from tool descriptions for non-sandbox agents
+- **Telegram username allowlist** — enhance Telegram user allowlist to include username-based filtering
+- **Accurate tiktoken token counts** — compiled context now shows memories and summary with precise token counts
+- **Translate remaining Indonesian to English** — all CLI commands and help text now in English (#342)
+
+### Bug Fix Highlights (44 fixes — highlights)
+
+- **False-positive continuation nudge** — fixed on report-style responses, completion/summary responses, and permission-seeking responses
+- **Continuation nudge negation fix** — `PLANNING_RE` nudge negation broke out of loop instead of falling through
+- **Safety pipeline import graceful fallback** — all tool files now wrap `safety_pipeline` import in try/except with warning log and graceful degradation
+- **`_skip_safety` flag hardening** — requires strict boolean `True` to skip safety checks
+- **Kanban `tool_guard` self-heal** — clears stale pending status for done/reassigned tasks
+- **Dark mode UI fixes** — hover text on Advanced Settings (#352), hover styling for session items (#360), fix for user-directory plugin modals and table
+- **EvoNET build fix** — fixed evonet build and `portal_copy` for absolute paths
+- **`/clear` chat input fix** — clear chat input after `/clear` command submission (#392)
+- **Task text sanitization** — prevent inconsistent status indicator rendering from sanitized task text
+- **Loaded skill badge persistence** — clear in-memory session skill data in slash command handler (#373)
+- **Fix misleading `Execution stopped by user`** — for sudo/signal deaths that were not user-initiated
+- **`/help` command visibility** — fix `/help` showing `/cd` and `/cwd` commands to non-super agents
+- **Fix eval page real-time logs** — escape HTML in Real-Time Logs (#335)
+- **Fix session state task list display** — not shown in chat UI right panel (#226)
+- **Fix portal Add button** — 6 JavaScript/HTML ID mismatches causing silent failure
+- **Fix trailing newline in patch.py** — when no lines remain after patch application
+- **Fix restart ready message** — proper web chat thinking bubble for slash commands
+- **Show webhook secret as plain text** — instead of masked for copy-paste (#212)
+- **Re-route SSE adapter after turn_split** — maintain real-time updates in monolith mode
+- **Update progress persistence** — survive crashes during update with progress tracking and pre-flight checks
+
+For the complete list of commits, see the [GitHub release](https://github.com/anvie/evonic/releases/tag/v0.5.0).
+
 ## v0.3.49 — 2026
 
 *7 commits*

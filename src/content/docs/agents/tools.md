@@ -57,6 +57,67 @@ Both tools return structured output with:
 - `exit_code`: Return code
 - `error`: Error message (if the command was blocked)
 
+## Additional Built-in Tools
+
+### `save_artifact`
+
+*Introduced in v0.5.0.*
+
+Persistent file output system for saving work results. Use this to save reports, summaries, generated files, or any output you want to keep beyond the current session.
+
+```python
+save_artifact(filename="report.md", content="# Analysis Report...", mime_type="text/markdown", mode="text")
+```
+
+Features:
+- Files are stored in the agent's artifacts directory and accessible via the web UI
+- Supports text and binary files (set `mode` to `"base64"` for binary)
+- Artifacts are visible in a modal viewer and survive session deletion
+- Cross-agent isolation: each agent can only see its own artifacts
+
+### `forget_memory`
+
+*Introduced in v0.5.0.*
+
+Soft-delete a long-term memory by its ID. Use this when a stored memory is stale, incorrect, or no longer relevant.
+
+```python
+forget_memory(memory_id=42)
+```
+
+The memory is marked as expired and will no longer appear in recall results. Only super agents can delete another agent's memories.
+
+### `portal_copy`
+
+*Introduced in v0.5.0.*
+
+Copy files between workspaces, portals, or across different paths using a single tool. This is useful for transferring files between different execution environments without manual staging.
+
+```python
+portal_copy(src="/_portal/shared_docs/report.md", dst="/workspace/report.md")
+```
+
+The source and destination paths accept any file tool path including `/_self/`, `/_portal/`, and regular workspace paths.
+
+## Write-vs-Edit Guard
+
+*Introduced in v0.5.0.*
+
+The `write_file` tool now **refuses to overwrite** an existing file. If the target file already exists, the tool returns an error message guiding the agent to use `str_replace` or `patch` for surgical edits instead. This prevents accidental data loss and encourages precise editing.
+
+The error message dynamically suggests the best edit tool based on the agent's assigned tools.
+
+## Improved `patch` Tool
+
+*Introduced in v0.5.0.*
+
+The `patch` tool now uses **tiered fuzzy matching** with three fallback levels:
+1. **Exact match** — fast, precise matching of the provided diff
+2. **Indent-tolerant** — matches even if indentation differs slightly
+3. **Unescape-tolerant** — handles JSON `\\uXXXX` escapes and smart quotes
+
+This makes the `patch` tool more reliable, especially when the LLM produces diffs with minor formatting inconsistencies.
+
 ## The `/_self/` Virtual Path
 
 All file tools (`read_file`, `write_file`, `str_replace`, `patch`) support a special `/_self/` path prefix that always resolves to the agent's own directory on the Evonic server (`agents/<agent_id>/`), regardless of the agent's workspace location.
@@ -75,6 +136,7 @@ In all these cases, the agent cannot reach its own configuration files using nor
 | `/_self/SYSTEM.md` | `agents/<id>/SYSTEM.md` | The agent's system prompt |
 | `/_self/kb/` | `agents/<id>/kb/` | Knowledge base files |
 | `/_self/sessions/` | `agents/<id>/sessions/` | Session data |
+| `/_self/artifacts/` | `agents/<id>/artifacts/` | Saved artifacts (via `save_artifact`) |
 
 ### Examples
 
