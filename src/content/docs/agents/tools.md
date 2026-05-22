@@ -63,17 +63,13 @@ Both tools return structured output with:
 
 *Introduced in v0.5.0.*
 
-Persistent file output system for saving work results. Use this to save reports, summaries, generated files, or any output you want to keep beyond the current session.
+Save a file to the agent's persistent artifacts directory. Use this to store reports, summaries, generated files, or any output you want to keep beyond the current session.
 
 ```python
 save_artifact(filename="report.md", content="# Analysis Report...", mime_type="text/markdown", mode="text")
 ```
 
-Features:
-- Files are stored in the agent's artifacts directory and accessible via the web UI
-- Supports text and binary files (set `mode` to `"base64"` for binary)
-- Artifacts are visible in a modal viewer and survive session deletion
-- Cross-agent isolation: each agent can only see its own artifacts
+See the [Artifacts](/agents/artifacts) page for full details on saving, accessing, and managing artifacts.
 
 ### `forget_memory`
 
