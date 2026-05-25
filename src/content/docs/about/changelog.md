@@ -78,6 +78,39 @@ description: Release history and updates for Evonic.
 
 For the complete list of commits, see the [GitHub release](https://github.com/anvie/evonic/releases/tag/v0.5.0).
 
+## v0.5.24 \u2014 2026
+
+*11 enhancements, 11 bug fixes*
+
+### Enhancements (11)
+
+- **Injection Guard toggle (#397)** \u2014 per-agent toggle for tool-level prompt injection detection in write_file, str_replace, patch, read_file, bash, runpy, and send_agent_message. Three response modes: block, warn, log. Configurable severity threshold. See [Injection Guard](/security/injection-guard).
+- **Recall tool result contents in thinking bubble (#398)** \u2014 recall tool outputs now appear in the agent's thinking bubble for visibility
+- **Auto-scroll + dark green log view (#394)** \u2014 improved Evonet and log viewing experience
+- **Evonet tunnel workplace awareness** \u2014 workplace context injected into agent system prompt for Evonet-connected devices
+- **`/_self/artifacts/` virtual path (#419)** \u2014 agents can now access their artifacts directory via the `/_self/artifacts/` virtual path from any execution environment
+- **Plan badge clickable modal (#418)** \u2014 click the plan badge in chat to view plan details
+- **Safety/Injection Guard toggles moved to Advanced Settings (#399)** \u2014 consolidated safety toggles into Advanced Settings section
+- **Toast notifications + robust error parser (#395)** \u2014 improved error feedback with toast notifications
+- **Model test connection visual feedback (#395)** \u2014 loading state and result feedback for model connection testing
+- **Download URL/button merged** \u2014 streamlined download interface, removed curl sample hint
+
+### Bug Fixes (11)
+
+- UnboundLocalError on lazy skill unload
+- Approval modal 409 stuck
+- `.env.example` read access denied
+- Summarizer JSON template crash
+- SSE thinking spinner stuck
+- Stale symlink false update banner
+- [DONE] response content recovery
+- Plan files per-agent sandbox path
+- False positive `git add .gitignore`
+- `str_replace` unicode escape mismatch
+- Update race guard + timeout
+
+For the complete list of commits, see the [GitHub release](https://github.com/anvie/evonic/releases/tag/v0.5.24).
+
 ## v0.3.49 — 2026
 
 *7 commits*
