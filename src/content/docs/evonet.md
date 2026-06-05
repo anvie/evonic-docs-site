@@ -41,8 +41,9 @@ git clone https://github.com/anvie/evonic
 cd evonet/
 make build           # current platform
 make build-linux     # Linux amd64
-make build-macos     # macOS arm64 + amd64
-make build-windows   # Windows amd64
+make build-macos       # macOS arm64 + amd64
+make build-windows     # Windows amd64
+make build-gui-macos   # macOS GUI app (.app bundle) — requires fyne CLI
 ```
 
 ## Quick Start
