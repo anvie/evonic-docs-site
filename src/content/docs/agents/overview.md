@@ -110,6 +110,8 @@ Agents support slash commands for quick actions. These work in both the web chat
 | `/help` | Display available slash commands |
 | `/summary` | Trigger conversation summarization |
 | `/exec` | Switch from plan mode to execute mode |
+| `/cwd` | Show the current workspace directory |
+| `/cd` | Change the agent's workspace directory |
 
 See [Slash Commands](/agents/slash-commands) for full details.
 

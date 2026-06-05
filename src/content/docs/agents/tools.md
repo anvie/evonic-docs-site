@@ -95,6 +95,25 @@ portal_copy(src="/_portal/shared_docs/report.md", dst="/workspace/report.md")
 
 The source and destination paths accept any file tool path including `/_self/`, `/_portal/`, and regular workspace paths.
 
+### `resolve_agent_approval`
+
+*Introduced in v0.6.78.*
+
+Approve or reject a pending tool-call approval from another agent. This is used in inter-agent workflows where one agent requests permission from another to execute a tool.
+
+```python
+resolve_agent_approval(approval_id="abc-123", decision="approve")
+```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `approval_id` | string | The approval ID from the notification message |
+| `decision` | string | `"approve"` or `"reject"` |
+
+The `approval_id` is included in the notification message when you receive an approval request from another agent.
+
 ## Write-vs-Edit Guard
 
 *Introduced in v0.5.0.*
