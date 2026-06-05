@@ -5,6 +5,28 @@ description: Release history and updates for Evonic.
 
 # Changelog
 
+## v0.6.77 — 2026
+
+*10 changes, 3 new contributors*
+
+### Enhancements (3)
+
+- **Plugin hot reload** — plugin files are now watched for changes during development. Edit your handler, plugin.json, or routes, and the plugin reloads automatically without needing `evonic plugin reload`
+- **Two-pass extraction in UI** — evaluator two-pass extraction settings and results are now exposed directly in the evaluation UI for better visibility
+- **Health endpoint checks** — added DB connectivity, disk usage, and Docker health checks to the `/health` endpoint for monitoring
+
+### Bug Fixes (7)
+
+- **Sandbox mock runner security** — `exec()` in Python mock test runner now uses AST validation to sandbox execution
+- **SVG avatar XSS prevention** — avatar uploads now reject SVG files to prevent stored XSS attacks
+- **Setup wizard dead TONES lookup** — removed stale TONES lookup that broke Next button on Super Agent step
+- **Unreplied-chat startup scan** — limited unreplied-chat initialization scan to human-facing sessions only
+- **Shallow clone git operations** — reconfigure remote to track branches for clean git fetch/pull after shallow clone install
+- **.env file permissions warning** — warn about `.env` file permissions when `SECRET_KEY` is auto-generated
+- **Kanban task_id type mismatch** — normalize `task_id` to string to prevent type mismatch bugs
+
+For the complete list of commits, see the [GitHub release](https://github.com/anvie/evonic/releases/tag/v0.6.77).
+
 ## v0.5.0 — 2026
 
 *255 commits, 110 changes*
