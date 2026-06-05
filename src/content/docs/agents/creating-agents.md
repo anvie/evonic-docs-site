@@ -204,7 +204,7 @@ meta-llama/Llama-3-8b-Instruct
 
 ### Model Fallback
 
-*Introduced in v0.5.0.*
+*Introduced in v0.5.0. Sticky behavior added in v0.6.78.*
 
 You can configure a **fallback chain** of models in case the primary model fails. The agent automatically retries with the next model in the chain if the primary model times out or returns an error.
 
@@ -216,7 +216,8 @@ gpt-4, gpt-4-mini, llama3.2:3b
 
 **Behavior:**
 - Each model in the chain is tried in order (1 retry per model)
-- The fallback chain persists across sessions
+- **Sticky fallback** (v0.6.78+) — once a fallback model is activated, it stays active until manually reset for more predictable behavior
+- To reset back to the primary model, use the `reset_active_model` tool
 - A badge in the UI shows which fallback model is currently active
 - If all models in the chain fail, the agent returns a timeout error
 

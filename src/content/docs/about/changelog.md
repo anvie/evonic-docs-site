@@ -5,6 +5,115 @@ description: Release history and updates for Evonic.
 
 # Changelog
 
+## v0.6.78 — 2026
+
+*184 commits, 93 changes*
+
+### New Features (13)
+
+- **Agent Sidebar** — sidebar panel showing agent list, status, and quick access for easier agent management and switching
+- **Message Wrapper Protocol** — agents automatically scan incoming messages for user preferences, facts, and instructions before responding, saving them to memory without explicit commands
+- **Bubble UI Popup** — chat interface with popup bubble mode for quick interactions without full-page navigation
+- **File & Image Upload** — direct file and image upload in chat with multimodal support for richer conversations
+- **Audio & Video Multimodal Input** — voice and video input support in chat for richer, more natural interaction
+- **Semantic Memory Conflict Detection** — intelligent detection and resolution of conflicting memories for more accurate recall across sessions
+- **Auto-Inject Agent Env Vars** — environment variables automatically injected into bash/runpy tools for seamless configuration access
+- **Health Endpoint** — `/health` endpoint for monitoring service availability
+- **Plugin Hot Reload** — instant plugin reloads on file change without service restart, speeding up plugin development
+- **Outbound File Sending** — agents can now send files to users as output artifacts, enabling richer agent-generated deliverables
+- **Pre-Commit Safety Checks** — automated pre-commit validation for path safety, sensitive data scanning, and file size limits
+- **Clickable Plan Badge** — plan badge in chat UI is now clickable, linking directly to the plan file for quick access
+- **Skeleton Loading** — skeleton placeholder UI for smoother perceived loading during page transitions
+
+### Plugin Features (1)
+
+- **pinchtab_eval** — evaluate PinchTab browser automation environments with structured testing capabilities
+
+### Enhancements (41)
+
+- **Sticky fallback model** — fallback model now remains active until manually reset via `reset_active_model()` for more predictable behavior
+- Skill management revamp with lazy/eager loading architecture
+- Agent state framework with `state()` tool and namespace support for structured workflows
+- `list_skillsets` + `apply_skillset` tools — browse and apply pre-configured agent templates
+- `manage_skill` tool — list, enable, or disable skills at runtime
+- `unassign_skill` tool — selectively remove skills from agents
+- `resolve_agent_approval` tool — programmatic approval resolution for inter-agent workflows
+- `llm_respond` event — standardized inter-agent text responses
+- `/cwd` and `/cd` slash commands for workspace navigation from chat
+- `/restart` command restricted to super agent only for safety
+- `emit_event` action type for scheduler — trigger plugin events on schedule
+- Session scheduler: jobs survive restart via persistence layer
+- Evaluation settings UI revamp with dedicated toggle page
+- Thinking bubble auto-expand on new content
+- Performance: 6x caches for stats, session state, triggers, and model resolution
+- Query optimizations across multiple backend paths
+- UI improvements: dark mode refinements, sidebar polish, icon consistency
+- Drop Python 3.9; require 3.10+
+- Async agent toolbox built on top of events/triggers
+- Plugin override: `default_plan_prompt` configurable per plugin
+- Plugin registry event: `core.chat.chat_history_rendered`
+- Truncation filters now individually configurable per tool
+- `icd10_search` tool upgraded with BM25 ranking and Indonesian medical terms
+- `icd10_search2` RAG search with BGE-M3 vector embeddings
+- Agent detail page: hide password fields, show agent type badges, prompt length indicator
+- Token stats: total vs loaded breakdown for transparency
+- Runpy sandbox `http` module supports `download()` helper for binary assets
+- Agent template pre-configured with eval skill for quick evaluator setup
+- `find()` glob returns absolute paths matching the sandbox workspace
+- Compact skill item cards on `/skills` page matching `/agents` card pattern
+- API router docstring endpoint: `/api/docstring/{agent_id}`
+- Sanitize commit messages before Git operations — auto-redact sensitive info
+- Persistent cache for model resolution to reduce repeated DB lookups
+- JWT secret auto-generated on first launch for zero-config setup
+- Task text rendered as markdown in session state display
+- Agent skills shown in agent list sidebar for at-a-glance awareness
+- User agents always shown first in sidebar regardless of sort
+- Gemma4 parser: `strip_gemma4_thinking` unified with standard parser
+- Warmup: prevent thinking from being called during model warmup phase
+- `user_updated` event emitted on owner name change for plugin reactivity
+
+### Bug Fixes (38)
+
+- **Gemma4 Bold Markdown Spacing** — fixed broken word spacing in bold text
+- Kanban: gracefully handle invalid JSON in task body instead of crashing
+- Scheduler: fixed next-fire-time precision and duplicate firing on restart
+- Scheduler: `interval` triggers now survive process restart correctly
+- Dark mode: unreadable checkbox contrast and icon visibility fixed
+- XSS prevention: sanitize raw HTML in message rendering
+- `@` mention auto-scroll flaky behavior on long agent lists fixed
+- Memory deduplication: `remember()` no longer double-saves on retry
+- Workspace root path resolution in `resolvePath()` — absolute paths handled correctly
+- Agent state tool now works inside inter-agent sessions
+- `send_agent_message`: agent ID allowed in `action_config` for schedule targeting
+- `create_schedule`: `agent_id` defaults to caller when omitted
+- `assign_tools`: tool not found returns clear error
+- `assign_skills`: validates agent exists before assigning
+- `sessrecap.log` truncated after plan execution — no unbounded log growth
+- Gemma4 parser: double-thinking-tag extraction and hanging on large inputs fixed
+- Docker-kill end_time regression in sandbox cleanup
+- Thinking tag wrapper incorrectly applied to eval-only sessions
+- `recall_sessions` returning duplicate summaries for inter-agent conversations
+- `last_agent_id` session tracking for inter-agent switching
+- Cache key collision when default model updated mid-session
+- Silent agent crash on missing model config — now shows clear error
+- `/agents` page crash on missing agent configs
+- `bump_version.sh` not committing `VERSION` file changes
+- `close` tool removed — handled internally by sandbox lifecycle
+- `llm_respond` event payload for standard OpenAI-format responses
+- Async event bridge error swallowing — errors now properly surfaced
+- Token count regression after `truncate()` refactor
+- Sandbox `get()` on localhost URLs timing out
+- `read_file` tool blocking on large files from agent session
+- `str_replace` returning wrong error message on ambiguous matches
+- `write_file` not creating parent directories when `create_dirs=true`
+- Stale `.plan` files left in repo after plan execution
+- Gitignore bypass via `write_file` to `.evonic/` paths
+- `read` KB tool not listing `.md` files in subdirectories
+- Scheduler `max_runs` not enforced on `date` triggers
+- Plugin variables not accessible in event handler callbacks
+
+For the complete list of commits, see the [GitHub release](https://github.com/anvie/evonic/releases/tag/v0.6.78).
+
 ## v0.6.77 — 2026
 
 *10 changes, 3 new contributors*
