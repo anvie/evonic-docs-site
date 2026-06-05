@@ -170,6 +170,37 @@ def on_turn_complete(event, sdk):
     sdk.log(f"Turn complete notification sent for session {session_id}")
 ```
 
+## Hot Reload
+
+*Introduced in v0.6.77.*
+
+During plugin development, Evonic watches your plugin files for changes and reloads them automatically — no manual restart or `evonic plugin reload` needed.
+
+### How It Works
+
+Edit any file in your plugin directory (`plugin.json`, `handler.py`, `routes.py`, or templates) and the changes take effect immediately. The hot reload watches for:
+
+- File saves (write to disk)
+- New files added to the plugin directory
+- File deletions within the plugin directory
+
+### What Gets Hot-Reloaded
+
+| File | Effect on Reload |
+|------|-----------------|
+| `plugin.json` | Manifest, events, and variables are re-read |
+| `handler.py` | Handler functions are re-registered |
+| `routes.py` | Flask routes are re-registered |
+| `templates/` | Jinja2 templates are reloaded on next render |
+
+### When to Use Manual Reload
+
+In rare cases where the hot reload doesn't detect your changes (e.g., editor saves to a temporary file and moves it), you can always fall back to the CLI:
+
+```bash
+evonic plugin reload my_plugin
+```
+
 ## Export a Plugin as ZIP
 
 *Introduced in v0.2.0.*
