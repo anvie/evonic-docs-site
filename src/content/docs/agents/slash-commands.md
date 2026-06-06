@@ -31,6 +31,27 @@ Clears the current conversation history for the active session. The agent starts
 
 ---
 
+### `/clear-memory`
+
+*Introduced in v0.6.91.*
+
+Clears the agent's long-term memories. This removes all stored facts, preferences, and remembered information that the agent has accumulated across sessions.
+
+**Behavior:**
+- Deletes all memories stored via `remember()` or the Message Wrapper Protocol
+- Each memory is soft-deleted (marked as expired) so it won't appear in future `recall()` results
+- The agent responds with a confirmation of how many memories were cleared
+
+**Example:**
+```
+/clear-memory
+> Cleared 12 memories.
+```
+
+**Note:** This only affects the agent's long-term memory, not the current conversation history. To clear the conversation history, use `/clear` instead.
+
+---
+
 ### `/help`
 
 Displays a list of available slash commands with brief descriptions. Certain commands (e.g. `/restart`) are hidden from non-super agents.
