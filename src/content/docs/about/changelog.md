@@ -114,6 +114,40 @@ description: Release history and updates for Evonic.
 
 For the complete list of commits, see the [GitHub release](https://github.com/anvie/evonic/releases/tag/v0.6.78).
 
+## v0.6.91 — 2026
+
+*5 new features, 4 enhancements, 14 bug fixes*
+
+### New Features (5)
+
+- **Auto Reply-Back for Cross-Agent Conversations** — agents now automatically reply when receiving messages from other agents, enabling seamless inter-agent dialogue without manual prompting or requiring the sender to poll for responses
+- **`/clear-memory` Slash Command** — new command to clear an agent's long-term memories, with full support for hyphenated command names in the slash command parser
+- **`clear_all_memories` Method** — new `chat_delegation` mixin method for programmatic memory cleanup across agents, enabling automated memory management in multi-agent workflows
+- **Slash Command Response Styling** — slash command responses now appear in a distinct blue style, visually separating system command output from AI-generated content in the chat
+- **Missing Slash Path Hint** — when a `/_self` path is missing its leading slash, agents now provide a helpful correction hint instead of a cryptic error
+
+### Enhancements (4)
+
+- **Session ID in Admin List** — session IDs now visible in the sessions admin page for easier reference and debugging
+- **Chat Fullscreen Persistence** — fullscreen chat state persists via `localStorage` across page reloads for a seamless user experience
+- **Agent Sidebar Limit** — agent sidebar now shows a maximum of 10 entries for cleaner navigation and reduced clutter
+- **Attachment Metadata** — `file_path` added to `attachment_info` metadata for richer file context in tool results
+
+### Bug Fixes (14)
+
+- Clear session no longer archives the session, keeping it alive for `has_session` checks
+- Bold markdown regex fixed for start-of-string matching in both `llm_client.py` and `gemma4_parser.py`
+- Missing-slash hints added to all four file-related tools (`write_file`, `str_replace`, `read_file`, `patch`)
+- `VERSION` removed from `.gitignore` so the bump script properly commits version changes
+- OGG voice messages now converted to WAV for multimodal LLM compatibility (#500)
+- Missing `import os` added in `tunnel_workplace.py`
+- Bubble popup now navigates to the correct session instead of always going to the agent chat room (#499)
+- Sessions now auto-archive on `/clear` to prevent stale summaries in `recall_sessions`
+- Mobile chat glitch resolved — SSE race condition and jQuery animation regression fixed
+- Web badge display corrected in session list item UI
+
+For the complete list of commits, see the [GitHub release](https://github.com/anvie/evonic/releases/tag/v0.6.91).
+
 ## v0.6.77 — 2026
 
 *10 changes, 3 new contributors*
