@@ -8,7 +8,7 @@ sidebar:
 ## Directory Structure
 
 ```
-test_definitions/
+evaluator/test_definitions/
 ├── conversation/
 │   ├── domain.json              # Domain metadata
 │   ├── level_1/
