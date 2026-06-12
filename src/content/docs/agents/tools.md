@@ -71,6 +71,31 @@ save_artifact(filename="report.md", content="# Analysis Report...", mime_type="t
 
 See the [Artifacts](/agents/artifacts) page for full details on saving, accessing, and managing artifacts.
 
+### `list_artifacts`
+
+*Introduced in v0.7.0.*
+
+Browse the agent's artifact directory. Returns a list of files stored in the agent's artifacts, with metadata like filename, size, and last-modified time. Automatically granted to any agent that has the `save_artifact` tool.
+
+```python
+list_artifacts()
+```
+
+**Example output:**
+```json
+{
+  "files": [
+    {"name": "report.md", "size": 1245, "modified": "2026-06-12T07:00:00Z", "mime_type": "text/markdown"}
+  ]
+}
+```
+
+**Parameters:**
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `query` | string | None | Optional search/filter string to match filenames |
+
 ### `forget_memory`
 
 *Introduced in v0.5.0.*

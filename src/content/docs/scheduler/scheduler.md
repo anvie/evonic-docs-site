@@ -142,7 +142,7 @@ Schedules are created through the scheduler skill's agent tools. Install the sch
 
 ## Trigger Types
 
-The scheduler supports three trigger types, each with its own configuration format.
+The scheduler supports four trigger types, each with its own configuration format.
 
 ### `date`: One-shot at specific time
 
@@ -223,6 +223,44 @@ scheduler.create_schedule(
 | `end_date` | str | None | Latest end date (ISO 8601) |
 
 See the [APScheduler CronTrigger docs](https://apscheduler.readthedocs.io/en/stable/modules/triggers/cron.html) for full syntax.
+
+### `auto_extend`: Perpetual automatic renewal
+
+*Introduced in v0.7.0.*
+
+A special trigger type that **automatically extends** running schedules, enabling perpetual scheduling patterns without manual renewal.
+
+**Behavior:**
+- When a schedule configured with `auto_extend` fires, it automatically renews itself
+- The renewal uses the same trigger and action configuration
+- This enables schedules that run indefinitely without requiring manual re-creation
+- Ideal for recurring monitoring tasks, health checks, and persistent workflows
+
+```python
+scheduler.create_schedule(
+    name='Perpetual health check',
+    trigger_type='auto_extend',
+    trigger_config={'interval_minutes': 30},
+    action_type='emit_event',
+    action_config={'event_name': 'health_check', 'payload': {}},
+)
+```
+
+**Config fields:**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `interval_minutes` | int | Yes | How often (in minutes) the schedule re-triggers and extends itself |
+
+## Scheduler Log Tab
+
+*Introduced in v0.7.0.*
+
+The scheduler detail view now includes a **Log** tab that shows activity execution details for each scheduled run. You can use this tab to:
+
+- View captured output from scheduled actions
+- Check timing information for each execution
+- Troubleshoot failures directly from the UI
 
 ## Action Types
 

@@ -81,19 +81,6 @@ When an agent sends a message to another agent that triggers a **platform restar
 
 This prevents a cascading scenario where a sub-agent or delegated task accidentally triggers a platform-wide restart without human oversight.
 
-### Auto Reply-Back
-
-*Introduced in v0.6.91.*
-
-When an agent receives a message from another agent, it now **automatically generates a reply** without needing a manual prompt. This makes inter-agent dialogue seamless:
-
-1. Agent A sends a message to Agent B
-2. Agent B automatically initiates a processing turn in its own session
-3. Agent B generates a response, which is auto-forwarded back to Agent A
-4. Agent A receives the reply and can continue the conversation
-
-This enables natural back-and-forth conversations between agents for collaborative problem-solving, while still enforcing the guard rails below.
-
 ### Loop prevention: passive reply rule
 
 The most dangerous failure mode in multi-agent systems is a **ping-pong loop**: where two agents keep messaging each other indefinitely:
@@ -121,7 +108,7 @@ Agent A  → Agent B  (delegates task 123)
 Agent B needs clarification:
   ✗ B.send_agent_message(A, "need clarification")  ← BLOCKED
   ✓ B ends turn: "I need clarification about X before I can proceed"
-    → auto-forwarded to A's session (auto reply-back)
+    → auto-forwarded to A's session
 
 Agent A reads B's response:
   → A.escalate_to_user("B needs clarification about X")
@@ -130,11 +117,11 @@ Agent A reads B's response:
 
 Agent B completes task:
   → B ends turn with final answer
-  → auto-forwarded to A (auto reply-back)
+  → auto-forwarded to A
   → A relays result to User Y
 ```
 
-This means **all escalation paths always flow upward** (toward the user), never sideways between peer agents. The auto reply-back feature makes this flow feel natural — agents automatically respond to each other without delays or manual intervention.
+This means **all escalation paths always flow upward** (toward the user), never sideways between peer agents.
 
 ### If you need human input from within a sub-task
 

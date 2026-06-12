@@ -131,6 +131,36 @@ The notice informs the agent that:
 
 This prevents the agent from attempting actions that would fail due to sandbox restrictions.
 
+## Run-As-User Isolation
+
+*Introduced in v0.7.0.*
+
+Each agent can be configured to run its `bash` and `runpy` tools under a **specific Linux user** on the host system. This adds an extra layer of OS-level isolation beyond the Docker sandbox.
+
+### How It Works
+
+When `run_as_user` is configured for an agent, the sandbox backend:
+
+1. Executes commands via `sudo -E -u <username>` (preserving environment variables across `sudo` boundaries)
+2. The command runs under the specified user's identity and permissions
+3. Filesystem access is restricted to what that user can access
+4. Environment variables survive the `sudo` elevation
+
+### Configuration
+
+Set the run-as-user in the agent's **General** tab or via the API:
+
+| Method | Configuration |
+|--------|---------------|
+| **Web UI** | Enter the Linux username in the **Run As User** field in the agent's General tab |
+| **API** | Set `"run_as_user": "username"` in the agent configuration payload |
+
+### Use Cases
+
+- **Multi-tenant deployments**: Each agent runs under a dedicated user, preventing file access across agent boundaries
+- **Compliance**: Meet audit requirements by tying agent actions to specific OS accounts
+- **Limited permissions**: Create restricted Linux users with only the permissions an agent needs
+
 ## Configuration
 
 ### Env Variables
