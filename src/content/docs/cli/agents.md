@@ -1,9 +1,59 @@
 ---
 title: Agent Management
-description: CLI commands for managing Evonic agents.
+description: CLI commands for managing Evonic agents and workplaces.
 ---
 
 Commands for creating, updating, enabling, disabling, and removing agents via the CLI.
+
+## `evonic workplace`
+
+### `evonic workplace list`
+
+*Introduced in v0.7.0.*
+
+List all configured workplaces with their type and connection status:
+
+```bash
+evonic workplace list
+```
+
+**Output:**
+```
+ID        Name            Type    Status
+-----------------------------------------
+main      Main Office     local   connected
+dev-ssh   Dev Server      ssh     connected
+edge-1    Edge Device     tunnel  disconnected
+```
+
+### `evonic workplace get <workplace_id>`
+
+*Introduced in v0.7.0.*
+
+Show detailed information about a specific workplace:
+
+```bash
+evonic workplace get main
+```
+
+**Output:**
+```
+ID:          main
+Name:        Main Office
+Type:        local
+Path:        /workspace
+Status:      connected
+Agents:      3
+```
+
+### `evonic workplace add/remove`
+
+Workplaces can also be added and removed through the CLI:
+
+```bash
+evonic workplace add my_remote --type ssh --host example.com --user deploy
+evonic workplace remove my_remote
+```
 
 ## `evonic agent list`
 

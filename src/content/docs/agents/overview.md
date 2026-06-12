@@ -100,6 +100,12 @@ Channels connect agents to external messaging platforms. Each channel type (Tele
 
 Conversations are persisted per-user, per-agent, per-channel. The same user can have separate conversations with different agents. Session history is used as context for each LLM call.
 
+### Agent Quick Search (Ctrl+G)
+
+*Introduced in v0.7.0.*
+
+Press **Ctrl+G** anywhere in the web UI to open a keyboard-driven overlay for instant agent search and navigation. Type a partial name to filter agents, then jump directly to any agent without touching the mouse or leaving the current page.
+
 ### Slash Commands
 
 Agents support slash commands for quick actions. These work in both the web chat and channel interfaces:
@@ -111,6 +117,7 @@ Agents support slash commands for quick actions. These work in both the web chat
 | `/help` | Display available slash commands |
 | `/summary` | Trigger conversation summarization |
 | `/exec` | Switch from plan mode to execute mode |
+| `/shutdown` | Shut down the Evonic server (super agent only) |
 | `/cwd` | Show the current workspace directory |
 | `/cd` | Change the agent's workspace directory |
 

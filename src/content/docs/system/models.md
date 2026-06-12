@@ -25,6 +25,38 @@ Models are managed via:
 
 Each model has a provider (e.g., `openai`, `anthropic`, `llama.cpp`), a base URL, API key, and configuration options like max tokens, timeout, and temperature.
 
+## API Format Translation
+
+*Introduced in v0.7.0.*
+
+The LLM client now supports translating between **OpenAI** and **Anthropic API formats**, configurable per-model via an **API Format** dropdown in the model modal.
+
+| Format | Description |
+|--------|-------------|
+| **OpenAI** | Standard chat completions format (default for most providers) |
+| **Anthropic** | Anthropic's native Messages API format |
+
+### How It Works
+
+When you set a model's API format to **Anthropic**, the LLM client:
+
+1. Takes the internal OpenAI-format request (messages, tools, system prompt)
+2. Translates it to Anthropic's Messages API format
+3. Sends the translated request to the model's base URL
+4. Translates the Anthropic-format response back to the internal format
+
+This means you can connect **Claude and other Anthropic-compatible models natively** without a proxy. Just set the base URL to an Anthropic-compatible endpoint and switch the API format to Anthropic.
+
+### Configuration
+
+1. Go to **System → Models** (`/system/models`)
+2. Create a new model or edit an existing one
+3. Find the **API Format** dropdown in the model form
+4. Select **Anthropic** for Anthropic-compatible models
+5. Configure the provider, base URL, and API key as usual
+
+The format is set **per-model**, so you can mix OpenAI-format and Anthropic-format models in the same deployment.
+
 ## Duplicating a Model
 
 *Introduced in v0.2.6.*

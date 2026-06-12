@@ -273,6 +273,28 @@ Displays detailed status information about the agent, including model, mode, wor
 > Skills: 3
 ```
 
+---
+
+### `/shutdown`
+
+*Introduced in v0.7.0.*
+
+Cleanly shuts down the entire Evonic server from within a conversation. No terminal access needed.
+
+**Permission:** Super agent only.
+
+**Behavior:**
+- Validates the caller is the super agent
+- Initiates a graceful server shutdown
+- All channels are stopped cleanly
+- The server process exits
+
+**Example:**
+```
+/shutdown
+> Shutting down Evonic...
+```
+
 ## How Commands Are Processed
 
 When a message starts with `/`, the agent runtime intercepts it before sending to the LLM:

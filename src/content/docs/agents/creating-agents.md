@@ -202,6 +202,23 @@ Or use a remote model:
 meta-llama/Llama-3-8b-Instruct
 ```
 
+### API Format
+
+*Introduced in v0.7.0.*
+
+When configuring a model, you can choose the **API format** the LLM client uses to communicate with the model provider. This is available as a dropdown in the model settings (`/system/models`):
+
+| Format | Description |
+|--------|-------------|
+| **OpenAI** | Standard OpenAI-compatible API format (default for most providers) |
+| **Anthropic** | Anthropic's native API format (for Claude models via Anthropic-compatible endpoints) |
+
+The API format dropdown lets you connect **Claude and other Anthropic-compatible models natively** without needing a proxy or translation layer. The LLM client automatically handles the format translation when set to Anthropic.
+
+This is configured **per-model** (not per-agent) — when you create or edit a model, the API format dropdown appears alongside the provider, base URL, and API key fields.
+
+See [Models](/system/models) for full configuration details.
+
 ### Model Fallback
 
 *Introduced in v0.5.0. Sticky behavior added in v0.6.78.*
@@ -271,6 +288,34 @@ You can disable the safety checker per agent to enable **full autopilot mode**, 
 :::caution[Warning]
 Disabling the safety checker means the agent will execute code and system commands without any approval gate. Only disable this for agents you fully trust.
 :::
+
+## Run-As-User Isolation
+
+*Introduced in v0.7.0.*
+
+Each agent can be configured to run its `bash` and `runpy` tools under a **specific Linux user** on the host system. This adds an extra layer of OS-level isolation: even if an agent escapes its sandbox, it operates under a restricted user account rather than the Evonic server process owner.
+
+### Configuration
+
+Set the run-as-user in the agent's **General** tab or via the API/CLI:
+
+| Method | Configuration |
+|--------|---------------|
+| **Web UI** | Enter the Linux username in the **Run As User** field in the agent's General tab |
+| **API** | Set `"run_as_user": "username"` in the agent configuration payload |
+
+### Behavior
+
+- When `run_as_user` is set, all `bash` and `runpy` commands execute under that user's identity
+- Environment variables are preserved across `sudo` boundaries (`sudo -E` behavior)
+- The user must exist on the host system before the agent can use it
+- If the user does not exist, the tool returns a clear error
+
+### Use Cases
+
+- **Multi-tenant deployments**: Each agent runs under a dedicated user, preventing file access across agent boundaries
+- **Compliance**: Meet audit requirements by tying agent actions to specific OS accounts
+- **Limited permissions**: Create restricted Linux users with only the permissions an agent needs
 
 ## Cloning an Agent
 

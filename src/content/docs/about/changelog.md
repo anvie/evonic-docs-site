@@ -5,6 +5,119 @@ description: Release history and updates for Evonic.
 
 # Changelog
 
+## v0.7.0 — 2026
+
+*158 commits, 82 changes*
+
+### New Features (10)
+
+- **Image Lightbox** — full-featured image viewer with prev/next navigation, thumbnail sizing, and download button for chat images and artifacts. Browse visual content inline without leaving the conversation.
+- **Anthropic API Format Translation** — the LLM client now translates between OpenAI and Anthropic API formats, configurable per-model via an API format dropdown in the model modal. Connect Claude and other Anthropic-compatible models natively without a proxy.
+- **Per-Agent Run-As-User Isolation** — configure a Linux user per agent for bash and runpy execution, with environment variables preserved across sudo boundaries. Each agent runs sandboxed under its own OS account.
+- **Ctrl+G Agent Quick Search** — keyboard-driven overlay for instant agent search and navigation. Type a partial name and jump directly to any agent without touching the mouse.
+- **Scheduler Auto-Extend Trigger** — new trigger type that automatically extends running schedules, enabling perpetual scheduling patterns without manual renewal.
+- **List Artifacts Tool** — new tool lets agents browse their artifact directory. Automatically granted to any agent that has the `save_artifact` tool.
+- **Agent Sidebar Unread Indicators** — a blue dot and selection ring on sidebar avatars show which agents have pending responses, so you never miss a completed task while browsing elsewhere.
+- **`/shutdown` Slash Command** — super agents can cleanly shut down the entire Evonic server from within a conversation, no terminal access needed.
+- **Workplace CLI Subcommand** — manage workplaces from the command line with `evonic workplace`: list, inspect, and configure workplaces without the web UI.
+- **Scheduler Log Tab** — the scheduler detail view now includes activity execution details, captured output, and timing for each scheduled run, making it possible to troubleshoot failures directly from the UI.
+
+### Plugin Features (2)
+
+- **Exa-Search** — AI-powered web search capability for agents, enabling real-time information retrieval from the internet with structured JSON output and semantic content extraction (exa-search skill).
+- **Obscura** — lightweight headless browser for web scraping, JS rendering, CDP server (Puppeteer/Playwright), and MCP server. A lighter alternative to PinchTab with no dependencies and a single binary (obscura skill).
+
+### Enhancements (34)
+
+- **Realtime SSE Consolidation** — five separate realtime event streams merged into one unified SSE endpoint, reducing browser connection overhead and eliminating race conditions between event sources.
+- **PROMPTPurify L5e Injection Guard** — a compact ML classifier runs as a second-pass injection guard, catching prompt injection patterns that regex-based guards miss.
+- **CSRF Protection** — double-submit cookie pattern protects all state-changing endpoints against cross-site request forgery attacks.
+- **Auto-Assign Non-Lazy Skill Tools** — when a non-lazy skill is assigned to an agent, its tools are now automatically registered without manual assignment.
+- **Evonic Doctor Consistency Checks** — two new diagnostic checks detect orphaned tool assignments with `--fix` support for auto-correction.
+- **Stale Session Injection Detection** — the runtime detects stale agent sessions and injects a staleness-aware prefix to keep the agent grounded. Configurable per-agent.
+- **Save Artifact Source Path Routing** — artifacts can now be saved directly from file paths through sandbox and tunnel backends, eliminating the base64 bottleneck for large files.
+- **Evonet.md Default KB** — new super agent setups ship with `evonet.md` as a default knowledge base.
+- **In-Place Agent Switching** — navigating between agents now swaps content without a full page reload, reducing wait time when bouncing between agents.
+- **Unified Chat State/Summary** — `/chat/state` and `/chat/summary` merged into a single API call, halving network overhead on every chat turn.
+- **Configurable Sidebar Agent Limit** — maximum visible agents in the sidebar is now configurable from System Settings.
+- **Server-Side Search/Filter** — agent search and filtering moved to the backend, fixing search that only matched the currently visible page.
+- **Avatar Initials** — agents now display colored name-initial circles instead of generic placeholder icons.
+- **Chat Image Download Button** — every image in chat messages now has a download button overlay for one-click saving.
+- **Build Operations Rule Injection** — agents with bash or runpy tools automatically receive instructions to run compilations inside tmux or screen sessions.
+- **Artifacts Pagination** — the artifacts tab now paginates large collections with server-side search and filtering.
+- **KB File Modal Auto-Grow** — the KB file editor textarea now auto-grows to fit content, eliminating nested scrollbars.
+- **cat_file_bytes Streaming Transfer** — file transfers across all backends use streaming, supporting larger files without temporary disk copies.
+- **Smart Quote Normalization** — curly/smart double quotes normalized before markdown parsing, preventing broken formatting from copy-pasted text.
+- **Scheduler Full Output Capture** — `session_prompt` output now fully captured and visible in the scheduler detail view for troubleshooting.
+- **Summarization Diagnostic Logs** — skip reasons logged when summarization is bypassed.
+- **Stale Boundary Event Stripping** — stale boundary events stripped from `/chat/events` to prevent ghost thinking bubbles after `/clear`.
+- **Memory NULL-Dimension Backfill** — existing memories without dimension vectors backfilled so conflict detection catches all duplicates.
+- **Relative Avatar Path Storage** — `avatar_path` stored as relative for backup/restore portability across deployments.
+- **Telegram Auto-Populate Display Name** — agent display name automatically populated from Telegram profile data on first connection.
+- **`sudo -E` Environment Preservation** — environment variables survive sudo elevation when running commands with `run_as_user`.
+- **Toast on Agent Enable/Disable** — enabling or disabling agents now shows a toast confirmation.
+- **Python `-c` Instead of Heredoc** — bash execution uses `python -c` to keep stdin available for interactive `input()` calls.
+- **Download Button Repositioned** — chat image download button moved to top-right overlay.
+- **Allow Soft-Switch to/from Super Agent** — sessions no longer reject mode/agent change when switching to or from the super agent.
+- **Workplace Detail Tab Alignment** — workplace detail page tabs now match agent_detail styling.
+- **Slow-Request Logging** — requests exceeding 500ms logged with full path and timing for bottleneck identification.
+- **Verbose Logging by Default in CLI** — CLI mode now matches GUI log output verbosity.
+
+### Performance (11)
+
+- **Agent Detail Page Speedup** — eliminated database write contention and redundant queries on agent detail page loads.
+- **SQLite Performance Tuning** — WAL mode, synchronous, and cache size PRAGMAs tuned for the platform's read-heavy workload.
+- **Buffer Events.Log Writes** — event log writes buffered to reduce filesystem directory churn.
+- **Cache `app_settings`** — SettingsMixin caches app_settings to avoid hitting the database on every page load.
+- **Strip Empty Tool Descriptions** — OpenAI tool definitions omit empty description strings, reducing token overhead.
+- **DB Connection Lifecycle** — connections closed after requests to prevent WAL checkpoint stalls and file descriptor exhaustion.
+- **Compiled Regex + Tool JSON Cache** — regex patterns compiled at module level and tool JSON cached with mtime invalidation.
+- **Lazy Image Loading with Skeleton Shimmer** — chat images load on-demand with skeleton shimmer animation placeholders.
+- **O(log N) Event Boundary Lookup** — bisect-based boundary search in `get_events_in_range` for faster event retrieval.
+- **LLM Client Settings Cache** — context_length, prompt_buffer, and max_retries cached with 30s TTL.
+- **Skill Manifest & Tool-Def Parsing Cache** — skill manifest JSON and tool-def parsing cached to avoid repeated filesystem reads.
+
+### Bug Fixes (36)
+
+- **Sidebar prevents empty chat space** — max-height and `align-self: flex-start` on the sidebar container stops it from pushing empty space into the chat room.
+- **PID start conflict** — single-instance prevention uses `flock` for atomic PID file access, fixing race conditions between parallel starts.
+- **10 CI test failures resolved** — MagicMock leak across tests, API delete endpoint handling, PID file cleanup, and `_tlocal`→`_tls` typo all fixed.
+- **Default KB not copied on web agent creation** — new agents created via the web UI now properly receive default knowledge base files.
+- **mkToggle race on agent pages** — rapid-toggle race condition on agents, plugins, and skills page toggles fixed.
+- **Native `confirm()` replaced** — eager skill activation uses Evonic showConfirm() instead of browser's native confirm().
+- **Browser autofill on search inputs** — autocomplete disabled on all search fields to prevent browser autofill.
+- **Continuation nudge disabled** — auto-continuation prompt injection deactivated.
+- **`/summary` accurate when summary unchanged** — slash command returns the correct message instead of a misleading error.
+- **Missing `clear_all_memories`** — `/clear-memory` slash command now properly removes all memories.
+- **Contiguous per-session chat sequence** — sequence numbers contiguous per session, preventing SSE from seeing phantom gaps.
+- **`/summary` AttributeError fix** — resolved `AttributeError` crash in agent runtime.
+- **Artifacts tools managed by feature toggle** — artifact-related tools controlled by the plugin feature toggle system.
+- **Persistent 'Saved!' label replaced** — Tools tab uses disappearing toast notifications instead of a static label.
+- **Path traversal escape in portal resolution** — path resolution hardened against directory traversal attacks.
+- **`save_artifact` error message improvements** — five fixes for unclear error messages.
+- **`read_file` directory error** — returns an actionable message when targeting a directory.
+- **Auto reply-back removed** — inter-agent auto-reply removed to prevent infinite ping-pong loops between agents.
+- **`str_replace`/`patch` smart-quote robustness** — curly/smart double quotes no longer break `str_replace` and `patch`.
+- **Flash-of-border on non-remote agent badge** — chat header badge no longer shows a brief border flash.
+- **Lightbox window scope** — Lightbox exported to window scope so artifacts tab and non-chat views can invoke it.
+- **SSE/polling leak on navigation** — SSE and polling connections properly closed on page navigation.
+- **Injection guard false positive** — base64-encoded file paths in CLI output no longer trigger the injection guard.
+- **web_test bubble popup navigation** — notification bubble from web tests navigates to agent detail instead of sessions page.
+- **Badge visibility for local agents** — workplace type badge resets className instead of using `classList.add`.
+- **Stale runpy reference removed** — outdated descriptions referencing removed functionality cleaned from runpy tool docs.
+- **Enter-key on session reply input** — mobile/desktop Enter-key distinction now applies to session page reply input.
+- **Kanban assignee blocked on done tasks** — completed and archived Kanban tasks can no longer have their assignee changed.
+- **Auto-extraction from plan markdown removed** — task auto-extraction from plan markdown removed, fixing unintended task creation.
+- **Early guard for missing `file_path` in `read_file`** — prevents `AttributeError` when `read_file` is called without `file_path`.
+- **Verbose lock debug removal** — `[LOCK] _llm_lock` debug logs silenced to reduce log noise.
+- **Remove exa-py dependency** — unused exa-py removed from requirements.txt after exa-search skill migration.
+- **Remove redundant artifacts injection** — duplicate artifacts SYSTEM.md injection removed from agents.py.
+- **Replace Tailwind arbitrary classes** — arbitrary-value Tailwind classes replaced with inline CSS for predictable styling.
+- **Sidebar `position:fixed`** — sidebar positioning changed to `position:fixed`, preventing flex container height issues.
+- **Bypass `is_skill_enabled` in auto-assign** — `_exec_assign_skills` now bypasses the `is_skill_enabled()` gate, fixing an edge case where tools would silently fail to assign.
+
+For the complete list of commits, see the [GitHub release](https://github.com/anvie/evonic/releases/tag/v0.7.0).
+
 ## v0.6.78 — 2026
 
 *184 commits, 93 changes*
