@@ -188,7 +188,7 @@ Setting `"format": "qwen_xml"` tells the evaluator to expect the Qwen XML format
 
 ## Creating Custom Evaluators
 
-Via the Settings UI or by creating JSON files in `test_definitions/evaluators/`:
+Via the Settings UI or by creating JSON files in `evaluator/test_definitions/evaluators/`:
 
 ```json
 {

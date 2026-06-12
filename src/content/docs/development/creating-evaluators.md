@@ -7,7 +7,7 @@ sidebar:
 
 ## Custom Evaluator Modes
 
-Custom evaluators are defined as JSON files in `test_definitions/evaluators/` and support three modes.
+Custom evaluators are defined as JSON files in `evaluator/test_definitions/evaluators/` and support three modes.
 
 ### Regex-Only
 

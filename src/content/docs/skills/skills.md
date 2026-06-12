@@ -282,7 +282,7 @@ def execute(agent: dict, args: dict) -> dict:
 ### Tool Discovery
 
 The `ToolRegistry` discovers tools from two sources:
-1. **Built-in tools**: JSON files in `test_definitions/tools/`
+1. **Built-in tools**: JSON files in `evaluator/test_definitions/tools/`
 2. **Skill tools**: definitions from `skills/*/` (enabled skills only)
 
 Both sources are combined via `tool_registry.get_all_tool_defs()`.

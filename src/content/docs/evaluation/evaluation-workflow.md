@@ -13,7 +13,7 @@ The evaluation engine tests LLMs across multiple domains with increasing complex
 
 ### 1. Test Loading
 
-The engine loads test definitions from `test_definitions/<domain>/level_<n>/test_*.json`. Tests are organized by domain and level (1-5), with level weights matching the level number (level 3 tests count 3x).
+The engine loads test definitions from `evaluator/test_definitions/<domain>/level_<n>/test_*.json`. Tests are organized by domain and level (1-5), with level weights matching the level number (level 3 tests count 3x).
 
 ### 2. System Prompt Resolution
 
@@ -94,7 +94,7 @@ For tool-calling tests, the engine runs a multi-turn loop:
 
 1. Send prompt with tool definitions to LLM
 2. LLM responds with `tool_calls` in its message
-3. Engine executes tools using mock responses (from `test_definitions/tools/*.json`)
+3. Engine executes tools using mock responses (from `evaluator/test_definitions/tools/*.json`)
 4. Tool results are sent back to LLM
 5. Repeat until LLM gives a final text response (max 5 iterations)
 

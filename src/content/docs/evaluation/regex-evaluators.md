@@ -113,7 +113,7 @@ LLM evaluates quality, regex extracts the score.
 
 ### Via JSON File
 
-Create a file in `test_definitions/evaluators/`:
+Create a file in `evaluator/test_definitions/evaluators/`:
 
 ```json
 {
