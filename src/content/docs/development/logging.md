@@ -92,7 +92,7 @@ All log files live under the `logs/` directory in the project root.
 | `logs/evonic.log.2` | Rotation | Rotated backup |
 | `logs/evonic.log.3` | Rotation | Rotated backup (newest) |
 | `logs/agents/agent.log` | Route: `backend.agent_runtime.*` | Agent runtime, state, and messaging logs *(moved from `logs/agent.log` in v0.2.0; agent messaging added in v0.3.19)* |
-| `logs/agents/supervisor.log` | Supervisor | Update supervisor logs |
+| `logs/agents/supervisor.log` | Supervisor | Removed in v0.8.0 |
 | `logs/channels.log` | Route: `backend.channels.*` | All channel implementations (WhatsApp, Telegram, etc.) |
 | `logs/eval/evaluator.log` | Route: `evaluator.*` | Evaluation engine logs *(moved from `logs/evaluator.log` in v0.2.6)* |
 | `logs/eval/` | Evaluation runs | Per-evaluation-run log files |
