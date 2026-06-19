@@ -295,6 +295,91 @@ Cleanly shuts down the entire Evonic server from within a conversation. No termi
 > Shutting down Evonic...
 ```
 
+
+---
+
+### `/detach`
+
+*Introduced in v0.8.0.*
+
+Moves a long-running command (builds, downloads, compilations) to the background so you can keep chatting while it runs. Progress is tracked persistently across the session.
+
+**Behavior:**
+- The process starts in the background immediately
+- You can continue chatting without waiting for the process to finish
+- When the job completes, the agent automatically notifies you with the result
+- The background job tracker survives agent restarts within the same session
+
+**Example:**
+```
+/detach
+> Process detached with job ID #42. You'll be notified when it completes.
+```
+
+---
+
+### `/investigate`
+
+*Introduced in v0.8.0.*
+
+Inspects another agent's context from the chat, surfacing session state, tool configuration, and runtime diagnostics without leaving the conversation.
+
+**Usage:**
+```
+/investigate <agent-id> <context>
+```
+
+**Parameters:**
+
+| Part | Description |
+|------|-------------|
+| agent-id | The target agent's slug ID (e.g. bookstore_bot) |
+| context | What to inspect (session state, tools, config, etc.) |
+
+**Behavior:**
+- Queries the target agent's runtime configuration
+- Returns structured diagnostic information
+- No modification is made to the target agent
+
+**Example:**
+```
+/investigate bookstore_bot tools
+> Agent: bookstore_bot
+> Tools (10):
+>   - bash
+>   - read
+>   - save_artifact
+>   ...
+```
+
+---
+
+### `/sub`
+
+*Introduced in v0.8.0.*
+
+Spawns a sub-agent directly from chat for parallel work. Sub-agents execute without planning delays and deliver responses via inter-agent forwarding.
+
+**Usage:**
+```
+/sub <name> --description "<purpose>"
+```
+
+**Behavior:**
+- Creates a lightweight sub-agent with a descriptive name
+- The sub-agent inherits the parent's model, tools, and skills
+- Sub-agents skip the planning phase and execute directly
+- Replies are automatically forwarded back to your session
+- Naming-pattern enforcement prevents invalid sub-agent IDs
+
+**Example:**
+```
+/sub researcher --description "Research topic X and summarize findings"
+> Sub-agent 'researcher' spawned. It will report back when done.
+```
+
+See [Sub-Agents](/agents/sub-agents) for the full system documentation.
+
 ## How Commands Are Processed
 
 When a message starts with `/`, the agent runtime intercepts it before sending to the LLM:

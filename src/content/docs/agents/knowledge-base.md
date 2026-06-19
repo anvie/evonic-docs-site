@@ -129,6 +129,44 @@ This is especially useful for sandboxed agents (where the workspace is `/workspa
 
 See [Tools: The `/_self/` Virtual Path](/agents/tools#the-_self-virtual-path) for full details.
 
+
+
+## KB System v2
+
+*Introduced in v0.8.0.*
+
+KB System v2 adds three powerful capabilities to the knowledge base experience:
+
+### Graph Traversal Tool
+
+The new `graph_query` tool lets agents follow wiki-link connections between KB documents. If your KB files link to each other using `[[kb/filename]]` syntax, agents can traverse these connections to discover related information:
+
+```python
+graph_query(entity="Acme Corp", edge_type="mentions", hops=2)
+```
+
+### Enhanced Listing
+
+The KB file listing now surfaces additional metadata:
+
+- **Staleness indicators** — files not updated in a long time are flagged
+- **Graph-awareness metadata** — inbound/outbound link counts are visible
+- **Search filtering** — filter KB documents by name without scrolling
+
+### Canonical `_kb_index.md`
+
+A special `_kb_index.md` index file keeps the knowledge graph navigable. When this file exists in the KB directory, it serves as the canonical entry point for the agent, listing all available documents and their relationships.
+
+### Coaching Prompts
+
+Agents now receive automatic **coaching prompts** that instruct them to:
+- Maintain KB graph links when creating new KB files
+- Add `[[kb/...]]` wiki-links to related documents
+- Update `_kb_index.md` when adding or removing KB documents
+
+See [Tools: graph_query](/agents/tools) for the full tool reference.
+
+
 ## Best Practices
 
 - **Keep files focused**: one topic per file (pricing, FAQ, policies, etc.)

@@ -139,6 +139,94 @@ resolve_agent_approval(approval_id="abc-123", decision="approve")
 
 The `approval_id` is included in the notification message when you receive an approval request from another agent.
 
+
+
+### Injected System Variables
+
+*Introduced in v0.8.0.*
+
+The `send_agent_message` tool supports injected system variables: pass key-value pairs via `injected_system_vars` that expand `{{key}}` placeholders in the target's system prompt.
+
+
+## Additional Built-in Tools (v0.8.0)
+
+### `agent_info`
+
+*Introduced in v0.8.0.*
+
+Inspect any other agent's full configuration from within a conversation. Use this for self-diagnostic workflows, checking what tools or skills another agent has, or debugging multi-agent setups.
+
+```python
+agent_info(target_agent_id="bookstore_bot")
+```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `target_agent_id` | string | The agent ID to inspect |
+
+**Returns:** Full configuration including tools, skills, channels, KB, artifacts, and model settings.
+
+---
+
+### `fetch_artifact`
+
+*Introduced in v0.8.0.*
+
+The reverse of `save_artifact`: fetch a file from the host artifacts directory back into the sandbox for inspection or processing. This is useful when an agent needs to analyze or modify a previously saved artifact.
+
+```python
+fetch_artifact(filename="report.md", dest_path="/workspace/report.md")
+```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `filename` | string | The name of the artifact to fetch (no path separators) |
+| `dest_path` | string | Optional destination path (defaults to /workspace/<filename>) |
+
+See [Artifacts](/agents/artifacts) for the full artifact system documentation.
+
+---
+
+### `graph_query`
+
+*Introduced in v0.8.0.*
+
+Traverse the knowledge graph by following relationships between entities. Use this when you need to understand connections between people, organizations, and projects stored in the agent's long-term memory.
+
+```python
+graph_query(entity="Acme Corp", edge_type="founded", hops=2)
+```
+
+**Parameters:**
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `entity` | string | required | The entity (name, alias, or slug) to start from |
+| `edge_type` | string | None | Filter: founded, invested_in, works_at, advises, attended, mentions |
+| `hops` | int | 2 | How many relationship hops to traverse |
+
+See [Knowledge Base](/agents/knowledge-base) for details on the KB System v2.
+
+---
+
+### Bash Command Param
+
+*Introduced in v0.8.0.*
+
+The bash tool now supports a `command` parameter for direct command execution alongside the existing `script` parameter:
+
+```bash
+bash(command="ls -la")
+```
+
+Both `command` (for single commands) and `script` (for multi-line scripts) are valid parameters. You can use whichever fits your use case.
+
+---
+
 ## Write-vs-Edit Guard
 
 *Introduced in v0.5.0.*

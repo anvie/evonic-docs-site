@@ -317,6 +317,30 @@ Set the run-as-user in the agent's **General** tab or via the API/CLI:
 - **Compliance**: Meet audit requirements by tying agent actions to specific OS accounts
 - **Limited permissions**: Create restricted Linux users with only the permissions an agent needs
 
+
+## Sub-Agent Settings
+
+*Introduced in v0.8.0.*
+
+When creating or configuring an agent, two new advanced settings control sub-agent behavior:
+
+| Setting | Description |
+|---------|-------------|
+| `inter_agent_clear_context` | Whether the agent's context is cleared between inter-agent messages. When enabled (default), each inter-agent turn starts with a fresh context, preventing message history from accumulating across delegation calls. |
+| `builtin_tools_enabled` | Whether built-in tools (read, write_file, patch, str_replace, etc.) are available. When enabled (default), the agent inherits the full set of built-in tools. When disabled, only explicitly assigned tools and skills are available. |
+
+### Configuration
+
+Configure these settings in the agent's **Advanced** settings panel, accessible from the agent detail page.
+
+### Use Cases
+
+- **`inter_agent_clear_context` disabled**: Useful for sub-agents that need conversation continuity across multiple delegation rounds
+- **`builtin_tools_enabled` disabled**: Useful for tightly-scoped agents that should only use specific tools (e.g., a calculator agent that doesn't need file system access)
+
+See [Sub-Agents](/agents/sub-agents) for the full sub-agent system documentation.
+
+
 ## Cloning an Agent
 
 *Introduced in v0.2.0.*
