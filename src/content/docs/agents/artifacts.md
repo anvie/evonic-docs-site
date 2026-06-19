@@ -81,6 +81,33 @@ This works from any execution environment: local, Docker sandbox, SSH workplace,
 
 ---
 
+### `fetch_artifact` Tool
+
+*Introduced in v0.8.0.*
+
+The `fetch_artifact` tool is the **reverse of `save_artifact`**—it lets agents copy a file from the host artifacts directory back into the sandbox execution environment for inspection or processing.
+
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `filename` | string | The artifact filename to fetch (no path separators) |
+| `dest_path` | string | Optional destination path (defaults to the working directory) |
+
+
+**Example:**
+
+```python
+fetch_artifact(filename="chart.png", dest_path="/workspace/chart.png")
+```
+
+This is especially useful when an agent needs to analyze or modify a previously saved artifact. For example, a sub-agent that generates a chart can save it with `save_artifact`, and the parent agent can later fetch it back for inspection.
+
+See [Tools: fetch_artifact](/agents/tools) for the full tool reference.
+
+---
+
 ## Key Characteristics
 
 ### Survive Session Deletion

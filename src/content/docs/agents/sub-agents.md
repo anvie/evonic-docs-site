@@ -195,6 +195,50 @@ destroy_sub_agent(agent_id: "api_collector")
 
 ---
 
+
+
+---
+
+## v0.8.0 Updates
+
+### `/sub` Slash Command
+
+*Introduced in v0.8.0.*
+
+You can now spawn sub-agents directly from chat using the `/sub` slash command, without needing to use `spawn_sub_agent` programmatically:
+
+```
+/sub <name> --description "<purpose>"
+```
+
+**Example:**
+```
+/sub researcher --description "Research topic X and summarize findings"
+> Sub-agent 'researcher' spawned. It will report back when done.
+```
+
+### Direct Execution
+
+Sub-agents now skip the planning phase and execute **directly**, reducing turn latency for delegated tasks. When a sub-agent receives a message, it immediately processes and responds without first generating a plan.
+
+### Expanded Settings
+
+Two new settings give fine-grained control over sub-agent behavior:
+
+| Setting | Description |
+|---------|-------------|
+| `inter_agent_clear_context` | Whether the sub-agent's context is cleared between inter-agent messages (default: enabled) |
+| `builtin_tools_enabled` | Whether built-in tools (read, write_file, etc.) are available to the sub-agent (per-agent toggle) |
+
+These settings are configured in the agent's **Advanced** settings panel.
+
+### Naming Enforcement
+
+Sub-agent IDs are now protected by **naming-pattern enforcement**. The system validates that sub-agent names conform to the expected pattern and rejects invalid names with a clear error message.
+
+---
+
+
 ## Best Practices
 
 1. **Give descriptive names** — sub-agent IDs are auto-generated from the name you provide, so use clear names like `"data_collector"` or `"api_fetcher"`

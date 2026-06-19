@@ -57,6 +57,36 @@ When an agent encounters a tool call that requires approval:
 
 For agent-to-agent scenarios, Agent B can also call `resolve_agent_approval` to programmatically approve or reject pending requests from Agent A.
 
+
+
+---
+
+### Collapsible Inter-Agent Messages
+
+*Introduced in v0.8.0.*
+
+Messages exchanged between agents (`[AGENT/...]` format) now appear in the chat as **collapsible headers**. Instead of showing the full inter-agent conversation inline, the chat displays a compact header that can be expanded on demand:
+
+```
+[AGENT/siwa]  Click to expand...
+```
+
+This significantly reduces visual noise in multi-agent conversations. The full message content is still visible when expanded, maintaining transparency without cluttering the chat.
+
+---
+
+### Sub-Agent Delegation
+
+The agent messaging system fully supports **sub-agent delegation**. When a parent agent spawns a sub-agent and sends it a message, the sub-agent processes the task and its final reply is automatically forwarded back to the parent's session.
+
+Key points:
+- Sub-agents use `send_agent_message` to communicate with their parent
+- The passive reply rule also applies to sub-agents (they cannot reply-back to the parent mid-task)
+- Sub-agents skip the planning phase for reduced latency
+
+See [Sub-Agents](/agents/sub-agents) for the complete sub-agent system documentation.
+
+
 ## Guard Rails
 
 The messaging system enforces several layers of protection against abuse and infinite loops.

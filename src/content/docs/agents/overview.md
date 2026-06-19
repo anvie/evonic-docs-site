@@ -118,6 +118,9 @@ Agents support slash commands for quick actions. These work in both the web chat
 | `/summary` | Trigger conversation summarization |
 | `/exec` | Switch from plan mode to execute mode |
 | `/shutdown` | Shut down the Evonic server (super agent only) |
+| `/detach` | Move a long-running process to the background |
+| `/investigate` | Inspect another agent's context |
+| `/sub` | Spawn a sub-agent from chat |
 | `/cwd` | Show the current workspace directory |
 | `/cd` | Change the agent's workspace directory |
 

@@ -146,7 +146,38 @@ When `run_as_user` is configured for an agent, the sandbox backend:
 3. Filesystem access is restricted to what that user can access
 4. Environment variables survive the `sudo` elevation
 
+#
+
+## Workspace Boundary Enforcement
+
+*Introduced in v0.8.0.*
+
+The **Workspace Boundary Enforcement** system prevents agents from reading files outside their sandbox. This affects three core tools:
+
+| Tool | Restriction |
+|------|-------------|
+| `read_file` | Cannot read files outside the workspace directory |
+| `grep` (find/grep tools) | Cannot search outside the workspace directory |
+| `glob` (file listing) | Cannot list files outside the workspace directory |
+
+### How It Works
+
+When any of these tools is called with a path that resolves outside the agent's sandbox boundary, the system:
+
+1. Resolves the path relative to the workspace
+2. Checks if the resolved path stays within the workspace directory
+3. If the path escapes the workspace, returns a clear error instead of executing
+
 ### Configuration
+
+This enforcement is automatic and always active. There is no toggle to disable it — it is a built-in safety feature of the sandbox environment.
+
+### Design Rationale
+
+The boundary enforcement prevents a class of sandbox escape attacks where an agent uses file tools with path traversal (`../`) or symlink tricks to read sensitive host files. Combined with the Docker sandbox isolation and Run-As-User isolation, this provides three layers of file access control.
+
+
+## Configuration
 
 Set the run-as-user in the agent's **General** tab or via the API:
 
