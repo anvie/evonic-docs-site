@@ -1,201 +1,134 @@
 ---
 title: Update System
-description: Reliable atomic self-update with rollback, SSH signature verification, and Telegram progress notifications.
+description: Simple git-based self-update that fetches release tags and applies them directly.
 sidebar:
   order: 100
 ---
 
 ## Overview
 
-Evonic includes an update supervisor that pulls new releases from your Git remote, verifies their SSH signature, installs dependencies in an isolated environment, and swaps the active release atomically: with rollback if anything goes wrong.
+Evonic's update system is intentionally simple. There is no separate supervisor daemon, no release staging, and no SSH signature verification. It just uses basic git operations directly on the repository.
 
-**Key properties:**
+Here is what happens when you run `evonic update`:
 
-- **Atomic**: no partial state is ever visible to the running daemon
-- **Rollback**: any failure (signature, deps, health check, monitoring) restores the previous release
-- **Isolated deps**: each release gets its own virtual environment: no shared-venv conflicts
-- **Zero pip dependencies in the supervisor**: the update engine is pure Python stdlib + system `git`
-- **Telegram notifications**: edit-in-place progress messages, separate failure alerts
+1. **Fetch** - pulls the latest tags from the remote
+2. **Apply** - checks out the newest release tag
+3. **Repair** - runs `evonic doctor --fix` to make sure everything is in good shape
+
+That is it. Two git commands and a health check.
 
 ---
 
-## Architecture
+## How It Works
 
-```
-Git remote ──► git fetch --tags ──► git verify-tag (SSH sig)
-                                  │
-                          git worktree add releases/<tag>/
-                                  │
-                          uv venv + pip install (isolated)
-                                  │
-                          health check on temp port
-                                  │
-                              stop daemon ──► atomic pointer swap
-                                  │
-                              start daemon ──► monitor 60s
-                                  │
-                                   rollback on any failure
-```
+Because Evonic uses a **flat-repo architecture**, the project root is the live directory. There is no separate `releases/` folder, no worktrees, and no symlink switching. When you update, the code on disk gets updated directly.
 
-### Directory layout
+### The two steps
 
-After migration the repository looks like this:
-
-```
-evonic/
-├── .git/                        # single git object store
-├── releases/
-│   ├── v1.0.0/                  # previous release (git worktree)
-│   │   └── .venv/
-│   └── v1.1.0/                  # current live release (git worktree)
-│       ├── .venv/
-│       ├── db      → ../../shared/db/      # symlink
-│       ├── agents  → ../../shared/agents/
-│       └── ...
-├── current → releases/v1.1.0/   # atomic symlink (POSIX)
-├── current.slot                 # Windows: same pointer, text file
-├── rollback.slot                # "v1.0.0": used by auto-rollback
-├── supervisor/
-│   ├── supervisor.py            # stdlib-only update engine
-│   ├── migrate.py               # one-time migration script
-│   └── config.json              # poll interval, telegram creds
-└── shared/                      # mutable state, survives across releases
-    ├── db/evonic.db
-    ├── agents/
-    ├── logs/
-    ├── run/evonic.pid
-    ├── .env
-    └── .ssh/allowed_signers
-```
-
-Each release worktree has symlinks pointing into `shared/` for all mutable data. `config.py`'s `BASE_DIR` resolves through these symlinks transparently: no application code changes are required.
-
-## Update lifecycle
-
-Each update runs 6 ordered steps. Any failure triggers rollback.
-
-| Step | Action | Progress |
+| Step | Action | What happens |
 |---|---|---|
-| 1 | Fetch tags from remote | 17% |
-| 2 | Verify SSH signature on new tag | 33% |
-| 3 | Create worktree, install deps, link `shared/` | 50% |
-| 4 | Start release on temp port, probe `/api/health` | 67% |
-| 5 | Stop daemon → atomic pointer swap → write `rollback.slot` | 83% |
-| 6 | Start new daemon → monitor health for `monitor_duration` seconds | 100% |
+| 1 | `git fetch --tags --force origin` | Gets the latest tags from the remote |
+| 2 | `git checkout <tag>` | Switches the working tree to the new version |
 
-### Rollback
+After both steps succeed, `evonic doctor --fix` runs automatically to repair the environment (reinstall dependencies, fix permissions, etc.).
 
-If any step fails:
+### What happens if something goes wrong?
 
-1. The supervisor swaps the `current` pointer back to `rollback.slot`
-2. The daemon is restarted from the previous release
-3. The failed release worktree is removed from disk
-4. A failure alert is sent to Telegram
+If `git fetch` fails - the update stops immediately with an error message. No changes are made to your code.
 
-Manual rollback:
+If `git checkout` fails (for example, you have local changes that conflict) - the update stops, and you will see instructions on how to resolve it. Your current version stays untouched.
+
+---
+
+## Usage
+
+### Check for updates (without applying)
+
+```bash
+evonic update --check
+```
+
+This fetches the latest tags and tells you what version is available, but does not change anything.
+
+### Update to the latest release
+
+```bash
+evonic update
+```
+
+Fetches tags, finds the newest vX.Y.Z tag that is newer than your current version, checks it out, and runs doctor --fix.
+
+### Update to a specific version
+
+```bash
+evonic update --tag v0.9.0
+```
+
+Useful if you want to pin to a specific release or skip a version.
+
+### Track the nightly channel
+
+```bash
+evonic update nightly
+```
+
+This tracks origin/main directly instead of release tags. Use this if you want the latest development changes.
+
+### Check the nightly channel
+
+```bash
+evonic update nightly --check
+```
+
+Shows the current commit hash vs the latest on origin/main without applying anything.
+
+---
+
+## Rollback
+
+Need to go back to the previous version?
 
 ```bash
 evonic update --rollback
 ```
 
----
+This reverts to the commit before the last update. The rollback also runs doctor --fix afterward.
 
-## Telegram notifications
-
-When `telegram_bot_token` and `telegram_chat_id` are configured, the supervisor sends a single message at update start and **edits it in place** as each step completes:
-
-```
-[Update v1.0.0 → v1.1.0]
-████████░░░░░░░░ 50%: Installing dependencies
-Started: 14:32:01
-```
-
-On success the message is updated to:
-
-```
-✅ Update to v1.1.0 complete
-█████████████████ 100%: Done
-Started: 14:32:01
-```
-
-On failure a **new message** is sent (so it stays visible even after the progress message is edited):
-
-```
-❌ Update v1.1.0 FAILED at step 4/6
-Rolled back to v1.0.0
-Error: Staged release failed health check on port 18080
-```
+> **Note**: Rollback only works if there is a previous state in git's reflog. If you have made other commits since the update, reflog may not point where you expect.
 
 ---
 
 ## Real-Time Update Notifications
 
-*Introduced in v0.2.6.*
+When a new Evonic release is available, the Web UI shows a notification banner at the top of the page.
 
-When a new Evonic release is available, the platform displays a **real-time notification** in the Web UI. This replaces the previous polling-based check that required manual trigger via `evonic update --check`.
+- **View Changelog** - opens the release notes for the new version
+- **Update Now** - triggers the update flow immediately
+- **Dismiss** - hides the notification temporarily
 
-### How It Works
+### How it works
 
-1. The update supervisor periodically checks the Git remote for new tags
-2. When a new tag is found (version > current), a notification is emitted via the **event bus**
-3. The Web UI listens for these events and displays a banner at the top of the page
-4. Clicking the banner triggers the update flow
+1. The update manager periodically checks the Git remote for new tags (cached for 24 hours)
+2. When a newer tag is found, it emits an event via the event bus
+3. Connected Web UI clients receive the event and show the banner
+4. Clicking **Update Now** calls the backend to start the update
 
-### UI Notification
-
-The banner appears on all pages and shows:
-
-```
-📦 Update available: v1.2.0 → v1.3.0
-[View Changelog] [Update Now] [Dismiss]
-```
-
-- **View Changelog** — opens the release notes for the new version
-- **Update Now** — triggers the update flow immediately
-- **Dismiss** — hides the notification (reappears on next page load if not dismissed permanently)
-
-### Disabling Notifications
-
-Set the following in `.env` to disable automatic update checks:
+### Disabling automatic checks
 
 ```env
 UPDATE_CHECK_ENABLED=0
 ```
 
-## Health check endpoint
-
-The supervisor probes `GET /api/health` before and after swapping the release. This endpoint is built into Evonic and returns:
-
-```json
-{
-  "status": "ok",
-  "uptime": 42.3,
-  "version": "v1.1.0"
-}
-```
-
-The endpoint is always accessible: it bypasses authentication and super-agent setup checks so the supervisor can reach it even on a fresh deployment.
-
 ---
 
-## Windows support
+## Restart
 
-The same supervisor code runs on Windows with the following differences:
-
-| Concern | Linux/macOS | Windows |
-|---|---|---|
-| Active release pointer | `current` symlink (atomic `rename(2)`) | `current.slot` text file (atomic `os.replace()`) |
-| Shared dir links | `os.symlink()` | NTFS junction (`mklink /J`), falls back to copy |
-| Process signals | `SIGUSR1` / `SIGTERM` | `taskkill /PID` |
-| Trigger supervisor | `SIGUSR1` | Named pipe `\\.\\pipe\\evonic-supervisor` |
-
-File locking is avoided by design: the daemon is fully stopped before any files in the new release directory are touched. The old release directory is never modified after creation.
+After an update (or rollback), the server needs to restart for the changes to take effect. The update does this automatically - it spawns a detached process that sends SIGTERM to the parent after a 2-second delay, letting the process manager (systemd, Docker, etc.) restart it cleanly.
 
 ---
 
 ## Known limitations
 
-- **~2–5 second downtime** during the swap (daemon stop + pointer change + daemon start)
-- **Supervisor is not self-updating**: it is intentionally kept small and updated manually
-- **Single signing key**: if the key is compromised, all future tags will pass verification; rotate immediately if suspected
-- **Health check false positives**: `/api/health` returning 200 does not catch logic regressions in rarely-used code paths
+- **Brief downtime** (~1-2 seconds) during the git checkout and server restart
+- **Local changes can block updates** - if you have uncommitted changes, git checkout will fail. Commit or stash them first
+- **No built-in rollback guarantee** - reflog-based rollback depends on git history; for absolute safety, keep backups of your data directory

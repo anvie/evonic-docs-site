@@ -225,18 +225,20 @@ URL: http://localhost:8080
 
 ### Updating the Server
 
-Check for and apply updates from the Git remote. Requires the [update supervisor](/agents/self-update) to be set up first.
+Check for and apply updates from the Git remote. See the [Update System guide](/agents/self-update) for a detailed explanation.
 
 ```bash
-evonic update [--check] [--tag TAG] [--rollback] [--force]
+evonic update [--check] [--tag TAG] [--rollback] [nightly]
 ```
 
 | Flag | Description |
 |------|-------------|
 | `--check` | Fetch tags and report what is available: no update is applied |
-| `--tag TAG` | Update to a specific tag instead of the latest |
-| `--rollback` | Roll back to the previous stable release |
-| `--force` | Skip SSH signature verification (development only) |
+| `--tag TAG` | Update to a specific tag (e.g. `--tag v0.9.0`) |
+| `--rollback` | Roll back to the previous state via git reflog |
+| `nightly` | Track `origin/main` instead of release tags |
+
+No setup required — the update runs directly using git operations on the repository.
 
 **Examples:**
 
@@ -244,7 +246,7 @@ evonic update [--check] [--tag TAG] [--rollback] [--force]
 # Check what version is available
 evonic update --check
 
-# Trigger an immediate update check on the running supervisor
+# Update to the latest release
 evonic update
 
 # Update to a specific tag
@@ -252,9 +254,10 @@ evonic update --tag v1.3.0
 
 # Roll back to the previous release
 evonic update --rollback
-```
 
-When the update supervisor is running in the background, `evonic update` signals it via `SIGUSR1` to trigger an immediate check. If the supervisor is not running, the update is performed inline in the current process.
+# Track the nightly/main channel
+evonic update nightly
+```
 
 **See also:** [Update System guide](/agents/self-update)
 
