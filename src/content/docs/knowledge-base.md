@@ -113,7 +113,7 @@ Each doc carries a `type` from a fixed set (an entity like "Jakarta" is just a d
 of `type: place` — there is no separate `entities/` directory):
 
 ```
-note · session · group · person · place · venue ·
+note · session · group · person · place · venue · event ·
 organization · company · product · contact
 ```
 
