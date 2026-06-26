@@ -51,6 +51,7 @@ export default defineConfig({
             { label: 'Plugins', slug: 'system/plugins' },
             { label: 'Models', slug: 'system/models' },
             { label: 'Events', slug: 'system/events' },
+            { label: 'Knowledge Base (Memory)', slug: 'knowledge-base' },
           ],
         },
         {
