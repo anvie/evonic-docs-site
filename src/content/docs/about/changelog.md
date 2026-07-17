@@ -5,7 +5,43 @@ description: Release history and updates for Evonic.
 
 # Changelog
 
+## v1.0.0 — 2026-07-17
+
+*Stable Release*
+
+### Core Architecture (4)
+
+- **CMP (Context Memory Protocol)** — a standardized protocol for managing agent memory state, enabling consistent context injection and structured recall across diverse LLM providers.
+- **ATG (Atomic Task Graph)** — a new way to represent complex goals as a DAG of atomic tasks, allowing agents to reason about dependencies, parallelize execution, and track granular progress.
+- **Bubblewrap Sandbox** — integrated `bwrap` (Bubblewrap) as a first-class workplace type, providing high-performance, hardware-isolated sandboxes with precise filesystem and network controls.
+- **Plugin Lifecycle System** — a formalized system for plugin initialization, runtime management, and graceful shutdown, ensuring stability and resource cleanup.
+
+### Agent Capabilities (5)
+
+- **OpenAI Codex Integration** — native support for Codex-optimized workflows, including "Chain-of-Thought" thinking bubbles that surface the agent's internal reasoning process before the final output.
+- **WhatsApp Multi-Agent Support** — expanded WhatsApp integration to support shared channels, concurrent number handling, and multi-agent coordination within a single chat thread.
+- **MCP Client Integration** — full support for the Model Context Protocol (MCP), allowing Evonic agents to connect to external MCP servers and utilize a vast ecosystem of standardized tools and resources.
+- **Enhanced Evaluator** — expanded the evaluation system to support complex cross-session metrics and automated regression testing for agent prompts.
+- **Drag-and-Drop File Upload** — streamlined file handling with direct drag-and-drop support in the chat UI, instantly making files available in the agent's workplace.
+
+### UI & Experience (4)
+
+- **New Panel UI** — a redesigned dashboard featuring a modular panel system for easier access to logs, state, and configuration.
+- **Background Process Manager** — a dedicated UI for monitoring and managing `/detach` jobs, providing real-time status and one-click termination.
+- **Agent Detail Redesign** — a complete overhaul of the Agent Detail page, organizing tools, knowledge, and configuration into a more intuitive, tabbed interface.
+- **Improved Navigation** — global search and quick-jump shortcuts for faster navigation across the agent ecosystem.
+
+### Tools & Commands (6)
+
+- **New Tools** — added `send_channel_message` for targeted external communication, `list_sessions` for session discovery, and **Transcribe Audio** for native voice-to-text processing.
+- **`/dump` Command** — export the current session state as a JSONL file for audit, debugging, or migration.
+- **`/clear` (with Archive)** — clearing history now automatically archives the session to a secure database, preventing data loss.
+- **`/unfocus` Command** — instantly break an agent out of a failed or stuck focus loop to resume general interaction.
+- **Improved Slash Command Discovery** — contextual help and auto-completion for all available slash commands.
+- **Session Recovery** — ability to restore archived sessions directly back into the active chat.
+
 ## v0.8.0 — 2026
+
 
 *192 commits, 82 changes*
 

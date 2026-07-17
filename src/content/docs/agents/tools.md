@@ -150,6 +150,33 @@ The `send_agent_message` tool supports injected system variables: pass key-value
 
 ## Additional Built-in Tools (v0.8.0)
 
+---
+
+### Built-in Tools (v1.0.0)
+
+#### `send_channel_message`
+Send a targeted text message to a specific external channel session (WhatsApp, Telegram, Discord). 
+
+```python
+send_channel_message(target=\"sess_abc123\", message=\"Hello from Evonic!\")
+```
+
+#### `list_sessions`
+Retrieve a list of active sessions for the current agent across all connected channels.
+
+```python
+list_sessions(channel_type=\"whatsapp\", limit=10)
+```
+
+#### **Transcribe Audio**
+Convert audio files uploaded to the workplace into text. The tool uses high-fidelity speech-to-text models to process `.wav`, `.mp3`, and `.ogg` files.
+
+```python
+transcribe_audio(file_path=\"/workspace/voice_note.wav\")
+```
+
+---
+
 ### `agent_info`
 
 *Introduced in v0.8.0.*
