@@ -49,13 +49,24 @@ export default defineConfig({
             { label: 'Agents', slug: 'system/agents' },
             { label: 'Skills', slug: 'system/skills' },
             { label: 'Plugins', slug: 'system/plugins' },
+            { label: 'Plugin Lifecycle', slug: 'system/plugins-lifecycle' },
             { label: 'Models', slug: 'system/models' },
             { label: 'Events', slug: 'system/events' },
+            { label: 'CMP (Context Memory)', slug: 'system/memory/cmp' },
+            { label: 'ATG (Task Graph)', slug: 'system/memory/atg' },
+            { label: 'OpenAI Codex', slug: 'system/integrations/openai-codex' },
+            { label: 'MCP Client', slug: 'system/mcp/integration' },
           ],
         },
         {
           label: 'Agents',
           autogenerate: { directory: 'agents' },
+        },
+        {
+          label: 'User Interface',
+          items: [
+            { label: 'Overview', slug: 'ui/overview' },
+          ],
         },
         {
           label: 'Evonet',

@@ -141,11 +141,26 @@ Pairing codes are validated against these rules:
 ## Supported Channels
 
 | Type | Status | Library | Description |
-|------|--------|---------|-------------|
+|------|--------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Telegram** | ✅ Implemented | `python-telegram-bot` | Full support via bot tokens. |
-| **WhatsApp** | ✅ Implemented | `@whiskeysockets/baileys` | WhatsApp Web via Node.js sidecar (Baileys bridge). |
+| **WhatsApp** | ✅ Implemented | `@whiskeysockets/baileys` | Full support for multi-agent coordination, shared channels, and concurrent number handling via Node.js sidecar (Baileys bridge). |
 | **Discord** | ⏳ Planned | `discord.py` | Coming soon. |
 | **Slack** | ⏳ Planned | `slack-sdk` | Coming soon. |
+
+### WhatsApp Advanced Integration (v1.0.0)
+
+WhatsApp integration in v1.0.0 has moved beyond simple 1-to-1 botting to support enterprise-grade coordination:
+
+- **Multi-Agent Coordination**: Multiple agents can now be assigned to a single WhatsApp channel. They coordinate through internal messaging to decide who handles a specific user request based on their skillsets.
+- **Shared Channels**: A single WhatsApp number can serve as a shared entry point for a team of agents, with session state shared across the "shared channel" context.
+- **Concurrent Number Support**: Evonic can now manage multiple WhatsApp accounts simultaneously, allowing for geo-specific numbers or separate brand identities within the same agent runtime.
+
+<Aside type="tip">
+  To enable multi-agent coordination on WhatsApp, go to the **Channel Detail Modal** and enable the `multi_agent_dispatch` toggle.
+</Aside>
+
+#### WhatsApp Pair-Sync
+When using multiple numbers, the platform uses a "Pair-Sync" mechanism to ensure that QR-code authentication is synchronized across the cluster, preventing session drops during server failover.
 
 ## Configuration
 

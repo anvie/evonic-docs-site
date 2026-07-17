@@ -13,9 +13,10 @@ Agents support **slash commands** for quick actions. These work in both the web 
 
 ### `/clear`
 
-Clears the current conversation history for the active session. The agent starts fresh with no prior context.
+Clears the current conversation history for the active session. In v1.0.0, this command automatically archives the session to the secure `session_archive.db` before deletion, preventing accidental data loss.
 
 **Behavior:**
+- Archives current session state to `session_archive.db`
 - Deletes all messages from the current session
 - Resets the session summary
 - Truncates the agent's `llm.log` and `sessrecap.log` files
@@ -202,6 +203,26 @@ Switches the agent to execute mode. In execute mode, write tools are unlocked an
 ```
 /exec
 > Switched to execute mode.
+```
+
+---
+
+### `/dump`
+
+*Introduced in v1.0.0.*
+
+Exports the current session state as a JSONL file. This is invaluable for auditing, debugging, or migrating a conversation to another environment.
+
+**Behavior:**
+- Collects all messages, tool outputs, and agent state for the active session
+- Generates a formatted JSONL dump file
+- Saves the file to the agent's artifacts directory
+- Returns a download link or artifact filename
+
+**Example:**
+```
+/dump
+> Session dumped to artifact: session_dump_20260717.jsonl
 ```
 
 ---

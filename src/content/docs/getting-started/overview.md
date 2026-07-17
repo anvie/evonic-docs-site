@@ -18,11 +18,14 @@ Evonic is an **agentic AI platform** built for open models. It lets you create A
 ### Key Features
 
 - **Agent platform** — design and deploy AI agents with custom models, tools, and knowledge bases
-- **Multi-channel** — connect agents to Telegram, WhatsApp, Discord, and the web
-- **Tool system** — extend agent capabilities with tools, skills, and plugins
-- **Evaluation** — test and benchmark agent performance
-- **Isolated sandbox** — safe execution of agent code in Docker containers
+- **Multi-channel** — connect agents to Telegram, WhatsApp (multi-agent, shared channels, concurrent numbers), Discord, and the web
+- **Tool system** — extend agent capabilities with tools, skills, plugins, and MCP servers
+- **CMP & ATG** — Context Memory Protocol and Atomic Task Graph for structured reasoning and reliable task execution
+- **Evaluation** — test and benchmark agent performance with expanded cross-session metrics and automated regression
+- **Isolated sandbox** — safe execution in Docker or high-performance Bubblewrap (`bwrap`) environments
 - **Evonet** — mesh network for multi-device agent deployment
+- **OpenAI Codex integration** — native support for Codex-optimized workflows with Chain-of-Thought thinking bubbles
+- **Modern Panel UI** — redesigned dashboard with modular panels, background process manager, and drag-and-drop file uploads
 
 ---
 
@@ -35,19 +38,39 @@ Evonic is an **agentic AI platform** built for open models. It lets you create A
 
 ---
 
-## What's New in v0.3.19
+## What's New in v1.0.0
 
-### New Branding
+Evonic v1.0.0 is a **stable release** that brings major architectural upgrades and a polished user experience. Here are the highlights:
 
-The Evonic mascot has been updated! The new **mascot.png** logo appears in the navigation bar and throughout the UI, giving the platform a fresh, modern look.
+### Core Architecture
 
-### Portal Feature
+- **CMP (Context Memory Protocol)** — standardized agent memory management across all LLM providers, with three-tier memory: working, episodic, and semantic.
+- **ATG (Atomic Task Graph)** — complex goals are now decomposed into a DAG of atomic tasks with dependency tracking and parallel execution.
+- **Bubblewrap Sandbox** — the new `bwrap` workplace type offers near-instant, hardware-isolated sandboxes with zero daemon overhead.
+- **Plugin Lifecycle System** — formalized `init → activate → active → deactivate` lifecycle for reliable plugin management.
 
-Agents can now access external directories through virtual path mapping — the **Portal** system. This allows agents to read and write files on local, SSH, or Evonet-connected remote filesystems using `/_portal/` paths.
+### Agent Capabilities
 
-### Improved Sandbox
+- **OpenAI Codex Integration** — native support with Chain-of-Thought "thinking bubbles" that surface the agent's internal reasoning.
+- **WhatsApp Multi-Agent** — shared channels, concurrent numbers, and multi-agent coordination within a single chat thread.
+- **MCP Client Integration** — connect to any Model Context Protocol server for instant access to a vast ecosystem of standardized tools.
+- **Expanded Evaluator** — cross-session metrics, automated regression testing, and dynamic prompt verification.
 
-Sandbox containers now use the `evonic-<session-id>` naming pattern, include automatic stale container cleanup, and offer the new `evonic clear-sandbox` CLI command for manual cleanup.
+### UI & Experience
+
+- **Panel UI** — modular, resizable panels for multi-context workflows.
+- **Background Process Manager** — monitor and manage `/detach` jobs in real time.
+- **Agent Detail Redesign** — tabbed interface with live state viewer.
+- **Drag-and-Drop Uploads** — files dropped into chat are instantly available in the agent's workplace.
+
+### New Tools & Commands
+
+- `send_channel_message`, `list_sessions`, and **Transcribe Audio** tools
+- `/dump` — export session state as JSONL
+- `/clear` — now auto-archives sessions to prevent data loss
+- `/unfocus` — break out of stuck focus loops instantly
+
+See the full [Changelog](/about/changelog) for all details.
 
 ---
 
