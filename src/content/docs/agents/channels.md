@@ -159,6 +159,29 @@ WhatsApp integration in v1.0.0 has moved beyond simple 1-to-1 botting to support
   To enable multi-agent coordination on WhatsApp, go to the **Channel Detail Modal** and enable the `multi_agent_dispatch` toggle.
 </Aside>
 
+#### WhatsApp Group Awareness
+
+*Introduced in v1.0.0.*
+
+Agents connected to WhatsApp can now detect and participate in **group chats**. When a message arrives from a WhatsApp group, the platform:
+
+- Identifies the message as originating from a group context (vs. a direct 1-to-1 chat)
+- Extracts the group ID and the sender's individual ID within the group
+- Tags the session with `group:<group_id>` metadata so the agent knows it's in a group setting
+- Allows the agent to mention (`@`) specific group members in replies
+
+**Configuration**: Group awareness is enabled by default. To disable it (forcing the agent to treat all messages as direct), set `group_aware: false` in the channel config.
+
+```json
+{
+  "type": "whatsapp",
+  "config": {
+    "group_aware": true,
+    "multi_agent_dispatch": true
+  }
+}
+```
+
 #### WhatsApp Pair-Sync
 When using multiple numbers, the platform uses a "Pair-Sync" mechanism to ensure that QR-code authentication is synchronized across the cluster, preventing session drops during server failover.
 
