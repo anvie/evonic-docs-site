@@ -16,6 +16,29 @@ The core of the v1.0.0 experience is the **Panel UI**. Instead of a traditional 
 - **Context Persistence**: Panels remember their state; if you were looking at a specific log file in the Log Panel, it will remain there when you switch agents.
 - **Quick-Toggle**: Use `Ctrl+K` (or `Cmd+K`) to quickly open or close panels like the State Viewer or Tool Console.
 
+### Panel UI Plugin Architecture
+
+The Panel UI is built on a **plugin-based architecture**. Each panel (Log Viewer, State Inspector, Tool Console, Process Manager, etc.) is a self-contained widget that registers itself with the panel system. This means:
+
+- **Extensibility**: New panels can be added by plugins without modifying the core UI code.
+- **Lazy Loading**: Panels are loaded on-demand — an unused panel consumes zero resources until you open it.
+- **Isolated State**: Each panel manages its own state independently, so a crash in one panel doesn't affect others.
+
+Developers building custom plugins can register new panels via the plugin manifest:
+
+```json
+{
+  "panels": [
+    {
+      "id": "custom-metrics",
+      "label": "Custom Metrics",
+      "icon": "chart-bar",
+      "component": "panels/MetricsPanel.vue"
+    }
+  ]
+}
+```
+
 ## Background Process Manager
 
 Managing long-running tasks is now simplified through the **Background Process Manager**. When you use the `/detach` command, the process is moved to this manager.

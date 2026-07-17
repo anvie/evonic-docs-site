@@ -1,15 +1,15 @@
 ---
 title: Sandbox
-description: Isolated execution environment for agent tools — Docker sandbox management, cleanup, and naming.
+description: Isolated execution environment for agent tools — Docker and Bubblewrap sandbox management, cleanup, and naming.
 sidebar:
   order: 12
 ---
 
 ## Overview
 
-Evonic executes the `runpy` and `bash` tools inside isolated **Docker containers** for safety and security. These sandbox containers provide filesystem isolation, resource limits, and network restrictions, ensuring agent code runs safely without affecting the host system.
+Evonic executes the `runpy` and `bash` tools inside isolated environments for safety and security. Two sandbox engines are supported: **Docker** (container-based) and **Bubblewrap** (`bwrap`, namespace-based). Both provide filesystem isolation, resource limits, and network restrictions, ensuring agent code runs safely without affecting the host system.
 
-*Updated in v0.3.19 with improved sandbox naming, a cleanup CLI command, and automatic stale container reaping.*
+*Updated in v1.0.0 with Bubblewrap sandbox support. Originally introduced in v0.3.19 with Docker sandbox naming, cleanup CLI, and automatic stale container reaping.*
 
 ## How Sandbox Works
 
@@ -191,6 +191,46 @@ Set the run-as-user in the agent's **General** tab or via the API:
 - **Multi-tenant deployments**: Each agent runs under a dedicated user, preventing file access across agent boundaries
 - **Compliance**: Meet audit requirements by tying agent actions to specific OS accounts
 - **Limited permissions**: Create restricted Linux users with only the permissions an agent needs
+
+## Bubblewrap Sandbox (v1.0.0)
+
+*Introduced in v1.0.0.*
+
+Evonic now supports **Bubblewrap (`bwrap`)** as an alternative sandbox engine. Bubblewrap uses Linux namespaces to create lightweight, hardware-isolated environments without requiring a Docker daemon.
+
+### Docker vs Bubblewrap
+
+| Feature | Docker Sandbox | Bubblewrap (`bwrap`) |
+|----------|----------------|--------------------------|
+| **Boot Time** | Medium (seconds) | Near-Instant (milliseconds) |
+| **Overhead** | High (Daemon required) | Extremely Low (Namespace-based) |
+| **Isolation** | Strong (CGroups/Namespaces) | Strong (Namespaces/Mounts) |
+| **Privileges** | Requires Docker Socket | Unprivileged (usually) |
+| **Persistence** | Volume-based | Bind-mount based |
+
+### Enabling bwrap
+
+To switch an agent to a Bubblewrap workplace, update the agent's configuration:
+
+```json
+{
+  "workplace": {
+    "type": "bwrap",
+    "mounts": [
+      "/home/evonic/shared",
+      "/tmp/agent-scratchpad"
+    ]
+  }
+}
+```
+
+### Security Best Practices
+
+- **Limit Mounts**: Only mount the absolute minimum directories required for the task.
+- **Read-Only Roots**: Mount system libraries as read-only to prevent modification of the sandbox environment.
+- **Network Sandboxing**: Use the `network: false` flag for agents that only perform local data processing.
+
+See the full [Bubblewrap Sandbox](/agents/sandboxes/bubblewrap) guide for detailed configuration and troubleshooting.
 
 ## Configuration
 

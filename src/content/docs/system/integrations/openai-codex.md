@@ -19,7 +19,52 @@ Instead of jumping straight from a prompt to a final answer, Codex-powered agent
 - **Debugging**: When an agent fails a task, the thinking bubble often reveals the exact misunderstanding or missing piece of context.
 - **Verification**: For complex math or architectural decisions, you can verify the step-by-step reasoning before trusting the code.
 
-## Codex-Optimized Workflows
+## Provider & Model Hierarchy
+
+Evonic uses a layered provider system for OpenAI models. When you configure a Codex-powered agent, the system resolves the model through this hierarchy:
+
+1. **Provider Layer** — defines the API base URL, authentication method, and available model list
+2. **Model Source** — maps a logical model name (e.g., `codex`) to a specific provider and model ID
+3. **Agent Config** — the agent selects a model source, which inherits the provider's connection settings
+
+### OAuth Authentication
+
+For OpenAI Codex access, Evonic supports **OAuth 2.0** authentication flow:
+
+```json
+{
+  "provider": {
+    "name": "openai-codex",
+    "base_url": "https://api.openai.com/v1",
+    "auth": {
+      "type": "oauth",
+      "client_id": "your-client-id",
+      "client_secret": "[REDACTED]",
+      "token_url": "https://api.openai.com/oauth/token",
+      "scopes": ["codex.read", "codex.write"]
+    }
+  }
+}
+```
+
+The OAuth flow handles token refresh automatically — if a token expires mid-session, Evonic silently refreshes it and retries the request without interrupting the agent's workflow.
+
+### Direct API Key (Alternative)
+
+If OAuth is not required, you can also use a standard API key:
+
+```json
+{
+  "provider": {
+    "name": "openai-codex",
+    "base_url": "https://api.openai.com/v1",
+    "auth": {
+      "type": "api_key",
+      "key": "[REDACTED]"
+    }
+  }
+}
+```
 
 The system leverages Codex's strengths in structural understanding and code generation:
 
