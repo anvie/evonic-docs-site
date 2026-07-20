@@ -1,121 +1,115 @@
 ---
-title: Troubleshooting — Agent Image Processing Failure
-description: Langkah demi langkah mengatasi masalah saat agen gagal memproses gambar di Evonic.
+title: Troubleshooting: Agent Image Processing Failure
+description: Step by step guide to fix issues when an agent fails to process images in Evonic.
 sidebar:
   order: 5
 ---
 
-Saat menggunakan agen dengan kemampuan vision (pengenalan gambar), kamu mungkin mengalami situasi di mana agen gagal memproses atau "melihat" gambar yang dikirim. Panduan ini akan membantumu mendiagnosis dan memperbaiki masalah tersebut secara sistematis.
+When using an agent with vision capabilities (image recognition), you may encounter a situation where the agent fails to process or "see" images you send. This guide will help you diagnose and fix the issue systematically.
 
-## Gejala Umum
+## Common Symptoms
 
-Sebelum masuk ke langkah perbaikan, kenali dulu gejala-gejala berikut:
+Before diving into fixes, recognize these symptoms:
 
-- Agen membalas seolah-olah tidak menerima gambar sama sekali
-- Agen merespons dengan teks seperti "Saya tidak bisa melihat gambar yang kamu kirim"
-- Agen hanya membaca teks tetapi mengabaikan attachment gambar
-- Tidak ada error yang terlihat, tapi agen tidak mendeskripsikan isi gambar
-
----
-
-## Penyebab Utama
-
-Masalah ini hampir selalu disebabkan oleh **konfigurasi vision yang belum diaktifkan** di salah satu (atau beberapa) dari tiga tempat berikut:
-
-1. **Pengaturan Model** — Model yang digunakan harus mendukung dan mengaktifkan fitur vision
-2. **Pengaturan Umum (General Settings)** — Fitur vision harus diaktifkan di level sistem
-3. **Pengaturan Agen** — Setiap agen individual harus mengaktifkan pemrosesan gambar
-
-Ketiga pengaturan ini harus **semuanya enabled**. Jika salah satu saja mati, agen tidak akan bisa memproses gambar.
+- The agent replies as if it never received an image at all
+- The agent responds with text like "I cannot see the image you sent"
+- The agent only reads text but ignores image attachments
+- No visible errors, but the agent does not describe the image content
 
 ---
 
-## Langkah 1: Periksa Pengaturan Model
+## Root Cause
 
-Pastikan model yang kamu gunakan mendukung vision dan fiturnya sudah diaktifkan.
+This issue is almost always caused by **vision configuration not being enabled** in one (or more) of these three places:
 
-### Cara Memeriksa:
+1. **Model Settings**: the model you are using must support and have vision enabled
+2. **General Settings**: vision must be enabled at the system level
+3. **Agent Settings**: each individual agent must have image processing enabled
 
-1. Buka halaman **Model Settings** di dashboard Evonic
-2. Pilih model yang digunakan oleh agen kamu (misalnya: Mimo v2.5, GPT-4 Vision, Claude, dll.)
-3. Cari toggle atau checkbox untuk **Vision** atau **Image Processing**
-4. Pastikan toggle tersebut dalam posisi **Enabled**
-
-> **Catatan**: Tidak semua model mendukung vision. Model seperti GPT-4o, Claude 3.5 Sonnet, Gemini 1.5 Pro, dan Llama 3.2 Vision memiliki kemampuan ini. Model text-only seperti GPT-3.5 atau Llama 3.1 (non-vision) tidak bisa memproses gambar.
-
-### Jika Model Tidak Mendukung Vision:
-
-- Ganti ke model yang mendukung vision dari daftar model yang tersedia
-- Untuk model lokal, pastikan kamu menggunakan varian vision (misal: `llava` atau `llama3.2-vision` alih-alih varian text-only)
+All three settings must be **enabled**. If even one is off, the agent will not be able to process images.
 
 ---
 
-## Langkah 2: Periksa Pengaturan Umum (General Settings)
+## Step 1: Check Model Settings
 
-Setelah model diaktifkan, pastikan fitur vision juga diaktifkan di level sistem.
+Make sure the model you are using supports vision and the feature is enabled.
 
-### Cara Memeriksa:
+### How to Check:
 
-1. Buka halaman **General Settings** di dashboard Evonic
-2. Cari bagian yang berkaitan dengan **Vision**, **Image**, atau **Multimodal**
-3. Pastikan toggle atau opsi untuk pemrosesan gambar dalam posisi **Enabled**
+1. Open the **Model Settings** page in the Evonic dashboard
+2. Select the model your agent is using (e.g. Mimo v2.5, GPT-4 Vision, Claude, etc.)
+3. Look for the toggle or checkbox for **Vision** or **Image Processing**
+4. Make sure the toggle is set to **Enabled**
 
-Pengaturan ini berlaku secara global — jika dinonaktifkan di sini, tidak ada agen yang bisa memproses gambar meskipun pengaturan model dan agen sudah benar.
+> **Note**: Not all models support vision. Models like GPT-4o, Claude 3.5 Sonnet, Gemini 1.5 Pro, and Llama 3.2 Vision have this capability. Text-only models like GPT-3.5 or Llama 3.1 (non-vision) cannot process images.
 
----
+### If Your Model Does Not Support Vision:
 
-## Langkah 3: Periksa Pengaturan Agen
-
-Langkah terakhir dan paling sering terlewat: pastikan agen spesifik yang kamu gunakan sudah diaktifkan untuk memproses gambar.
-
-### Cara Memeriksa:
-
-1. Buka halaman **Agents** di dashboard Evonic
-2. Pilih agen yang mengalami masalah
-3. Buka tab **Settings** atau **Configuration**
-4. Cari pengaturan untuk **Image Processing**, **Vision**, atau **Attachment Handling**
-5. Pastikan opsi tersebut dalam posisi **Enabled**
-
-> **Tips**: Jika kamu menggunakan banyak agen, periksa pengaturan ini untuk setiap agen yang perlu memproses gambar. Pengaturan vision bersifat per-agen.
+- Switch to a vision-capable model from the available model list
+- For local models, make sure you are using the vision variant (e.g. `llava` or `llama3.2-vision` instead of the text-only variant)
 
 ---
 
-## Langkah 4: Verifikasi Setelah Perbaikan
+## Step 2: Check General Settings
 
-Setelah memastikan ketiga pengaturan di atas sudah enabled:
+After the model is enabled, make sure vision is also enabled at the system level.
 
-1. **Restart agen** jika perlu (beberapa perubahan memerlukan restart)
-2. Kirim gambar uji ke agen melalui channel yang biasa kamu gunakan
-3. Minta agen untuk mendeskripsikan isi gambar
-4. Jika agen berhasil mendeskripsikan gambar, masalah sudah teratasi
+### How to Check:
 
----
+1. Open the **General Settings** page in the Evonic dashboard
+2. Find the section related to **Vision**, **Image**, or **Multimodal**
+3. Make sure the toggle or option for image processing is set to **Enabled**
 
-## Checklist Cepat
-
-Gunakan checklist ini untuk memastikan tidak ada yang terlewat:
-
-- [ ] Model mendukung vision (GPT-4o, Claude, Gemini Vision, Llama Vision, dll.)
-- [ ] Vision diaktifkan di **Model Settings**
-- [ ] Vision diaktifkan di **General Settings**
-- [ ] Image processing diaktifkan di **Agent Settings**
-- [ ] Agen sudah di-restart setelah perubahan
-- [ ] Gambar uji berhasil diproses
+This setting applies globally. If disabled here, no agent will be able to process images even if the model and agent settings are correct.
 
 ---
 
-## Masih Mengalami Masalah?
+## Step 3: Check Agent Settings
 
-Jika ketiga pengaturan di atas sudah benar tetapi agen tetap tidak bisa memproses gambar:
+The last and most commonly missed step: make sure the specific agent you are using has image processing enabled.
 
-- **Cek format gambar**: Pastikan format gambar didukung (JPEG, PNG, GIF, WebP umumnya didukung; format khusus seperti HEIC mungkin tidak)
-- **Cek ukuran gambar**: Beberapa model memiliki batasan ukuran gambar. Coba kirim gambar dengan resolusi lebih kecil
-- **Cek koneksi model**: Jika menggunakan model cloud (API), pastikan koneksi internet stabil dan API key valid
-- **Cek log agen**: Buka log agen untuk melihat apakah ada error spesifik terkait pemrosesan gambar
-- **Coba channel berbeda**: Jika kamu menggunakan WhatsApp, coba kirim gambar melalui Telegram atau web chat untuk mengisolasi apakah masalahnya di channel atau di agen
+### How to Check:
+
+1. Open the **Agents** page in the Evonic dashboard
+2. Select the agent that is having the issue
+3. Open the **Settings** or **Configuration** tab
+4. Find the setting for **Image Processing**, **Vision**, or **Attachment Handling**
+5. Make sure the option is set to **Enabled**
+
+> **Tip**: If you are using multiple agents, check this setting for every agent that needs to process images. Vision settings are per-agent.
 
 ---
 
-## Referensi
+## Step 4: Verify After Fixing
 
-Solusi ini didasarkan pada [GitHub Issue #90](https://github.com/anvie/evonic/issues/90#issuecomment-5025562704) di repositori Evonic. Jika kamu menemukan pola kegagalan baru, silakan laporkan melalui GitHub Issues.
+After confirming all three settings above are enabled:
+
+1. **Restart the agent** if needed (some changes require a restart)
+2. Send a test image to the agent through the channel you normally use
+3. Ask the agent to describe what is in the image
+4. If the agent successfully describes the image, the issue is resolved
+
+---
+
+## Quick Checklist
+
+Use this checklist to make sure nothing is missed:
+
+- [ ] Model supports vision (GPT-4o, Claude, Gemini Vision, Llama Vision, etc.)
+- [ ] Vision is enabled in **Model Settings**
+- [ ] Vision is enabled in **General Settings**
+- [ ] Image processing is enabled in **Agent Settings**
+- [ ] Agent has been restarted after changes
+- [ ] Test image was processed successfully
+
+---
+
+## Still Having Issues?
+
+If all three settings above are correct but the agent still cannot process images:
+
+- **Check image format**: Make sure the image format is supported (JPEG, PNG, GIF, WebP are generally supported; special formats like HEIC may not be)
+- **Check image size**: Some models have image size limits. Try sending a smaller resolution image
+- **Check model connection**: If using a cloud model (API), make sure the internet connection is stable and the API key is valid
+- **Check agent logs**: Open the agent logs to see if there are any specific errors related to image processing
+- **Try a different channel**: If you are using WhatsApp, try sending the image through Telegram or web chat to isolate whether the issue is with the channel or the agent
