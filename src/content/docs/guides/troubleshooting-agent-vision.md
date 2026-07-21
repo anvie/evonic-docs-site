@@ -1,5 +1,5 @@
 ---
-title: Troubleshooting: Agent Image Processing Failure
+title: "Troubleshooting: Agent Image Processing Failure"
 description: Step by step guide to fix issues when an agent fails to process images in Evonic.
 sidebar:
   order: 5
