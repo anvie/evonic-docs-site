@@ -1,8 +1,6 @@
 ---
-title: "Troubleshooting: Agent Image Processing Failure"
+title: "Agent Image Processing Failure"
 description: Step by step guide to fix issues when an agent fails to process images in Evonic.
-sidebar:
-  order: 5
 ---
 
 When using an agent with vision capabilities (image recognition), you may encounter a situation where the agent fails to process or "see" images you send. This guide will help you diagnose and fix the issue systematically.
