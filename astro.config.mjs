@@ -103,6 +103,10 @@ export default defineConfig({
           autogenerate: { directory: 'guides' },
         },
         {
+          label: 'Troubleshooting',
+          autogenerate: { directory: 'troubleshooting' },
+        },
+        {
           label: 'Local Models',
           autogenerate: { directory: 'local-models' },
         },
