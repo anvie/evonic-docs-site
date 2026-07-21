@@ -54,7 +54,6 @@ export default defineConfig({
             { label: 'Events', slug: 'system/events' },
             { label: 'CMP (Context Memory)', slug: 'system/memory/cmp' },
             { label: 'ATG (Task Graph)', slug: 'system/memory/atg' },
-            { label: 'OpenAI Codex', slug: 'system/integrations/openai-codex' },
             { label: 'MCP Client', slug: 'system/mcp/integration' },
           ],
         },
