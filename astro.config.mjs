@@ -106,6 +106,10 @@ export default defineConfig({
           autogenerate: { directory: 'local-models' },
         },
         {
+          label: 'Proprietary Models',
+          autogenerate: { directory: 'proprietary-models' },
+        },
+        {
           label: 'Troubleshooting',
           autogenerate: { directory: 'troubleshooting' },
         },
