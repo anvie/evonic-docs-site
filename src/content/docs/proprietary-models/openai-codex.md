@@ -7,14 +7,15 @@ If you have a **ChatGPT Plus** or **ChatGPT Pro** subscription, you can connect 
 
 ## How It Works
 
-Instead of the usual API key approach, Codex uses a secure **OAuth 2.0** login flow:
+Instead of the usual API key approach, Codex uses a secure **OAuth 2.0 + PKCE** flow. You'll set up Codex as a provider just like any other model provider — the only difference is that you authorize it through your OpenAI account instead of pasting an API key.
 
-1. You click **Connect Codex** in the Evonic settings
-2. Evonic redirects you to OpenAI's login page
-3. You authorize Evonic to use your subscription
-4. Tokens are securely stored, and your available models are discovered automatically
+Here's the overall flow:
 
-Your data still flows through Evonic — OpenAI never sees it directly. The subscription gives you access to models like `gpt-5.4`, `gpt-5.5`, and `gpt-5.6` with **no per-token charges**.
+1. **Create a provider** — add a new provider with API Format set to "Codex (OAuth)"
+2. **Connect** — click Connect on the provider card to authorize via your OpenAI account
+3. **Fetch models** — after connecting, fetch the list of available models from your subscription
+
+Your data still flows through Evonic — OpenAI never sees it directly. The subscription gives you access to models like `gpt-5.6-sol`, `gpt-5.6-terra`, and `gpt-5.6-luna` with **no per-token charges**.
 
 ## Prerequisites
 
@@ -24,46 +25,60 @@ Your data still flows through Evonic — OpenAI never sees it directly. The subs
 
 ## Connecting Your Subscription
 
-### Step 1 — Open Model Settings
+Setting up Codex is a three-step process: create the provider, authorize it, then fetch your models.
 
-Navigate to **Settings → Models** in the Evonic web UI. Look for the **OpenAI Codex** section at the top of the models grid.
+### Step 1 — Create a Provider
 
-### Step 2 — Click Connect
+Navigate to **Settings → Models** and click **Add Provider**. Fill in the provider form:
 
-Click the **Connect Codex** button. A popup window opens, taking you to OpenAI's authorization page.
+| Field | Value |
+|---|---|
+| **Display Name** | `OpenAI Codex` (or any name you prefer) |
+| **Type** | `Remote` |
+| **Base URL** | `https://chatgpt.com/backend-api/codex` |
+| **API Key** | Leave empty — OAuth will fill this in |
+| **API Format** | **Codex (OAuth)** |
 
-### Step 3 — Authorize
+Click **Save Provider**. A new provider card appears in the models grid with **Connect** and **Fetch Models** buttons.
 
-Log in with your OpenAI account and approve the connection. OpenAI will ask you to confirm that Evonic can access your subscription.
+### Step 2 — Connect & Authorize
 
-### Step 4 — Wait for Model Discovery
+On the provider card, click the green **Connect** button. A popup window opens, redirecting you to OpenAI's login page. Log in with your OpenAI account and approve the connection. OpenAI will ask you to confirm that Evonic can access your subscription.
 
-Once authorized, Evonic automatically exchanges the authorization code for secure tokens and discovers all available models in your subscription. You'll see them appear as model cards in the settings page.
+Once authorized, Evonic exchanges the authorization code for secure tokens automatically. The provider card shows a green dot when connected.
 
-### Step 5 — Done!
+:::tip[Remote access?]
+If you're running Evonic on a remote server, the callback popup may not work. Paste the full callback URL from your browser address bar into the text area in the waiting modal.
+:::
 
-The Codex indicator turns green. Your models are ready to use — just assign them to any agent like you would with any other model provider.
+### Step 3 — Fetch Models
+
+After connecting, click the **Fetch Models** button on the provider card. Evonic queries the Codex endpoint and lists all models available under your subscription. From the results, you can quickly add any model with one click.
+
+That's it! Your Codex models are now ready to use — assign them to any agent like you would with any other model provider.
 
 ## Available Models
 
-The models available depend on your subscription tier:
+The models available depend on your subscription tier. After clicking **Fetch Models**, you'll see a list of what's available:
 
 | Subscription | Typical Models |
 |---|---|
-| **ChatGPT Plus** | `gpt-5.4`, `gpt-5.5` |
-| **ChatGPT Pro** | `gpt-5.4`, `gpt-5.5`, `gpt-5.6`, plus extended context windows |
+| **ChatGPT Plus** | `gpt-5.6-sol`, `gpt-5.6-terra` |
+| **ChatGPT Pro** | `gpt-5.6-sol`, `gpt-5.6-terra`, `gpt-5.6-luna`, plus extended context windows |
 
-After connecting, Evonic automatically detects which models are available to your account and displays them in the settings panel.
+If the API doesn't return a model list, Evonic falls back to these defaults so you can still add them manually.
 
 ## Using Codex with Agents
 
-Once connected, Codex models appear in the model dropdown when you create or edit an agent. Here's how it looks in your configuration:
+Once connected and models are fetched, Codex models appear in the model dropdown when you create or edit an agent. Here's how it looks in your configuration:
 
 ```yaml
 model:
-  provider: codex
-  model_name: gpt-5.4
+  provider: openai-codex
+  model_name: gpt-5.6-sol
 ```
+
+The `provider` field matches the provider name you chose when creating it. The `model_name` is the model ID shown in the Fetch Models result.
 
 From the CLI, you can verify the connection:
 
@@ -74,10 +89,10 @@ evonic model list
 **Example output:**
 
 ```
-ID                                    Name         Provider    Status
+ID                                    Name           Provider       Status
 --------------------------------------------------------------------------
-a1b2c3d4-...                         GPT-5.4       codex       enabled
-e5f6g7h8-...                         GPT-5.5       codex       enabled
+a1b2c3d4-...                         GPT-5.6 Sol     openai-codex   enabled
+e5f6g7h8-...                         GPT-5.6 Terra   openai-codex   enabled
 ```
 
 ## Managing Your Connection
@@ -88,7 +103,7 @@ The Codex card in **Settings → Models** shows a green indicator when connected
 
 ### Reconnecting
 
-Tokens expire periodically. Evonic refreshes them automatically in the background. If the refresh fails — for example, if you changed your OpenAI password — just click **Connect Codex** again to re-authorize.
+Tokens expire periodically. Evonic refreshes them automatically in the background. If the refresh fails — for example, if you changed your OpenAI password — just click **Connect** again to re-authorize.
 
 ### Disconnecting
 
@@ -117,14 +132,14 @@ For most users, Codex is the simpler option — no need to manage API keys or mo
 
 ### Models not appearing after authorization
 
-- Wait a few seconds — model discovery runs automatically after the OAuth callback
-- Try refreshing the settings page
-- If the issue persists, disconnect and reconnect
+- Make sure you clicked **Fetch Models** after connecting — models are not auto-discovered
+- Check that your subscription is active at [chatgpt.com/account](https://chatgpt.com/account)
+- If the API returns an empty list, try adding models manually using the fallback names (e.g., `gpt-5.6-sol`)
 
 ### "Token Expired" warning
 
 - Tokens refresh automatically; the warning appears when the refresh window is closing
-- If the warning persists for more than a few minutes, re-authorize by clicking **Connect Codex** again
+- If the warning persists for more than a few minutes, re-authorize by clicking **Connect** again
 
 ### Slow responses compared to API
 
