@@ -238,6 +238,19 @@ gpt-4, gpt-4-mini, llama3.2:3b
 - A badge in the UI shows which fallback model is currently active
 - If all models in the chain fail, the agent returns a timeout error
 
+#### Global Default Model Fallback
+
+*Introduced in v1.1.0.*
+
+In addition to per-agent model fallback chains, you can now set a **global default fallback model** that applies across all agents. Configure the `default_model_fallback_id` setting to define a platform-wide backup model.
+
+**Behavior:**
+- When an agent's primary model times out or returns a transient error, and the agent has no fallback chain configured, the global fallback is used
+- The `/model` slash command output is now fallback-aware — it displays both the active model and any fallback that is currently engaged
+- `describe_image` (vision tool) also falls back on rate limits and transient errors, using the global fallback when no per-agent vision fallback is set
+
+**Also new in v1.1.0:** You can now configure a dedicated **Evaluation Model** setting (#732) for the evaluator pipeline, separate from the agent's main model.
+
 ### Workspace Directory
 
 Each agent has a **workspace directory** for file operations. By default, this is `agents/<agent_id>/workspace/`. You can customize it in the General tab to point to any directory on the filesystem.
@@ -252,6 +265,24 @@ Agents operate in one of two modes: **Plan** or **Execute**. This state is persi
 - **Execute mode**: The agent executes actions directly.
 
 The agent state is managed automatically by the runtime. See [Agent State](/agents/agent-state) for details.
+
+### Slash Command Controls
+
+*Introduced in v1.1.0.*
+
+You can control which slash commands are available to each agent using two new fields in the **Settings** tab (#728):
+
+| Setting | Description |
+|---------|-------------|
+| `hidden_slash_commands` | Commands hidden from `/help` output and autocomplete, but still executable |
+| `disabled_slash_commands` | Commands completely blocked — attempting to use them returns an error |
+
+**Use Cases:**
+- **Hide advanced commands** from simple agents (e.g., hide `/restart` from non-admin agents)
+- **Disable dangerous commands** for tightly-scoped agents (e.g., disable `/sub` to prevent sub-agent spawning)
+- **Simplify the command palette** for agents used by non-technical users
+
+Configure these as comma-separated lists in the agent's Settings tab. Changes take effect immediately — no restart required.
 
 ### Knowledge Tab
 
@@ -340,6 +371,49 @@ Configure these settings in the agent's **Advanced** settings panel, accessible 
 
 See [Sub-Agents](/agents/sub-agents) for the full sub-agent system documentation.
 
+
+### Super Agent Skill Assignment
+
+*Introduced in v1.1.0.*
+
+The Super Agent can now selectively assign individual skills to itself (#739). Previously, the Super Agent bypassed authorization checks for all skill operations, which was too broad. With v1.1.0, the assignment model is more granular:
+
+- Super Agents can assign **specific skills** rather than receiving blanket authorization
+- A database migration (section 10b) tracks which skills have been approved for the Super Agent
+- Skill reviews now respect individual assignment decisions
+
+This change aligns with Evonic's security-first design philosophy — no agent, not even the Super Agent, gets unrestricted access by default.
+
+## Agent JSON Export/Import
+
+*Introduced in v1.1.0.*
+
+Agents can now be exported and imported as JSON files, enabling full agent portability:
+
+```bash
+# Export an agent
+evonic agent export bookstore_bot --output bookstore_bot.json
+
+# Import an agent
+evonic agent import bookstore_bot.json
+```
+
+**What gets exported:**
+- Agent ID, name, description
+- System prompt
+- Model configuration (model, fallback chain, API format)
+- Tool assignments
+- Skill assignments
+- Channel configuration
+- All settings from the General, Tools, and Settings tabs
+
+**Validation:** Imported JSON files are validated against the current schema before creation. If the schema has changed between export and import, you'll get clear error messages indicating which fields need adjustment.
+
+This is ideal for:
+- **Backing up** agent configurations before major changes
+- **Migrating** agents between Evonic instances (dev → staging → production)
+- **Sharing** agent templates with your team
+- **Version-controlling** agent configurations alongside your codebase
 
 ## Cloning an Agent
 

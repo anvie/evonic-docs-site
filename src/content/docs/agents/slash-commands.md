@@ -401,6 +401,52 @@ Spawns a sub-agent directly from chat for parallel work. Sub-agents execute with
 
 See [Sub-Agents](/agents/sub-agents) for the full system documentation.
 
+## Slash Command Controls
+
+*Introduced in v1.1.0.*
+
+Each agent can now be configured with **hidden** and **disabled** slash command lists directly from the agent Settings tab. This gives you precise control over which commands are visible and usable per agent.
+
+| Setting | Description |
+|---------|-------------|
+| `hidden_slash_commands` | Commands hidden from the `/help` listing but still executable |
+| `disabled_slash_commands` | Commands fully blocked — they won't appear and won't execute |
+
+**Behavior:**
+- Hidden commands won't show up in `/help` but can still be invoked by name
+- Disabled commands return a clear error if someone tries to invoke them
+- Configure these per-agent in the Settings tab or via API
+
+**Example — hiding advanced commands from a public-facing agent:**
+```
+# In the agent's hidden_slash_commands:
+/restart, /shutdown
+
+# In the agent's disabled_slash_commands:
+/investigate, /sub
+```
+
+---
+
+## Guided Slash Commands
+
+*Introduced in v1.1.0.*
+
+Slash commands now support **parameter metadata** that enables live frontend hints and autocomplete as you type. When you start typing a command like `/clear` or `/model`, the UI shows the expected parameters so you never have to guess the syntax.
+
+**How it works:**
+- Each command exposes `parameters`, `accepts_args`, and `to_dict` metadata
+- The frontend reads this metadata and renders inline hints and autocomplete suggestions
+- Supported commands include `/clear`, `/model`, `/sub`, `/investigate`, and more
+
+**Example — typing `/sub` shows inline hints:**
+```
+/sub <name> --description "<purpose>"
+```
+The `<name>` and `--description` placeholders appear as grey hints in the input field, and autocomplete fills them as you tab through.
+
+---
+
 ## How Commands Are Processed
 
 When a message starts with `/`, the agent runtime intercepts it before sending to the LLM:

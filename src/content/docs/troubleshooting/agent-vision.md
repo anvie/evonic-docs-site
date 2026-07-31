@@ -102,6 +102,38 @@ Use this checklist to make sure nothing is missed:
 
 ---
 
+## Vision Pipeline Fallbacks
+
+*Introduced in v1.1.0.*
+
+Evonic includes a multi-layered vision fallback system to ensure image processing never stalls, even when the primary vision model is unavailable or rate-limited.
+
+### How It Works
+
+1. **Primary vision model** — the model configured in the agent's model settings is tried first
+2. **Secondary fallback** — if the primary model returns a rate limit or transient error, a secondary vision model (configurable via environment variables and the Web UI) takes over
+3. **Third fallback** — a third fallback model is tried if both primary and secondary fail
+
+The `describe_image` tool automatically cascades through these fallbacks, so the agent never returns a "cannot see image" error due to a temporarily unavailable model.
+
+### Configuration
+
+| Setting | How to Configure |
+|---------|-----------------|
+| **Vision fallback model** | Set via the **Vision Fallback** field in the agent's model settings, or via the `EVONIC_VISION_FALLBACK_MODEL` environment variable |
+| **Tertiary fallback** | Configured in `EVONIC_VISION_FALLBACK_MODEL_3` environment variable |
+
+### Auto-Conversion & Compression
+
+- **Format conversion** — non-JPEG/PNG images (WebP, HEIC, BMP, etc.) are automatically converted to JPEG before being sent to the vision model, ensuring broad format compatibility
+- **Image compression** — large images are automatically compressed to stay within model-specific size limits, preventing "image too large" errors
+
+:::tip
+If your agent still fails to process images after enabling all three settings, try sending a smaller or JPEG-format image to rule out conversion issues. The fallback system handles most transient failures, but persistent errors usually point to a configuration gap in Steps 1–4 above.
+:::
+
+---
+
 ## Still Having Issues?
 
 If all three settings above are correct but the agent still cannot process images:

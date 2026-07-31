@@ -148,6 +148,23 @@ When `run_as_user` is configured for an agent, the sandbox backend:
 
 #
 
+## Persistent Docker Sandbox
+
+*Introduced in v1.1.0.*
+
+Docker sandbox containers now **persist across sessions and server restarts**. Previously, each new session spawned a fresh container and destroyed it when the session ended. With v1.1.0, containers are preserved:
+
+- The container stays alive after a session ends, ready for reuse
+- On server restart, Evonic reconnects to existing containers rather than creating new ones
+- Agent workspaces inside the container survive indefinitely
+
+**Benefits:**
+- **Faster startup** — no need to rebuild the sandbox environment on every new session
+- **Stateful workflows** — installed packages, compiled binaries, and edited files persist across sessions
+- **Reduced resource churn** — fewer container create/destroy cycles reduce Docker daemon load
+
+The idle timeout reaper still cleans up containers that have been inactive beyond `SANDBOX_IDLE_TIMEOUT` (default 30 minutes). To keep a container alive indefinitely, increase this value or disable the reaper.
+
 ## Workspace Boundary Enforcement
 
 *Introduced in v0.8.0.*
