@@ -123,6 +123,8 @@ Agents support slash commands for quick actions. These work in both the web chat
 | `/sub` | Spawn a sub-agent from chat |
 | `/cwd` | Show the current workspace directory |
 | `/cd` | Change the agent's workspace directory |
+| `/dump` | Export the current session as a JSONL file |
+| `/unfocus` | Clear the agent's focus mode to accept all sessions |
 
 See [Slash Commands](/agents/slash-commands) for full details.
 

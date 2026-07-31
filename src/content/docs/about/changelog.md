@@ -40,6 +40,36 @@ description: Release history and updates for Evonic.
 - **Improved Slash Command Discovery** — contextual help and auto-completion for all available slash commands.
 - **Session Recovery** — ability to restore archived sessions directly back into the active chat.
 
+## v1.1.0 — 2026-07-31
+
+*Reliability & Delivery — 194 commits*
+
+### Platform Reliability (4)
+
+- **Persistent Docker Sandbox** — sandbox containers now survive across sessions and server restarts, eliminating redundant image rebuilds and preserving package installations between conversations.
+- **WhatsApp Safe Delivery** — global safe-delivery configuration with an outbound dispatcher, throttled queue preservation, and zombie-connection auto-recovery for the WhatsApp bridge, ensuring messages are delivered even under unstable network conditions.
+- **Global Default Model Fallback** — a new `default_model_fallback_id` setting lets you define a platform-wide fallback model that all agents inherit. The `/model` slash command now shows whether the active model came from a fallback chain.
+- **Timezone Validation** — the `EVONIC_TIMEZONE` setting is now properly persisted through `run_setup`, ensuring timezone configuration survives server restarts.
+
+### Agent & Developer Experience (4)
+
+- **Guided Slash Commands** — slash commands now expose parameter metadata (`parameters`, `accepts_args`, `to_dict`) with live frontend hints and autocomplete for `/clear`, `/model`, and other commands. No more guessing what arguments a command accepts.
+- **Slash Command Controls** — per-agent `hidden_slash_commands` and `disabled_slash_commands` settings in the Settings tab give you fine-grained control over which commands each agent can see and use (#728).
+- **Agent JSON Export/Import** — full agent portability: export any agent as a validated JSON file and import it into another Evonic instance. All configuration, tools, skills, and prompts are preserved.
+- **Super Agent Skill Assignment** — super agents now use selective skill assignment (#739) with a dedicated doctor migration, replacing blanket authorization bypass with precise, auditable control.
+
+### Vision & Model Improvements (3)
+
+- **Vision Pipeline Fallbacks** — a secondary vision fallback model (configurable via environment variables and the Web UI) and a restored third vision model fallback ensure image processing never stalls. Non-JPEG/PNG images are auto-converted and large images are compressed before processing.
+- **`describe_image` Rate-Limit Resilience** — the built-in image description tool now falls back on both rate limits and transient errors, keeping vision-enabled agents functional under load.
+- **Evaluation Model Setting** — a dedicated, configurable evaluation model for the evaluator pipeline (#732) lets you choose the best model for scoring accuracy independently from the agent's chat model.
+
+### Plugin Features (3)
+
+- **Workflow Guard Plugin** — reusable failure thresholds, hard locks, and an escalation outbox provide production-grade failure handling for multi-step workflows.
+- **Panel Plugin `confirm_dialog`** — action buttons in the Panel UI can now trigger confirmation dialogs, preventing accidental destructive actions.
+- **Photo Validation API** — a stateless photo validation endpoint with a model index, reason codes, and secret-free token verification for programmatic image verification.
+
 ## v0.8.0 — 2026
 
 
