@@ -140,6 +140,24 @@ kanban_get_comments(task_id: "183", limit: 5, offset: 0)
 kanban_get_comments(task_id: "183", limit: 5, offset: 5)
 ```
 
+## Attachments
+
+*Introduced in v1.1.2.*
+
+Kanban tasks now support **image and comment attachments**. When creating or updating a task, agents and users can attach files directly to the task card for richer context.
+
+### Image Attachments
+
+The task image picker has been modernized with a clean UI for uploading and previewing images attached to tasks. Images appear inline on the task card and are viewable from the board.
+
+### Comment Attachments
+
+Files can also be attached to individual comments. This is useful for sharing screenshots, logs, or reference documents as part of a progress update — keeping all task-related artifacts in one place.
+
+### AI Task Enhancer
+
+The built-in AI task enhancer now outputs in English by default, helping standardize task descriptions across multi-language teams. It analyzes the task title and description to suggest a clearer, better-structured version.
+
 ## API Endpoints
 
 The Kanban plugin exposes REST endpoints for programmatic access. See the [Plugin SDK](/plugins/sdk) for details on available endpoints and request/response formats.
