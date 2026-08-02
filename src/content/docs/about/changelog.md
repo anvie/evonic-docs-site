@@ -70,6 +70,24 @@ description: Release history and updates for Evonic.
 - **Panel Plugin `confirm_dialog`** — action buttons in the Panel UI can now trigger confirmation dialogs, preventing accidental destructive actions.
 - **Photo Validation API** — a stateless photo validation endpoint with a model index, reason codes, and secret-free token verification for programmatic image verification.
 
+## v1.1.2 — 2026-08-02
+
+*Agent State Lifecycle & Kanban Workflow — 25 commits*
+
+### Agent Core (2)
+
+- **AgentState Task Lifecycle (#742–746)** — the agent runtime now enforces proper task lifecycle transitions in the tool loop. Execution paths are synchronized across concurrent operations, live task feedback streams through the UI, the Vault Janitor receives scheduling controls for cleanup operations, and stale task state self-heals on session wake — so agents no longer pick up abandoned tasks from previous sessions.
+- **Explore Tool Regression Fix** — eager skill tools (such as Explore) are now protected from mid-turn tool pruning in the LLM loop, restoring reliable availability of the Explore tool.
+
+### Kanban (1)
+
+- **Kanban Attachments** — image and comment attachments are now supported on kanban tasks. The task image picker has been modernized, the AI task enhancer outputs in English, and task creator controls have been restored (#734, #739, #740, #741).
+
+### UI & Reliability (2)
+
+- **Viewer Copy Buttons** — code-block copy buttons are now available in article, document, and artifact viewers (#735).
+- **Settings & Reliability** — vision model dropdowns are now grouped under a dedicated Vision Models section with a mobile overflow fix (#737). The agent sidebar no longer drops busy events during page-load races (#738). Corrupted quotes in the evaluate settings template have been repaired.
+
 ## v0.8.0 — 2026
 
 

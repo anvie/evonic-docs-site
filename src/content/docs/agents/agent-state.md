@@ -124,6 +124,36 @@ When a user sends a message, the classifier evaluates it before the agent enters
 
 The classifier is enabled by default. You can disable it per-agent in the **General** tab by toggling the **Task Complexity Classifier** setting (`task_complexity_classifier: 0`).
 
+## Task Lifecycle
+
+*Introduced in v1.1.2.*
+
+The agent runtime enforces a proper **task lifecycle** to ensure reliable execution and prevent stale state from lingering across sessions. Each task the agent works on goes through a defined lifecycle with enforced transitions.
+
+### Lifecycle States
+
+| State | Description |
+|-------|-------------|
+| **Todo** | Task is on the board but not yet started |
+| **In Progress** | Agent has picked up the task and is actively working |
+| **Done** | Task completed successfully |
+
+### Enforced Transitions
+
+The tool loop enforces valid transitions between task states. Agents cannot skip steps — for example, a task must be moved to **In Progress** before it can be marked **Done**.
+
+### Self-Healing on Session Wake
+
+When a session wakes up after a restart or disconnect, the runtime automatically detects and heals stale task state. If an agent had a task in **In Progress** from a previous session, that stale state is cleaned up so the agent doesn't pick up abandoned work from an old conversation.
+
+### Vault Janitor Scheduling
+
+The Vault Janitor — Evonic's background cleanup service — receives scheduling controls to manage task lifecycle housekeeping. This includes periodic purging of orphaned task metadata and stale session-task associations.
+
+### Live Task Feedback
+
+Task state changes are streamed live to the UI. When an agent transitions a task (e.g., starting work or completing it), the session state panel updates immediately so you can follow along in real time.
+
 ## Configuration
 
 The agent mode can be influenced by:
