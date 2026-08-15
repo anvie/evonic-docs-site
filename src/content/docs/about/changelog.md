@@ -88,6 +88,38 @@ description: Release history and updates for Evonic.
 - **Viewer Copy Buttons** — code-block copy buttons are now available in article, document, and artifact viewers (#735).
 - **Settings & Reliability** — vision model dropdowns are now grouped under a dedicated Vision Models section with a mobile overflow fix (#737). The agent sidebar no longer drops busy events during page-load races (#738). Corrupted quotes in the evaluate settings template have been repaired.
 
+## v1.2.0 — 2026-08-14
+
+*Agent State Lifecycle & Kanban Workflow — 25 commits*
+
+### Agent & DX (3)
+
+- **Background Job Visibility & Monitors** — you can now see which background jobs are still running, opt in to per-job completion monitors, and receive a notification in the originating chat when a job finishes. Combined with `/detach`, this closes the loop on long-running work without ever blocking the conversation.
+- **Keyed Memory Supersession** — long-term memory now supports durable, keyed facts. Re-recording a fact under the same key automatically supersedes the stale value, so agents remember current facts instead of accumulating outdated duplicates.
+- **Panel Slash-Command Bindings** — panel actions can be bound to custom slash commands, giving operators a chat-native shortcut for panel-triggered operations.
+
+### WhatsApp (1)
+
+- **Shared-Channel Routing & Identity** — shared WhatsApp channels gain explicit routing controls and sender identity resolution, and agents can be restricted to direct-message-only messaging. Attachments, documents, status broadcasts, and newsletters are handled more reliably, and shared-channel sender expiry is enforced.
+
+### Approvals & Models (2)
+
+- **Dangerous-Code Highlighting** — approval prompts now highlight the potentially dangerous parts of a code block, so you can see exactly what you're approving at a glance.
+- **Per-Call LLM Retry Override** — the retry budget for an LLM call can be overridden per invocation, giving fine-grained control over transient-error retrying beyond the global maximum.
+
+### Viewer & Dependencies (2)
+
+- **Plan-File Viewer Tabs** — the plan-file viewer now offers both a rendered-Markdown view and a source-editing tab, so you can read plans cleanly or adjust them directly.
+- **Headless QR Decoder** — ID-card processing now runs a headless QR decoder dependency, enabling QR-based card reads without a GUI runtime.
+
+### Reliability (internal)
+
+- Fixed background-job command parsing and restored job-exit notices.
+- Improved Codex stream failure reporting and provider/SSE diagnostics, including correct identification of the failing vision model.
+- Enforced external-channel file delivery and blocked local filesystem paths from chat links.
+- Corrected workspace and tunnel file handling, including remote binary reads and virtual-path policy enforcement.
+- Corrected scheduler tidy timing, constrained Explorer cancellation, and oversized-output handling.
+
 ## v0.8.0 — 2026
 
 

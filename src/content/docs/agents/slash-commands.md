@@ -337,6 +337,33 @@ Moves a long-running command (builds, downloads, compilations) to the background
 > Process detached with job ID #42. You'll be notified when it completes.
 ```
 
+### Job Visibility & Monitors
+
+*Introduced in v1.2.0.*
+
+Detaching a job only moves it out of your way — it does not, by itself, tell you what happened. v1.2.0 adds two capabilities so long-running work stays accountable without ever blocking the chat:
+
+**1. Running-job visibility.** The session's **Session State panel** now lists every background job started in the session, with its command, live status, exit code (once it exits), and whether a monitor is attached. You always know what is still running.
+
+**2. Opt-in completion monitors.** You can ask the agent to *watch* a specific job and be told when something happens. Only an attached monitor produces a notification — unmonitored jobs stay silent, so an unrelated background command finishing never derails the conversation. A monitor is one-shot: it notifies exactly once, then removes itself.
+
+| Watch condition | When it fires |
+|-----------------|---------------|
+| `on_exit`     | The watched process exits (any exit code) |
+| `on_failure`  | The watched process exits non-zero |
+| `log_match`   | A regex matches in the job's log tail |
+| `shell`       | A shell predicate the agent runs succeeds |
+
+Conditions are OR-combined, so a monitor fires on the first one that becomes true. Monitors survive server restarts (they are persisted as scheduler jobs) and are capped at **10 per session**, each defaulting to a **6-hour** expiry.
+
+**Example — be told when a build finishes or fails:**
+```
+> Watch the build and tell me when it's done.
+> Watching job #42 — I'll notify you when it exits.
+... (you keep chatting) ...
+> Job #42 exited with code 0 (build succeeded).
+```
+
 ---
 
 ### `/investigate`
