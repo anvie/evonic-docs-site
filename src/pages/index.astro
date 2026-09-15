@@ -1,622 +1,937 @@
 ---
-// src/pages/index.astro
-// Evonic Landing Page — Swarm Intelligence, Zero Lock-in
+import Atmosphere from '../components/landing/Atmosphere.astro';
+import CapabilityVisual from '../components/landing/CapabilityVisual.astro';
+import Contributors from '../components/landing/Contributors.astro';
+import Icon from '../components/landing/Icon.astro';
+import '../styles/landing.css';
+
+const docs = '/getting-started/quickstart/';
+const github = 'https://github.com/anvie/evonic';
+const installCommands = {
+	'one-liner': 'curl -fsSL https://evonic.dev/install.sh | bash',
+	manual: 'git clone https://github.com/anvie/evonic'
+};
+const workspaceTabs = [
+	{ id: 'evonic', title: 'Evonic', text: 'Many agents, one Evonic.', src: '/evoagent.mp4' },
+	{ id: 'evomem', title: 'Evomem', text: 'Memory that outlives the session.', src: '/evomem.mp4' },
+	{ id: 'evonet', title: 'Evonet', text: 'Agents on every device.', src: '/evonet.mp4' }
+];
+const steps = [
+	{
+		title: 'Shape every agent',
+		text: 'Give each agent an identity, a model, tools, and reference knowledge. Add skills as its responsibilities grow.',
+		icon: 'spark',
+		category: 'AGENT DESIGN',
+		label: 'Agent identity',
+		detail: 'A purpose. A personality. Possibilities.'
+	},
+	{
+		title: 'Run it anywhere',
+		text: 'Agents can run tools locally, on an SSH server, or through an Evonet tunnel across your infrastructure.',
+		icon: 'globe',
+		category: 'FLEXIBLE EXECUTION',
+		label: 'Anywhere execution',
+		detail: 'Local. Remote. Wherever work happens.'
+	},
+	{
+		title: 'Build connected teams',
+		text: 'Agents can message and delegate to each other, combining specialist roles into a coordinated workflow.',
+		icon: 'network',
+		category: 'MULTI-AGENT TEAMS',
+		label: 'A connected system',
+		detail: 'Independent agents. Shared possibilities.'
+	}
+];
+const nodeGroups = [
+	[
+		{ label: 'Model', icon: 'code' },
+		{ label: 'Knowledge', icon: 'layers' },
+		{ label: 'Tools & skills', icon: 'terminal' },
+		{ label: 'Channels', icon: 'chat' }
+	],
+	[
+		{ label: 'Local', icon: 'terminal' },
+		{ label: 'SSH server', icon: 'globe' },
+		{ label: 'Evonet tunnel', icon: 'network' },
+		{ label: 'Sandbox', icon: 'shield' }
+	],
+	[
+		{ label: 'Research agent', icon: 'spark' },
+		{ label: 'Coding agent', icon: 'code' },
+		{ label: 'Writing agent', icon: 'chat' },
+		{ label: 'Your workflow', icon: 'globe' }
+	]
+];
+// Every feature keeps its own position, size, and angle across tab changes.
+const nodeLayouts = [
+	[
+		{ x: 30, y: 28, angle: -2 },
+		{ x: 70, y: 28, angle: 3 },
+		{ x: 30, y: 74, angle: 2 },
+		{ x: 70, y: 74, angle: -3 }
+	],
+	[
+		{ x: 28, y: 12, angle: -7 },
+		{ x: 65, y: 15, angle: 6 },
+		{ x: 35, y: 88, angle: 5 },
+		{ x: 72, y: 87, angle: -5 }
+	],
+	[
+		{ x: 35, y: 43, angle: -3 },
+		{ x: 72, y: 40, angle: 4 },
+		{ x: 28, y: 61, angle: 6 },
+		{ x: 65, y: 58, angle: -7 }
+	]
+];
+// Rotations pivot at the connector endpoint so every line stays attached.
+type SystemNode = {
+	label: string;
+	icon: string;
+	group: number;
+	side: 'left' | 'right';
+	depth: number;
+	x: number;
+	y: number;
+	angle: number;
+	position: string;
+};
+const systemNodes: SystemNode[] = nodeGroups.flatMap((nodes, group) =>
+	nodes.map((node, index) => ({
+		...node,
+		group,
+		side: index % 2 === 0 ? 'left' : 'right',
+		depth: group,
+		...nodeLayouts[group][index],
+		position: ['a', 'b', 'c', 'd'][index]
+	}))
+);
+// Connector endpoints in the hero illustration share the 1000-unit diagram grid.
+// Depth shrinks each node and darkens it instead of fading it, so overlapping artwork stays solid.
+// A negative depth sits in front of the hub, which is where the inner trio hugs the mascot.
+const heroSatellites = [
+	{ label: 'Agent', x: 70, y: -150, depth: 2 },
+	{ label: 'Coding', x: 105, y: -60, depth: 1 },
+	{ label: 'Skills', x: 150, y: 30, depth: 0 },
+	{ label: 'Models', x: 210, y: -104, depth: 2 },
+	{ label: 'Research', x: 265, y: 52, depth: 0 },
+	{ label: 'Tasks', x: 320, y: -170, depth: 2 },
+	{ label: 'Tools', x: 380, y: -20, depth: 1 },
+	{ label: 'Writing', x: 412, y: -86, depth: -1 },
+	{ label: 'Sandbox', x: 500, y: -68, depth: -1 },
+	{ label: 'Knowledge', x: 450, y: 42, depth: 0 },
+	{ label: 'Chat', x: 588, y: -94, depth: -1 },
+	{ label: 'Evonet', x: 620, y: -152, depth: 2 },
+	{ label: 'Memory', x: 670, y: -40, depth: 1 },
+	{ label: 'Local', x: 720, y: 58, depth: 0 },
+	{ label: 'Triggers', x: 775, y: -96, depth: 1 },
+	{ label: 'Channels', x: 830, y: -12, depth: 1 },
+	{ label: 'Cron', x: 880, y: -140, depth: 2 },
+	{ label: 'Teams', x: 925, y: 40, depth: 0 }
+];
+// Narrow screens get their own fan: fewer nodes, pulled onto an arc that still spans the
+// section, because the desktop spacing collapses once the artwork is this small.
+const narrowHeroSatellites = [
+	{ label: 'Agent', x: 88, y: -57, depth: 2 },
+	{ label: 'Coding', x: 188, y: 7, depth: 1 },
+	{ label: 'Skills', x: 373, y: 44, depth: 0 },
+	{ label: 'Writing', x: 312, y: -47, depth: -1 },
+	{ label: 'Sandbox', x: 500, y: -37, depth: -1 },
+	{ label: 'Chat', x: 688, y: -52, depth: -1 },
+	{ label: 'Teams', x: 627, y: 44, depth: 0 },
+	{ label: 'Channels', x: 812, y: 7, depth: 1 },
+	{ label: 'Cron', x: 912, y: -57, depth: 2 }
+];
+const heroFans = [
+	{ key: 'desktop', nodes: heroSatellites },
+	{ key: 'narrow', nodes: narrowHeroSatellites }
+];
+const connectorPath = (x: number) => `M${x} 1000 C${x} 580 ${500 + (x - 500) * 0.35} 250 500 0`;
+const nodeConnectionPath = (node: SystemNode) =>
+	node.side === 'left'
+		? `M${node.x * 10} ${node.y * 10} C390 ${node.y * 10} 400 500 500 500`
+		: `M${node.x * 10} ${node.y * 10} C610 ${node.y * 10} 600 500 500 500`;
 ---
 
 <!DOCTYPE html>
-<html lang="en" class="evonic-landing">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Evonic — Swarm Intelligence, Zero Lock-in</title>
-  <meta name="description" content="Your Models. Your Rules. Your Swarm. Local-first agentic AI for open models.">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg-deep: #020617;
-      --bg-navy: #152A3A;
-      --bg-navy-light: #1B394F;
-      --bg-navy-dark: #0D2137;
-      --bg-navy-shade: #0F2835;
-      --accent: #22d3ee;
-      --accent-glow: #06b6d4;
-      --accent-warm: #2dd4bf;
-      --text-primary: #f1f5f9;
-      --text-secondary: #94a3b8;
-      --text-muted: #64748b;
-    }
-
-    html { font-size: 16px; scroll-behavior: smooth; }
-
-    body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      background: var(--bg-deep);
-      color: var(--text-primary);
-      min-height: 100vh;
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    /* ── Background layers ── */
-
-    .bg-mesh {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      overflow: hidden;
-      pointer-events: none;
-    }
-
-    .bg-mesh::before {
-      content: '';
-      position: absolute;
-      top: -40%;
-      left: -20%;
-      width: 140%;
-      height: 140%;
-      background:
-        radial-gradient(ellipse at 30% 20%, rgba(21, 42, 58, 0.95) 0%, transparent 60%),
-        radial-gradient(ellipse at 70% 40%, rgba(13, 33, 55, 0.8) 0%, transparent 55%),
-        radial-gradient(ellipse at 50% 80%, rgba(15, 40, 53, 0.6) 0%, transparent 50%),
-        radial-gradient(ellipse at 20% 65%, rgba(27, 57, 79, 0.45) 0%, transparent 45%);
-      animation: bgFloat 20s ease-in-out infinite alternate;
-    }
-
-    .bg-mesh::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 80% 30%, rgba(34, 211, 238, 0.04) 0%, transparent 40%),
-        radial-gradient(circle at 10% 60%, rgba(27, 57, 79, 0.55) 0%, transparent 50%);
-      animation: bgFloat 15s ease-in-out 5s infinite alternate-reverse;
-    }
-
-    @keyframes bgFloat {
-      0% { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(2%, -1%) scale(1.05); }
-    }
-
-    .dot-grid {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      background-image: radial-gradient(circle, rgba(34, 211, 238, 0.04) 1px, transparent 1px);
-      background-size: 40px 40px;
-    }
-
-    .page-content {
-      position: relative;
-      z-index: 1;
-    }
-
-    /* ── Topbar ── */
-
-    .topbar {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 1.5rem 2rem;
-      position: relative;
-      z-index: 2;
-    }
-
-    .topbar-link {
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-size: 0.875rem;
-      font-weight: 500;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      transition: all 0.2s;
-    }
-
-    .topbar-link:hover {
-      color: var(--accent);
-      background: rgba(34, 211, 238, 0.08);
-    }
-
-    /* ── Hero ── */
-
-    .hero {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 1rem 1.5rem 3rem;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* ── Swarm Mascots ── */
-
-    .swarm-container {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      max-width: 700px;
-      margin-bottom: 2rem;
-      min-height: 300px;
-    }
-
-    .swarm-center {
-      position: relative;
-      z-index: 3;
-      flex-shrink: 0;
-    }
-
-    .swarm-glow {
-      position: absolute;
-      inset: -60px;
-      background: radial-gradient(circle, rgba(34, 211, 238, 0.2) 0%, rgba(6, 182, 212, 0.07) 40%, transparent 70%);
-      border-radius: 50%;
-      animation: glowPulse 3s ease-in-out infinite;
-    }
-
-    @keyframes glowPulse {
-      0%, 100% { opacity: 0.5; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.12); }
-    }
-
-    .mascot-large {
-      position: relative;
-      width: 260px;
-      height: auto;
-      filter: drop-shadow(0 0 40px rgba(34, 211, 238, 0.3));
-      animation: mascotFloat 4s ease-in-out infinite;
-      z-index: 3;
-    }
-
-    @keyframes mascotFloat {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-
-    /* Flanking small mascots */
-    .swarm-flank {
-      position: absolute;
-      pointer-events: none;
-      animation: flankFloat 5s ease-in-out infinite;
-    }
-
-    .swarm-flank img {
-      width: 100%;
-      height: auto;
-      filter: drop-shadow(0 0 12px rgba(34, 211, 238, 0.15));
-    }
-
-    @keyframes flankFloat {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      25% { transform: translateY(-6px) rotate(1deg); }
-      50% { transform: translateY(-2px) rotate(-1deg); }
-      75% { transform: translateY(-8px) rotate(0.5deg); }
-    }
-
-    /* Left side */
-    .flank-l1 { left: 8%; top: 20%; width: 90px; opacity: 0.55; animation-delay: 0s; z-index: 1; }
-    .flank-l2 { left: 18%; top: 55%; width: 65px; opacity: 0.4; animation-delay: 1.2s; z-index: 1; }
-    .flank-l3 { left: 2%; top: 50%; width: 50px; opacity: 0.3; animation-delay: 2.5s; z-index: 0; }
-
-    /* Right side */
-    .flank-r1 { right: 8%; top: 18%; width: 85px; opacity: 0.55; animation-delay: 0.6s; z-index: 1; }
-    .flank-r2 { right: 16%; top: 58%; width: 60px; opacity: 0.4; animation-delay: 1.8s; z-index: 1; }
-    .flank-r3 { right: 2%; top: 48%; width: 55px; opacity: 0.3; animation-delay: 3.1s; z-index: 0; }
-
-    /* ── Tagline ── */
-
-    .tagline {
-      max-width: 800px;
-      margin-bottom: 2.5rem;
-    }
-
-    .tagline-main {
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      font-weight: 800;
-      line-height: 1.15;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.75rem;
-    }
-
-    .brand-name {
-      font-size: clamp(1.2rem, 3vw, 1.8rem);
-      font-weight: 800;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      background: linear-gradient(135deg, var(--accent-glow), var(--accent-warm));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 0.5rem;
-    }
-
-    /* ── CTA ── */
-
-    .cta-group {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1.75rem;
-      border-radius: 12px;
-      font-size: 1rem;
-      font-weight: 600;
-      font-family: inherit;
-      text-decoration: none;
-      transition: all 0.25s;
-      cursor: pointer;
-      border: none;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent-glow), var(--accent-warm));
-      color: #020617;
-      box-shadow: 0 4px 20px rgba(6, 182, 212, 0.3);
-    }
-
-    .btn-primary:hover {
-      box-shadow: 0 6px 30px rgba(6, 182, 212, 0.5);
-      transform: translateY(-2px);
-    }
-
-    .btn-ghost {
-      background: rgba(27, 57, 79, 0.5);
-      color: var(--text-primary);
-      border: 1px solid rgba(34, 211, 238, 0.2);
-      backdrop-filter: blur(10px);
-    }
-
-    .btn-ghost:hover {
-      border-color: rgba(34, 211, 238, 0.4);
-      transform: translateY(-2px);
-    }
-
-    /* ── Sections shared ── */
-
-    .section {
-      padding: 2rem 1.5rem 4rem;
-      max-width: 1000px;
-      margin: 0 auto;
-      position: relative;
-      z-index: 1;
-    }
-
-    .section-label {
-      text-align: center;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: var(--accent);
-      margin-bottom: 2rem;
-    }
-
-    /* ── Principles / Features Grid ── */
-
-    .principles-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.25rem;
-    }
-
-    .feature-card {
-      background: rgba(27, 57, 79, 0.35);
-      border: 1px solid rgba(34, 211, 238, 0.08);
-      border-radius: 16px;
-      padding: 1.75rem 1.5rem;
-      transition: all 0.3s;
-      backdrop-filter: blur(10px);
-    }
-
-    .feature-card:hover {
-      background: rgba(27, 57, 79, 0.65);
-      border-color: rgba(34, 211, 238, 0.25);
-      transform: translateY(-4px);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-    }
-
-    .feature-icon {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      display: block;
-    }
-
-    .feature-card h3 {
-      font-size: 1.05rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      color: var(--text-primary);
-    }
-
-    .feature-card p {
-      font-size: 0.875rem;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
-
-
-    /* ── Screenshot Showcase ── */
-
-    .screenshot-section {
-      padding: 2rem 1.5rem 4rem;
-      max-width: 1100px;
-      margin: 0 auto;
-      position: relative;
-      z-index: 1;
-    }
-
-    .screenshot-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem;
-      margin-top: 2rem;
-    }
-
-    .screenshot-card {
-      background: rgba(27, 57, 79, 0.25);
-      border: 1px solid rgba(34, 211, 238, 0.1);
-      border-radius: 16px;
-      overflow: hidden;
-      transition: all 0.3s;
-      backdrop-filter: blur(10px);
-    }
-
-    .screenshot-card:hover {
-      border-color: rgba(34, 211, 238, 0.3);
-      transform: translateY(-4px);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(34, 211, 238, 0.08);
-    }
-
-    .screenshot-card img {
-      display: block;
-      width: 100%;
-      height: auto;
-      border-bottom: 1px solid rgba(34, 211, 238, 0.08);
-    }
-
-    .screenshot-caption {
-      padding: 1rem 1.25rem;
-      text-align: center;
-    }
-
-    .screenshot-caption h3 {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 0.25rem;
-    }
-
-    .screenshot-caption p {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      line-height: 1.4;
-    }
-
-    /* ── Footer ── */
-
-    .footer {
-      text-align: center;
-      padding: 2rem 1.5rem 3rem;
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      position: relative;
-      z-index: 1;
-    }
-
-    .footer a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    .footer a:hover {
-      text-decoration: underline;
-    }
-
-    /* ── Responsive ── */
-
-    @media (max-width: 768px) {
-      .swarm-container {
-        min-height: 240px;
-        max-width: 100%;
-      }
-      .flank-l1 { left: 2%; top: 22%; width: 55px; }
-      .flank-l2 { left: 10%; top: 58%; width: 45px; }
-      .flank-l3 { left: -2%; top: 48%; width: 35px; }
-      .flank-r1 { right: 2%; top: 20%; width: 50px; }
-      .flank-r2 { right: 8%; top: 60%; width: 40px; }
-      .flank-r3 { right: -2%; top: 46%; width: 38px; }
-      .principles-grid {
-        grid-template-columns: 1fr;
-      }
-      .screenshot-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .topbar { padding: 1rem 1rem; }
-      .hero { padding: 0.5rem 1rem 2rem; }
-      .swarm-container { min-height: 200px; margin-bottom: 1rem; }
-      .principles-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-      }
-      .section { padding: 1rem 1rem 3rem; }
-      .feature-card { padding: 1.25rem 1rem; }
-    }
-  </style>
-</head>
-<body>
-  <div class="bg-mesh"></div>
-  <div class="dot-grid"></div>
-
-  <div class="page-content">
-    <nav class="topbar">
-      <a href="/getting-started/installation" class="topbar-link">Docs</a>
-      <a href="https://github.com/anvie/evonic" class="topbar-link" target="_blank" rel="noopener">GitHub</a>
-    </nav>
-
-    <main>
-      <section class="hero">
-        <!-- Swarm Mascots -->
-        <div class="swarm-container">
-
-          <!-- Left flank -->
-          <div class="swarm-flank flank-l1"><img src="/img/mascot.png" alt="Evonic agent" width="90" height="auto" /></div>
-          <div class="swarm-flank flank-l2"><img src="/img/mascot.png" alt="Evonic agent" width="65" height="auto" /></div>
-          <div class="swarm-flank flank-l3"><img src="/img/mascot.png" alt="Evonic agent" width="50" height="auto" /></div>
-
-          <!-- Center large -->
-          <div class="swarm-center">
-            <div class="swarm-glow"></div>
-            <img
-              class="mascot-large"
-              src="/img/mascot-large.png"
-              alt="Evonic Mascot"
-              width="260"
-              height="auto"
-            />
-          </div>
-
-          <!-- Right flank -->
-          <div class="swarm-flank flank-r1"><img src="/img/mascot.png" alt="Evonic agent" width="85" height="auto" /></div>
-          <div class="swarm-flank flank-r2"><img src="/img/mascot.png" alt="Evonic agent" width="60" height="auto" /></div>
-          <div class="swarm-flank flank-r3"><img src="/img/mascot.png" alt="Evonic agent" width="55" height="auto" /></div>
-
-        </div>
-
-        <div class="tagline">
-          <p class="brand-name">EVONIC</p>
-          <h1 class="tagline-main">The home your agents deserve</h1>
-        </div>
-
-        <div class="cta-group">
-          <a href="/getting-started/installation" class="btn btn-primary">
-            Get Started &rarr;
-          </a>
-          <a href="/system" class="btn btn-ghost">
-            Explore Docs
-          </a>
-        </div>
-      </section>
-
-      <!-- Core Principles (6 items) -->
-      <section class="section">
-        <p class="section-label">Core Principles</p>
-        <div class="principles-grid">
-          <div class="feature-card">
-            <span class="feature-icon">🔓</span>
-            <h3>Open Model First</h3>
-            <p>Built for open models. Zero vendor lock-in — run any model, anywhere, locally.</p>
-          </div>
-          <div class="feature-card">
-            <span class="feature-icon">🤝</span>
-            <h3>Agent-to-Agent Protocol</h3>
-            <p>Agents talk directly to each other. No orchestrator bottleneck. True swarm intelligence.</p>
-          </div>
-          <div class="feature-card">
-            <span class="feature-icon">🪶</span>
-            <h3>Minimal Dependencies</h3>
-            <p>Lean stack. No bloated abstractions. Just what you need to run agents at scale.</p>
-          </div>
-          <div class="feature-card">
-            <span class="feature-icon">🛡️</span>
-            <h3>Safety by Design</h3>
-            <p>Sandboxed execution + heuristic safety checkpoints. Dangerous actions are intercepted — real autonomy, real guardrails.</p>
-          </div>
-          <div class="feature-card">
-            <span class="feature-icon">⚡</span>
-            <h3>Fast &amp; Reliable</h3>
-            <p>Optimized for speed. Async-first architecture built for production workloads.</p>
-          </div>
-          <div class="feature-card">
-            <span class="feature-icon">🌟</span>
-            <h3>Open Source</h3>
-            <p>Community-driven spirit, with enterprise discipline. Built transparently, governed openly.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Features (6 items) -->
-      <section class="section">
-        <p class="section-label">Features</p>
-        <div class="principles-grid">
-          <div class="feature-card">
-            <span class="feature-icon">🧠</span>
-            <h3>Independent Agents</h3>
-            <p>True independent agents, not sub-agents. Each has its own role, memory, and workplace. Direct agent-to-agent messaging, no middleman.</p>
-          </div>
-          <div class="feature-card">
-            <span class="feature-icon">🌐</span>
-            <h3>Anywhere Workplaces</h3>
-            <p>Run agents locally or remotely, even behind NAT without a public IP. Your workplace, your rules, no network gymnastics.</p>
-          </div>
-          <div class="feature-card">
-            <span class="feature-icon">📦</span>
-            <h3>Sandbox Execution</h3>
-            <p>Every agent runs in an isolated sandbox. Peace of mind knowing your system is protected from unexpected agent behavior.</p>
-          </div>
-          <div class="feature-card">
-            <span class="feature-icon">🔍</span>
-            <h3>Heuristic Safety Checking</h3>
-            <p>Early detection of risky agent behavior across the swarm. Catch anomalies before they cascade, proactive, not reactive.</p>
-          </div>
-          <div class="feature-card">
-            <span class="feature-icon">🛠️</span>
-            <h3>Skills</h3>
-            <p>Not just prompts, skills come with real tools. Skills without tools are like a craftsman without a toolbox</p>
-          </div>
-          <div class="feature-card">
-            <span class="feature-icon">📋</span>
-            <h3>Plugins</h3>
-            <p>Plugins to enrich your workflow. Pre-included kanban plugin, a powerful plugins for managing the agentic work.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Screenshots -->
-      <section class="screenshot-section">
-        <p class="section-label">In Action</p>
-        <div class="screenshot-grid">
-          <div class="screenshot-card">
-            <img src="/img/evonic-web.jpg" alt="Evonic Web Dashboard" loading="lazy" />
-            <div class="screenshot-caption">
-              <h3>Web Dashboard</h3>
-              <p>Manage your agents, monitor swarm activity, and track tasks from a clean, modern interface.</p>
-            </div>
-          </div>
-          <div class="screenshot-card">
-            <img src="/img/evonic-cli.jpg" alt="Evonic CLI Interface" loading="lazy" />
-            <div class="screenshot-caption">
-              <h3>CLI Interface</h3>
-              <p>Powerful command-line tools for managing agents, plugins, and workflows from your terminal.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="footer">
-      <p>Evonic &copy; 2026 - Build with 💙 by <a href="https://twitter.com/anvie" target="_blank" rel="noopener">Robin Syihab</a> (<a href="https://twitter.com/anvie" target="_blank" rel="noopener">@anvie</a>)</p>
-    </footer>
-  </div>
-</body>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Evonic — The home your agents deserve</title>
+		<meta
+			name="description"
+			content="Evonic is an agentic AI framework for building independent agents—and connecting them into systems that get work done. Your Models. Your Rules. Your Swarm."
+		/>
+		<meta name="theme-color" content="#080b12" />
+		<meta property="og:title" content="Evonic — The home your agents deserve" />
+		<meta
+			property="og:description"
+			content="Design. Deploy. Orchestrate. Build independent agents, on your terms."
+		/>
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+	</head>
+	<body>
+		<div id="top">
+			<a class="skip-link" href="#main">Skip to content</a>
+			<header>
+				<div class="nav-wrap">
+					<a class="brand" href="#top" aria-label="Evonic home"
+						><img src="/img/mascot.png" alt="" width="38" height="38" />evonic<span class="brand-dot"
+							>.</span
+						></a
+					>
+					<nav aria-label="Main navigation" id="main-nav">
+						<a href="#why-evonic">Why Evonic</a>
+						<a href="#how-it-works">How it works</a>
+						<a href={docs}>Docs <span class="nav-external">↗</span></a>
+						<a href={github} target="_blank" rel="noreferrer">GitHub <Icon name="external" size={13} /></a>
+					</nav>
+					<a class="button button-small nav-cta" href={docs}
+						>Get started <span class="button-icon"><Icon name="arrow" size={16} /></span></a
+					>
+					<button class="menu-toggle" aria-label="Open navigation" aria-expanded="false" aria-controls="main-nav">
+						<span class="menu-open"><Icon name="menu" /></span>
+						<span class="menu-close" hidden><Icon name="close" /></span>
+					</button>
+				</div>
+			</header>
+
+			<main id="main">
+				<section class="hero" aria-labelledby="hero-title">
+					<div class="hero-grid" aria-hidden="true"></div>
+					<div class="hero-content">
+						<div class="hero-illustration hero-enter">
+							<div class="hero-mascot">
+								<div class="hero-ascii" aria-hidden="true"><Atmosphere /></div>
+								<img
+									src="/img/mascot.png"
+									alt="Evonic's blue jellyfish mascot"
+									width="150"
+									height="150"
+									fetchpriority="high"
+								/>
+							</div>
+							{
+								heroFans.map((fan) => (
+									<div class={`hero-fan hero-fan-${fan.key}`}>
+										{fan.nodes.map((satellite, i) => (
+											<svg
+												class={`hero-connectors depth-${satellite.depth}`}
+												aria-hidden="true"
+												viewBox="0 0 1000 1000"
+												preserveAspectRatio="none"
+												style={`--node-y:${satellite.y}px;--depth:${satellite.depth}`}
+											>
+												<path d={connectorPath(satellite.x)} vector-effect="non-scaling-stroke" />
+												<path
+													class="hero-particles"
+													d={connectorPath(satellite.x)}
+													pathLength="100"
+													style={`animation-delay:${-i * 1.2}s`}
+													vector-effect="non-scaling-stroke"
+												/>
+											</svg>
+										))}
+										{fan.nodes.map((satellite) => (
+											<span
+												class={`hero-satellite${satellite.depth < 0 ? ' hero-front' : ''}`}
+												aria-hidden="true"
+												style={`--anchor:${satellite.x / 10}%;--node-y:${satellite.y}px;--depth:${satellite.depth}`}
+											>
+												<img src="/img/mascot.png" alt="" width="72" height="72" />
+											</span>
+										))}
+									</div>
+								))
+							}
+						</div>
+						<div class="hero-copy">
+							<h1 id="hero-title" class="hero-enter">
+								Agentic infrastructure<br /><span class="gradient-text">for organizations.</span>
+							</h1>
+							<p class="hero-description hero-enter">
+								Evonic is an agentic AI framework for building independent agents—and connecting them
+								into systems that get work done.
+							</p>
+							<div class="hero-actions hero-enter">
+								<a class="button" href={docs}
+									>Build your first agent <span class="button-icon"><Icon name="arrow" size={18} /></span></a
+								>
+								<a class="button button-outline" href={github}
+									>Explore GitHub <Icon name="github" size={16} /></a
+								>
+							</div>
+						</div>
+					</div>
+					<div class="hero-bottom">
+						<span><span class="little-cross">✧</span> Your Models. Your Rules. Your Swarm.</span><a
+							href="#why-evonic">Scroll to explore <span class="scroll-icon">↓</span></a
+						>
+					</div>
+				</section>
+
+				<section class="dashboard-section section-shell" id="why-evonic" aria-labelledby="dashboard-title">
+					<div class="dashboard-intro">
+						<div class="section-heading" data-reveal>
+							<p class="eyebrow">A HOME FOR EVERY AGENT</p>
+							<h2 id="dashboard-title">
+								One place to<br /><span class="gradient-text">bring it together.</span>
+							</h2>
+							<p>
+								Create agents, choose their models, manage tools, and follow their activity from one
+								workspace.
+							</p>
+						</div>
+						<div class="quick-start" data-reveal>
+							<div class="quick-start-head">
+								<span><i class="status-dot"></i> QUICK START</span>
+								<a href={docs}>Full guide <Icon name="external" size={13} /></a>
+							</div>
+							<div class="install-tabs" role="tablist" aria-label="Installation method">
+								<button class="active" data-mode="one-liner" role="tab" aria-selected="true">One-liner</button
+								><button data-mode="manual" role="tab" aria-selected="false">Manual</button>
+							</div>
+							<div class="install-content" role="tabpanel">
+								<p>Install everything in one command.</p>
+								<div class="command-line">
+									<code><span>$</span> {installCommands['one-liner']}</code>
+									<button class="copy-install" aria-label="Copy install command">
+										<Icon name="copy" size={15} />
+										<span class="copy-label" aria-live="polite">Copy</span>
+									</button>
+								</div>
+								<div class="quick-meta">
+									<span><Icon name="code" size={14} /> Python 3.10+</span>
+									<span><Icon name="globe" size={14} /> Local or cloud LLM</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="dashboard-frame" data-reveal>
+						<div class="dashboard-topline">
+							<span><i class="status-dot"></i> THE EVONIC WORKSPACE</span><span
+								>Everything, connected. <Icon name="layers" size={16} /></span
+							>
+						</div>
+						<div class="workspace-tabs" role="tablist" aria-label="Evonic workspace previews">
+							{
+								workspaceTabs.map((tab, i) => (
+									<button
+										class={`workspace-tab${i === 0 ? ' active' : ''}`}
+										id={`workspace-tab-${tab.id}`}
+										data-index={i}
+										role="tab"
+										aria-selected={i === 0}
+										aria-controls={`workspace-panel-${tab.id}`}
+									>
+										<span class="index">0{i + 1}</span>
+										<span class="workspace-tab-copy">
+											<strong>{tab.title}</strong>
+											<span>{tab.text}</span>
+										</span>
+									</button>
+								))
+							}
+						</div>
+						<div class="dashboard-visual">
+							{
+								workspaceTabs.map((tab, i) => (
+									<div
+										class="dashboard-crop"
+										id={`workspace-panel-${tab.id}`}
+										role="tabpanel"
+										aria-labelledby={`workspace-tab-${tab.id}`}
+										data-src={tab.src}
+										data-title={tab.title}
+										hidden={i !== 0}
+									>
+										{i === 0 && (
+											<video
+												src={tab.src}
+												aria-label={`${tab.title} preview`}
+												autoplay
+												muted
+												loop
+												playsinline
+												preload="auto"
+											/>
+										)}
+									</div>
+								))
+							}
+						</div>
+					</div>
+				</section>
+
+				<div class="manifesto" aria-label="Your Models. Your Rules. Your Swarm.">
+					<div class="manifesto-track" aria-hidden="true">
+						<span>Your Models.</span><span>Your Rules.</span><span class="outlined-text">Your Swarm.</span
+						><span>✳</span>
+					</div>
+				</div>
+
+				<section class="process section-shell" id="how-it-works" aria-labelledby="process-title">
+					<div class="section-heading" data-reveal>
+						<p class="eyebrow">A FRAMEWORK WITH ROOM TO GROW</p>
+						<h2 id="process-title">
+							Start with an agent.<br /><span class="gradient-text">Build a system around it.</span>
+						</h2>
+					</div>
+					<div class="process-stage" data-step="0">
+						<div class="stage-grid" aria-hidden="true"></div>
+						<div class="stage-glow" aria-hidden="true"></div>
+						<div class="agent-system" role="group" aria-label="Explore agent features">
+							<svg
+								class="connector-lines"
+								data-layer="base"
+								aria-hidden="true"
+								viewBox="0 0 1000 1000"
+								preserveAspectRatio="none"
+							>
+								{
+									systemNodes.map((node) => (
+										<path
+											class={`connector-base${node.group === 0 ? ' focused' : ''}`}
+											data-group={node.group}
+											style={`visibility:${node.group === 0 ? 'hidden' : 'visible'}`}
+											d={nodeConnectionPath(node)}
+											vector-effect="non-scaling-stroke"
+										/>
+									))
+								}
+							</svg>
+							<svg
+								class="connector-lines foreground"
+								data-layer="foreground"
+								aria-hidden="true"
+								viewBox="0 0 1000 1000"
+								preserveAspectRatio="none"
+							>
+								{
+									systemNodes.map((node) => (
+										<>
+											<path
+												class={`connector-base${node.group === 0 ? ' focused' : ''}`}
+												data-group={node.group}
+												style={`visibility:${node.group === 0 ? 'visible' : 'hidden'}`}
+												d={nodeConnectionPath(node)}
+												vector-effect="non-scaling-stroke"
+											/>
+											<path
+												class="connector-particles"
+												data-group={node.group}
+												style={`visibility:${node.group === 0 ? 'visible' : 'hidden'}`}
+												d={nodeConnectionPath(node)}
+												pathLength="100"
+												vector-effect="non-scaling-stroke"
+											/>
+										</>
+									))
+								}
+							</svg>
+							<svg
+								class="connector-lines foreground hover-connector"
+								aria-hidden="true"
+								viewBox="0 0 1000 1000"
+								preserveAspectRatio="none"
+							>
+								{
+									systemNodes.map((node) => (
+										<path
+											class="hover-flow"
+											data-feature={node.label}
+											style="visibility:hidden"
+											d={nodeConnectionPath(node)}
+											pathLength="1"
+											vector-effect="non-scaling-stroke"
+										/>
+									))
+								}
+							</svg>
+							{
+								systemNodes.map((node) => (
+									<button
+										class={`system-node${node.group === 0 ? ' focused' : ''}`}
+										type="button"
+										aria-pressed={node.group === 0}
+										data-group={node.group}
+										data-side={node.side}
+										data-position={node.position}
+										data-label={node.label}
+										style={`--depth:${node.depth};--anchor:${node.x}%;--angle:${node.angle}deg;top:${node.y}%`}
+									>
+										<Icon name={node.icon} size={21} /><span>{node.label}</span>
+									</button>
+								))
+							}
+							<div class="agent-core" aria-hidden="true">
+								<div class="core-ring"></div>
+								<img src="/img/mascot.png" alt="" width="130" height="130" /><span
+									>evonic<span class="brand-dot">.</span></span
+								>
+							</div>
+						</div>
+						<div class="stage-description" aria-live="polite">
+							<span>{steps[0].label}</span>
+							<p>{steps[0].detail}</p>
+						</div>
+					</div>
+					<div class="step-grid" aria-label="Explore three Evonic capabilities">
+						{
+							steps.map((step, i) => (
+								<button class={`step${i === 0 ? ' active' : ''}`} data-index={i} aria-pressed={i === 0} data-reveal>
+									<div class="step-top">
+										<span>{step.category}</span><Icon name={step.icon} size={20} />
+									</div>
+									<h3>{step.title}</h3>
+									<p>{step.text}</p>
+									<span class="step-progress" />
+								</button>
+							))
+						}
+					</div>
+				</section>
+
+				<section class="capability-section section-shell" aria-labelledby="capability-title">
+					<div class="section-heading capability-heading" data-reveal>
+						<p class="eyebrow">BUILT FOR TRUSTED AUTONOMY</p>
+						<h2 id="capability-title">
+							Memory that lasts.<br /><span class="gradient-text">Reach that goes further.</span>
+						</h2>
+					</div>
+					<div class="capability-grid">
+						<article class="feature-card context-card" data-reveal>
+							<div class="context-visual"><CapabilityVisual kind="memory" /></div>
+							<p class="eyebrow">EVOMEM · PERSISTENT KNOWLEDGE</p>
+							<h2>Remember more.<br /><span class="gradient-text">Retrieve what matters.</span></h2>
+							<p>
+								Give agents lasting memory from your Markdown files. Evomem combines keyword search,
+								vector retrieval, and a knowledge graph to find relevant context without an LLM call at
+								query time. Your knowledge stays easy to edit, back up, and version.
+							</p>
+							<div class="capability-tags">
+								<span>Persistent memory</span><span>Hybrid search</span><span>Markdown files</span>
+							</div>
+							<a class="text-link" href="https://github.com/anvie/evomem"
+								>Explore Evomem <Icon name="external" size={18} /></a
+							>
+						</article>
+						<article class="feature-card evonet-card" data-reveal>
+							<div class="evonet-visual"><CapabilityVisual kind="network" /></div>
+							<p class="eyebrow">EVONET · ANYWHERE EXECUTION</p>
+							<h2>Your agents.<br /><span class="gradient-text">Your infrastructure.</span></h2>
+							<p>
+								Put agents to work on laptops, servers, and edge devices. Evonet connects each device to
+								Evonic through an outbound tunnel, so agents can run commands and work with files
+								without SSH access, port forwarding, or a public IP.
+							</p>
+							<div class="capability-tags">
+								<span>Outbound connection</span><span>No public IP</span><span>Auto reconnect</span>
+							</div>
+							<a class="text-link" href="https://github.com/anvie/evonic/tree/main/evonet"
+								>Explore Evonet <Icon name="external" size={18} /></a
+							>
+						</article>
+					</div>
+				</section>
+
+				<section class="workflow section-shell" aria-labelledby="workflow-title">
+					<div class="section-heading" data-reveal>
+						<p class="eyebrow">BRING THE WORK TO YOUR AGENTS</p>
+						<h2 id="workflow-title">
+							Meet your workflow<br /><span class="gradient-text">where it is.</span>
+						</h2>
+					</div>
+					<div class="workflow-grid">
+						<article class="feature-card channel-card" data-reveal>
+							<div class="channel-visual" aria-hidden="true">
+								<span><Icon name="globe" size={28} /></span><span
+									><svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"
+										><path d="m21 3-4 18-6-5-3 3 1-6 9-7-11 6-5-2Z" /></svg
+									></span
+								><span><Icon name="chat" size={28} /></span><span
+									><svg
+										viewBox="0 0 24 24"
+										width="28"
+										height="28"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="1.5"
+										><path d="m5 5 4-1 1 2h4l1-2 4 1 3 13-5 2-1-3H8l-1 3-5-2Z" /><circle
+											cx="8"
+											cy="12"
+											r="1.5"
+										/><circle cx="16" cy="12" r="1.5" /></svg
+									></span
+								>
+							</div>
+							<h3>Talk in familiar channels</h3>
+							<p>Web, Telegram, WhatsApp, and Discord.</p>
+							<div class="card-bottom">
+								<span>Conversations connected to agent capabilities.</span><Icon name="chat" size={18} />
+							</div>
+						</article>
+						<article class="feature-card schedule-card" data-reveal>
+							<div class="schedule-visual" aria-hidden="true">
+								<div class="timeline-line"></div>
+								<div class="schedule-pill">
+									<span class="status-dot"></span><span>Recurring task</span><span class="schedule-time"
+										>09:00</span
+									><Icon name="check" size={16} />
+								</div>
+								<div class="schedule-pill next">
+									<Icon name="clock" size={14} /><span>Next run scheduled</span><span class="schedule-time"
+										>Tomorrow</span
+									>
+								</div>
+							</div>
+							<h3>Keep recurring work moving</h3>
+							<p>Use cron-based triggers, recurring tasks, and reminders.</p>
+							<div class="card-bottom">
+								<span>Manage the system through the dashboard or CLI.</span><Icon name="clock" size={18} />
+							</div>
+						</article>
+					</div>
+				</section>
+
+				<Contributors />
+
+				<section class="final-cta section-shell" aria-labelledby="cta-title">
+					<div class="cta-lines" aria-hidden="true"></div>
+					<div class="cta-glow" aria-hidden="true"></div>
+					<div class="cta-content" data-reveal>
+						<img src="/img/mascot.png" alt="" width="110" height="110" loading="lazy" />
+						<p class="eyebrow">YOUR NEXT CHAPTER STARTS HERE</p>
+						<h2 id="cta-title">
+							Make room for<br /><span class="gradient-text">your first agent.</span>
+						</h2>
+						<p>Choose a model endpoint. Set up Evonic. Start building.</p>
+						<a class="button" href={docs}
+							>Get started with Evonic <span class="button-icon"><Icon name="arrow" size={18} /></span></a
+						><span class="cta-note">Python 3.10+ <span>·</span> Local or cloud models</span>
+					</div>
+				</section>
+			</main>
+
+			<footer class="section-shell">
+				<div class="footer-top">
+					<div>
+						<a class="brand" href="#top"
+							><img src="/img/mascot.png" alt="" width="34" height="34" />evonic<span class="brand-dot"
+								>.</span
+							></a
+						>
+						<p>Your Models. Your Rules. Your Swarm.</p>
+					</div>
+					<nav aria-label="Footer navigation">
+						<a href="#contributors">Contributors</a>
+						<a href={docs}>Documentation <Icon name="external" size={14} /></a><a
+							href={github}
+							target="_blank"
+							rel="noreferrer">GitHub <Icon name="external" size={14} /></a
+						><a href="https://github.com/anvie/evonic/blob/main/LICENSE"
+							>License <Icon name="external" size={14} /></a
+						>
+					</nav>
+				</div>
+				<div class="footer-bottom">
+					<span>© 2026 Evonic · Built by <a href="https://github.com/anvie">Robin Syihab</a></span
+					><button class="motion-toggle" aria-pressed="false"
+						><span class="motion-indicator"><i></i><i></i><i></i></span
+						><span class="motion-label">Pause motion</span></button
+					><a href="#top">Back to top ↑</a>
+				</div>
+			</footer>
+		</div>
+
+		<script>
+			import { prefersLightweightMotion } from '../lib/motion-profile';
+
+			const root = document.getElementById('top');
+			const header = document.querySelector('header');
+			const toggle = document.querySelector('.menu-toggle');
+			const nav = document.getElementById('main-nav');
+			const menuOpenIcon = document.querySelector('.menu-toggle .menu-open');
+			const menuCloseIcon = document.querySelector('.menu-toggle .menu-close');
+			const motionToggle = document.querySelector('.motion-toggle');
+			const motionLabel = document.querySelector('.motion-label');
+			const motionIndicator = document.querySelector('.motion-indicator');
+
+			let menuOpen = false;
+			let motionPaused = false;
+			let lightweight = true;
+			let installMode = 'one-liner';
+			let copied = false;
+
+			const installCommands = {
+				'one-liner': 'curl -fsSL https://evonic.dev/install.sh | bash',
+				manual: 'git clone https://github.com/anvie/evonic'
+			};
+			const stepCopy = [
+				{ label: 'Agent identity', detail: 'A purpose. A personality. Possibilities.' },
+				{ label: 'Anywhere execution', detail: 'Local. Remote. Wherever work happens.' },
+				{ label: 'A connected system', detail: 'Independent agents. Shared possibilities.' }
+			];
+			const iconPaths = {
+				copy: 'M8 8h11v11H8V8Zm-3 8H4V4h12v1',
+				check: 'm5 12 4 4L19 6'
+			};
+
+			const setMenu = (open) => {
+				menuOpen = open;
+				nav?.classList.toggle('open', open);
+				menuOpenIcon?.toggleAttribute('hidden', open);
+				menuCloseIcon?.toggleAttribute('hidden', !open);
+				toggle?.setAttribute('aria-expanded', String(open));
+				toggle?.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+			};
+			toggle?.addEventListener('click', () => setMenu(!menuOpen));
+			nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setMenu(false)));
+			document.addEventListener('keydown', (event) => {
+				if (event.key === 'Escape' && menuOpen) {
+					setMenu(false);
+					toggle?.focus();
+				}
+			});
+
+			const stage = document.querySelector('.process-stage');
+			const stageLabel = document.querySelector('.stage-description > span');
+			const stageDetail = document.querySelector('.stage-description p');
+			const stepButtons = [...document.querySelectorAll('.step')];
+			const systemNodes = [...document.querySelectorAll('.system-node')];
+			const hoverPaths = [...document.querySelectorAll('.hover-connector path')];
+
+			const setHover = (label) => {
+				hoverPaths.forEach((path) => {
+					const match = label !== null && path.dataset.feature === label;
+					path.style.visibility = match ? 'visible' : 'hidden';
+					if (match) path.getAnimations().forEach((animation) => (animation.currentTime = 0));
+				});
+			};
+			const setStep = (step) => {
+				if (stage) stage.dataset.step = String(step);
+				document.querySelectorAll('.connector-lines[data-layer]').forEach((svg) => {
+					const foreground = svg.dataset.layer === 'foreground';
+					svg.querySelectorAll('.connector-base[data-group]').forEach((path) => {
+						const group = Number(path.dataset.group);
+						path.style.visibility = (group === step) === foreground ? 'visible' : 'hidden';
+						path.classList.toggle('focused', group === step);
+					});
+					svg.querySelectorAll('.connector-particles[data-group]').forEach((path) => {
+						path.style.visibility = Number(path.dataset.group) === step ? 'visible' : 'hidden';
+					});
+				});
+				systemNodes.forEach((node) => {
+					const on = Number(node.dataset.group) === step;
+					node.classList.toggle('focused', on);
+					node.setAttribute('aria-pressed', String(on));
+				});
+				stepButtons.forEach((button, index) => {
+					button.classList.toggle('active', index === step);
+					button.setAttribute('aria-pressed', String(index === step));
+				});
+				if (stageLabel && stageDetail && stepCopy[step]) {
+					stageLabel.textContent = stepCopy[step].label;
+					stageDetail.textContent = stepCopy[step].detail;
+				}
+			};
+			systemNodes.forEach((node) => {
+				node.addEventListener('click', () => setStep(Number(node.dataset.group)));
+				node.addEventListener('focus', () => setHover(node.dataset.label ?? null));
+				node.addEventListener('blur', () => setHover(null));
+				node.addEventListener('pointerenter', (event) => {
+					if (event.pointerType === 'mouse') setHover(node.dataset.label ?? null);
+				});
+				node.addEventListener('pointerleave', () => setHover(null));
+			});
+			stepButtons.forEach((button) => button.addEventListener('click', () => setStep(Number(button.dataset.index))));
+
+			const installTabs = [...document.querySelectorAll('.install-tabs button')];
+			const installNote = document.querySelector('.install-content > p');
+			const commandLine = document.querySelector('.command-line code');
+			const copyButton = document.querySelector('.copy-install');
+			const copyLabel = document.querySelector('.copy-label');
+			const copyIconPath = document.querySelector('.copy-install svg path');
+
+			const updateCopyState = () => {
+				if (copyLabel) copyLabel.textContent = copied ? 'Copied' : 'Copy';
+				copyIconPath?.setAttribute('d', copied ? iconPaths.check : iconPaths.copy);
+			};
+			const setInstallMode = (mode) => {
+				installMode = mode;
+				copied = false;
+				installTabs.forEach((tab) => {
+					const on = tab.dataset.mode === mode;
+					tab.classList.toggle('active', on);
+					tab.setAttribute('aria-selected', String(on));
+				});
+				if (installNote) {
+					installNote.textContent =
+						mode === 'one-liner' ? 'Install everything in one command.' : 'Clone the repository to begin.';
+				}
+				if (commandLine) {
+					const prompt = document.createElement('span');
+					prompt.textContent = '$';
+					commandLine.replaceChildren(prompt, document.createTextNode(` ${installCommands[mode]}`));
+				}
+				updateCopyState();
+			};
+			installTabs.forEach((tab) => tab.addEventListener('click', () => setInstallMode(tab.dataset.mode)));
+			copyButton?.addEventListener('click', async () => {
+				await navigator.clipboard.writeText(installCommands[installMode]);
+				copied = true;
+				updateCopyState();
+				window.setTimeout(() => {
+					copied = false;
+					updateCopyState();
+				}, 1600);
+			});
+
+			const workspaceTabs = [...document.querySelectorAll('.workspace-tab')];
+			const workspacePanels = [...document.querySelectorAll('.dashboard-crop')];
+			const setWorkspaceTab = (index) => {
+				workspaceTabs.forEach((tab, i) => {
+					const on = i === index;
+					tab.classList.toggle('active', on);
+					tab.setAttribute('aria-selected', String(on));
+				});
+				workspacePanels.forEach((panel, i) => {
+					const on = i === index;
+					panel.hidden = !on;
+					const existing = panel.querySelector('video');
+					if (on && !existing) {
+						const video = document.createElement('video');
+						video.src = panel.dataset.src ?? '';
+						video.setAttribute('aria-label', `${panel.dataset.title} preview`);
+						video.autoplay = true;
+						video.muted = true;
+						video.loop = true;
+						video.playsInline = true;
+						video.preload = 'auto';
+						panel.append(video);
+					} else if (!on && existing) {
+						existing.remove();
+					}
+				});
+			};
+			workspaceTabs.forEach((tab, i) => tab.addEventListener('click', () => setWorkspaceTab(i)));
+
+			const onScroll = () => header?.classList.toggle('scrolled', window.scrollY > 30);
+			window.addEventListener('scroll', onScroll, { passive: true });
+			onScroll();
+
+			const regions = root?.querySelectorAll('main > section, footer') ?? [];
+			const visibilityObserver = new IntersectionObserver((entries) => {
+				entries.forEach((entry) => {
+					entry.target.dataset.motionVisible = String(entry.isIntersecting);
+				});
+			});
+			regions.forEach((region) => visibilityObserver.observe(region));
+
+			const onVisibility = () => root?.classList.toggle('page-hidden', document.hidden);
+			document.addEventListener('visibilitychange', onVisibility);
+			onVisibility();
+
+			const preference = matchMedia('(prefers-reduced-motion: reduce)');
+			const viewport = matchMedia('(pointer: coarse), (max-width: 720px)');
+			const desktopPointer = matchMedia('(hover: hover) and (pointer: fine) and (min-width: 721px)');
+			lightweight = prefersLightweightMotion();
+			motionPaused = preference.matches;
+			let stopDesktopMotion;
+			let generation = 0;
+			let revealObserver;
+			let motionObserver;
+			let reveals = [];
+
+			const setup = async (paused) => {
+				const currentGeneration = ++generation;
+				const smoothScroll = desktopPointer.matches;
+				document.documentElement.classList.toggle('motion-disabled', paused);
+				root?.classList.toggle('motion-paused', paused);
+				root?.classList.toggle('lightweight', lightweight);
+				stopDesktopMotion?.();
+				stopDesktopMotion = undefined;
+				if (root) delete root.dataset.desktopMotion;
+				revealObserver?.disconnect();
+				motionObserver?.disconnect();
+				reveals.forEach((animation) => animation.cancel());
+				reveals = [];
+				motionToggle?.setAttribute('aria-pressed', String(paused));
+				motionIndicator?.classList.toggle('paused', paused);
+				if (motionLabel) motionLabel.textContent = paused ? 'Enable motion' : 'Pause motion';
+				window.dispatchEvent(new CustomEvent('evonic:motion', { detail: { paused } }));
+				if (paused) return;
+
+				// One-shot reveals need no scroll listener and leave no permanent GPU layer.
+				revealObserver = new IntersectionObserver(
+					(entries, observer) => {
+						entries.forEach((entry) => {
+							if (!entry.isIntersecting) return;
+							observer.unobserve(entry.target);
+							const animation = entry.target.animate(
+								[
+									{ opacity: 0, transform: `translateY(${lightweight ? 8 : 28}px)` },
+									{ opacity: 1, transform: 'none' }
+								],
+								{ duration: lightweight ? 260 : 650, easing: 'cubic-bezier(.22,1,.36,1)' }
+							);
+							reveals.push(animation);
+							animation.onfinish = () => {
+								const index = reveals.indexOf(animation);
+								if (index >= 0) reveals.splice(index, 1);
+							};
+						});
+					},
+					{ threshold: 0.08 }
+				);
+				root?.querySelectorAll('[data-reveal]').forEach((el) => revealObserver?.observe(el));
+
+				// Preserve the same marquee on every profile; defer its library on lighter devices.
+				const loadMotion = async () => {
+					motionObserver?.disconnect();
+					try {
+						const { startDesktopMotion } = await import('../lib/desktop-motion');
+						if (currentGeneration !== generation) return;
+						stopDesktopMotion = startDesktopMotion(root, {
+							animateHero: !lightweight,
+							smoothScroll
+						});
+						if (root) root.dataset.desktopMotion = 'ready';
+					} catch (error) {
+						console.warn('Scroll animation unavailable; using native scrolling.', error);
+					}
+				};
+				const manifesto = root?.querySelector('.manifesto');
+				if (lightweight && !smoothScroll && manifesto) {
+					motionObserver = new IntersectionObserver(
+						(entries) => {
+							if (entries.some((entry) => entry.isIntersecting)) void loadMotion();
+						},
+						{ rootMargin: '300px 0px' }
+					);
+					motionObserver.observe(manifesto);
+				} else {
+					void loadMotion();
+				}
+			};
+
+			void setup(motionPaused);
+			motionToggle?.addEventListener('click', () => {
+				motionPaused = !motionPaused;
+				void setup(motionPaused);
+			});
+			preference.addEventListener('change', () => {
+				motionPaused = preference.matches;
+				void setup(motionPaused);
+			});
+			const updateProfile = () => {
+				lightweight = prefersLightweightMotion();
+				void setup(motionPaused);
+			};
+			viewport.addEventListener('change', updateProfile);
+			desktopPointer.addEventListener('change', updateProfile);
+		</script>
+	</body>
 </html>
