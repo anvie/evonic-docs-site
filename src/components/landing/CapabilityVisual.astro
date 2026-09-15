@@ -1,0 +1,293 @@
+---
+interface Props {
+	kind: 'memory' | 'network';
+}
+
+const { kind } = Astro.props;
+---
+
+<svg class="capability-art" viewBox="0 0 500 270" fill="none" aria-hidden="true">
+	<defs>
+		<radialGradient id={`${kind}-halo`}>
+			<stop stop-color="#76adff" stop-opacity="0.16" />
+			<stop offset="1" stop-color="#76adff" stop-opacity="0" />
+		</radialGradient>
+		<linearGradient id={`${kind}-glass`} x1="0" y1="0" x2="1" y2="1">
+			<stop stop-color="#2b4260" /><stop offset="1" stop-color="#111c2d" />
+		</linearGradient>
+		<linearGradient id={`${kind}-edge`} x1="0" y1="0" x2="1" y2="1">
+			<stop stop-color="#c0ddff" stop-opacity="0.85" /><stop
+				offset="1"
+				stop-color="#6791cc"
+				stop-opacity="0.2"
+			/>
+		</linearGradient>
+		<linearGradient id={`${kind}-beam`}>
+			<stop stop-color="#729edb" stop-opacity="0.15" /><stop
+				offset="0.5"
+				stop-color="#afd4ff"
+				stop-opacity="0.7"
+			/><stop offset="1" stop-color="#729edb" stop-opacity="0.15" />
+		</linearGradient>
+		<filter id={`${kind}-glow`} x="-100%" y="-100%" width="300%" height="300%">
+			<feGaussianBlur stdDeviation="3" />
+		</filter>
+	</defs>
+	<ellipse cx="250" cy="140" rx="210" ry="122" fill={`url(#${kind}-halo)`} />
+	{
+		kind === 'memory' ? (
+			<>
+				<ellipse
+					cx="250"
+					cy="151"
+					rx="154"
+					ry="69"
+					stroke="#7eabeb"
+					stroke-opacity="0.09"
+					transform="rotate(-13 250 151)"
+				/>
+				<g stroke={`url(#${kind}-beam)`} stroke-width="1.4">
+					<path d="M124 102C171 102 167 128 211 128M371 95C325 95 341 134 292 134M153 196C206 196 187 168 226 159M363 188C315 188 324 164 282 157" />
+				</g>
+				<g transform="translate(63 51) rotate(-11 35 43)">
+					<rect
+						x="7"
+						y="7"
+						width="63"
+						height="80"
+						rx="10"
+						fill="#111d2c"
+						stroke="#6d94c3"
+						stroke-opacity="0.23"
+					/>
+					<rect
+						width="63"
+						height="80"
+						rx="10"
+						fill={`url(#${kind}-glass)`}
+						stroke={`url(#${kind}-edge)`}
+					/>
+					<path
+						d="M15 20h17M15 34h33M15 44h33M15 54h22"
+						stroke="#90b3df"
+						stroke-opacity="0.6"
+						stroke-width="2"
+						stroke-linecap="round"
+					/>
+				</g>
+				<g transform="translate(355 55) rotate(10 29 35)">
+					<rect
+						width="58"
+						height="72"
+						rx="10"
+						fill={`url(#${kind}-glass)`}
+						stroke="#7fa6dc"
+						stroke-opacity="0.38"
+					/>
+					<path
+						d="M14 18h15M14 32h30M14 42h30M14 52h20"
+						stroke="#8bafd9"
+						stroke-opacity="0.5"
+						stroke-width="2"
+						stroke-linecap="round"
+					/>
+				</g>
+				<g transform="translate(113 176) rotate(8 24 24)">
+					<rect width="48" height="48" rx="10" fill="#18273b" stroke="#7fa6dc" stroke-opacity="0.35" />
+					<path
+						d="M13 17h22M13 25h22M13 33h13"
+						stroke="#90b3df"
+						stroke-opacity="0.55"
+						stroke-width="2"
+						stroke-linecap="round"
+					/>
+				</g>
+				<g transform="translate(351 169) rotate(-8 23 23)">
+					<rect width="46" height="46" rx="10" fill="#18273b" stroke="#7fa6dc" stroke-opacity="0.3" />
+					<path
+						d="m14 18 9-5 9 5-9 5-9-5Zm0 8 9 5 9-5"
+						stroke="#a5c8f5"
+						stroke-opacity="0.7"
+						stroke-width="1.5"
+						stroke-linejoin="round"
+					/>
+				</g>
+				<path
+					d="m250 114 72 40-72 42-72-42 72-40Z"
+					fill="#122034"
+					stroke="#729edb"
+					stroke-opacity="0.4"
+				/>
+				<path
+					d="m178 145 72 41 72-41"
+					stroke="#a4d0ff"
+					stroke-opacity="0.4"
+					filter={`url(#${kind}-glow)`}
+					stroke-width="5"
+				/>
+				<path
+					d="m250 94 72 40-72 42-72-42 72-40Z"
+					fill={`url(#${kind}-glass)`}
+					stroke={`url(#${kind}-edge)`}
+				/>
+				<path
+					d="m250 73 72 40-72 42-72-42 72-40Z"
+					fill={`url(#${kind}-glass)`}
+					stroke={`url(#${kind}-edge)`}
+					stroke-width="1.5"
+				/>
+				<path
+					d="m250 96 29 16-29 17-29-17 29-16Z"
+					fill="#a8d2ff"
+					fill-opacity="0.1"
+					stroke="#b9d9ff"
+					stroke-opacity="0.75"
+				/>
+				<path d="M250 129v26" stroke="#9fcaff" stroke-opacity="0.35" />
+				<g fill="#c5e1ff">
+					<circle cx="163" cy="112" r="2.5" /><circle cx="329" cy="122" r="2.5" /><circle
+						cx="196"
+						cy="181"
+						r="2"
+					/>
+				</g>
+			</>
+		) : (
+			<>
+				<g stroke={`url(#${kind}-beam)`} stroke-width="1.6">
+					<path d="M106 162C167 162 167 132 250 132S329 94 394 94" />
+					<path d="M250 132C309 132 284 212 343 212" />
+				</g>
+				<path
+					class="signal"
+					d="M106 162C167 162 167 132 250 132S329 94 394 94"
+					stroke="#d0e8ff"
+					stroke-width="3"
+					stroke-linecap="round"
+					pathLength="100"
+				/>
+				<circle cx="250" cy="132" r="62" stroke="#8bb5f1" stroke-opacity="0.08" />
+				<circle
+					cx="250"
+					cy="132"
+					r="47"
+					fill={`url(#${kind}-glass)`}
+					stroke={`url(#${kind}-edge)`}
+					stroke-width="1.5"
+				/>
+				<circle
+					cx="250"
+					cy="132"
+					r="47"
+					stroke="#9fcaff"
+					stroke-opacity="0.3"
+					stroke-width="3"
+					filter={`url(#${kind}-glow)`}
+				/>
+				<path
+					d="m245 140-5 5a11 11 0 0 1-16-16l12-12a11 11 0 0 1 16 0m3 7 5-5a11 11 0 0 1 16 16l-12 12a11 11 0 0 1-16 0m-8-7 20-20"
+					stroke="#c5e1ff"
+					stroke-width="2.5"
+					stroke-linecap="round"
+				/>
+				<g transform="translate(39 116) rotate(-5 53 36)">
+					<rect
+						width="106"
+						height="71"
+						rx="8"
+						fill={`url(#${kind}-glass)`}
+						stroke={`url(#${kind}-edge)`}
+						stroke-width="1.5"
+					/>
+					<rect
+						x="8"
+						y="8"
+						width="90"
+						height="55"
+						rx="3"
+						fill="#0f1928"
+						stroke="#83ade4"
+						stroke-opacity="0.16"
+					/>
+					<path
+						d="m27 26 10 9-10 9m20 0h22"
+						stroke="#aed2ff"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					/>
+					<path d="M-9 74h124l-8 7H-1l-8-7Z" fill="#23374f" stroke="#7ba6df" stroke-opacity="0.65" />
+				</g>
+				<g transform="translate(365 46) rotate(6 35 50)">
+					<rect
+						width="69"
+						height="106"
+						rx="11"
+						fill={`url(#${kind}-glass)`}
+						stroke={`url(#${kind}-edge)`}
+					/>
+					{[13, 40, 67].map((y) => (
+						<>
+							<rect
+								x="10"
+								y={y}
+								width="49"
+								height="20"
+								rx="4"
+								fill="#101c2d"
+								stroke="#719ad0"
+								stroke-opacity="0.3"
+							/>
+							<path d={`M18 ${y + 10}h17`} stroke="#849fc3" stroke-opacity="0.5" stroke-linecap="round" />
+							<circle cx="49" cy={y + 10} r="2" fill="#b4d9ff" />
+						</>
+					))}
+				</g>
+				<g transform="translate(319 188) rotate(-9 24 24)">
+					<path
+						d="M12 0v-6M24 0v-6M36 0v-6M12 48v6M24 48v6M36 48v6M0 12h-6M0 24h-6M0 36h-6M48 12h6M48 24h6M48 36h6"
+						stroke="#8cb2e5"
+						stroke-opacity="0.4"
+						stroke-width="2"
+					/>
+					<rect
+						width="48"
+						height="48"
+						rx="9"
+						fill={`url(#${kind}-glass)`}
+						stroke="#86afe9"
+						stroke-opacity="0.6"
+					/>
+					<rect
+						x="12"
+						y="12"
+						width="24"
+						height="24"
+						rx="5"
+						fill="#a8cfff"
+						fill-opacity="0.08"
+						stroke="#a8cfff"
+						stroke-opacity="0.5"
+					/>
+				</g>
+			</>
+		)
+	}
+</svg>
+
+<style>
+	.capability-art {
+		width: 100%;
+		height: 100%;
+		overflow: visible;
+	}
+	.signal {
+		stroke-dasharray: 0.1 33.233333;
+		animation: signal-travel 5s linear infinite;
+	}
+	@keyframes signal-travel {
+		to {
+			stroke-dashoffset: -100;
+		}
+	}
+</style>
