@@ -10,8 +10,10 @@ export default defineConfig({
     starlight({
       title: 'Evonic',
       description: 'Documentation for Evonic \u2014 Local-first agentic AI for open models',
+      logo: { src: './src/assets/mascot.png', alt: 'Evonic' },
       customCss: ['./src/styles/custom.css'],
       favicon: '/favicon.svg',
+      social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/anvie/evonic' }],
       head: [
         {
           tag: 'meta',
