@@ -1,0 +1,319 @@
+---
+title: Overview
+description: "Introduction to the Evonic plugin system: create, manage, and extend Evonic with custom plugins."
+---
+
+# Plugins
+
+Plugins are event-driven extensions that respond to platform events. They run automatically when triggered by events and can perform actions like sending notifications, processing data, or integrating with external services.
+
+## Plugin Structure
+
+A plugin is a directory under `plugins/` containing:
+
+```
+my_plugin/
+├── plugin.json    # Manifest: metadata, events, variables
+└── handler.py     # Event handler functions
+```
+
+That's it. No `setup.py`, no `backend/` subdirectory. Just two files at the root of the plugin directory.
+
+Plugins can also extend the platform with **Flask routes** (web pages and API endpoints) by providing a `routes.py` file with a `create_blueprint()` function. See the Route Registration guide for details.
+
+```
+my_plugin/
+├── plugin.json    # Manifest: metadata, events, variables, routes
+├── handler.py     # Event handler functions
+├── routes.py      # Flask route handlers (optional)
+└── templates/     # Jinja2 templates (optional)
+    └── page.html
+```
+
+### plugin.json
+
+The plugin manifest defines the plugin's metadata and events it responds to:
+
+```json
+{
+  "id": "my_plugin",
+  "name": "My Custom Plugin",
+  "version": "1.0.0",
+  "description": "Plugin that does something when events occur",
+  "events": [
+    "message_received",
+    "turn_complete"
+  ],
+  "variables": [
+    {
+      "name": "CONFIG_KEY",
+      "type": "string",
+      "description": "Configuration variable description"
+    }
+  ]
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | string | Yes | Unique plugin identifier (lowercase, alphanumeric + underscores) |
+| `name` | string | Yes | Display name for the plugin |
+| `version` | string | Yes | Semantic version (e.g. `1.0.0`) |
+| `description` | string | Yes | Short description of what the plugin does |
+| `events` | string[] | Yes | List of event names this plugin subscribes to |
+| `variables` | object[] | No | Configuration variables users can set |
+
+### Handler Functions
+
+Each event in the `events` array maps to a handler function named `on_<event_name>` in `handler.py`. See [Events](/system/events) for a list of all supported events. The handler signature is:
+
+```python
+def on_<event_name>(event: dict, sdk: PluginSDK) -> None:
+    """Handle <event_name> events."""
+    # Your logic here
+```
+
+- **`event`**: a dict containing event-specific data (e.g. `session_id`, `message`, `summary`, etc.)
+- **`sdk`**: a `PluginSDK` instance providing helper methods (see [Plugin SDK](/plugins/sdk))
+- **Return value**: handlers should not return anything. The framework ignores return values.
+
+### Example Handler
+
+```python
+def on_message_received(event, sdk):
+    """Log every incoming message."""
+    session_id = event.get('session_id', '')
+    user_message = event.get('message', '')
+    sdk.log(f"Received message from session {session_id}: {user_message}")
+
+def on_turn_complete(event, sdk):
+    """Log when a conversation turn finishes."""
+    session_id = event.get('session_id', '')
+    sdk.log(f"Turn complete for session {session_id}")
+```
+
+### Configuration Variables
+
+Plugins can define configuration variables that users can set via CLI. Variable types:
+
+| Type | Description | Example |
+|------|-------------|---------|
+| `string` | Text value | `"https://hooks.example.com"` |
+| `number` | Numeric value | `10` |
+| `boolean` | True/false value | `true` |
+| `array` | List of values | `["value1", "value2"]` |
+
+Access variables in your handler via `sdk.config`:
+
+```python
+def on_message_received(event, sdk):
+    webhook_url = sdk.config.get('WEBHOOK_URL', '')
+    min_count = int(sdk.config.get('MIN_COUNT', 5))
+    enabled = sdk.config.get('ENABLE_FEATURE', True)
+```
+
+### Example Plugin: Message Logger
+
+Here's a complete example plugin that logs all incoming messages and sends a notification when a turn completes:
+
+#### plugin.json
+
+```json
+{
+  "id": "message_logger",
+  "name": "Message Logger",
+  "version": "1.0.0",
+  "description": "Logs all incoming messages and notifies on turn completion",
+  "events": [
+    "message_received",
+    "turn_complete"
+  ],
+  "variables": [
+    {
+      "name": "WEBHOOK_URL",
+      "type": "string",
+      "description": "Webhook URL for notifications"
+    },
+    {
+      "name": "MIN_COUNT",
+      "type": "number",
+      "description": "Minimum messages before logging"
+    }
+  ]
+}
+```
+
+#### handler.py
+
+```python
+def on_message_received(event, sdk):
+    """Log every incoming message."""
+    session_id = event.get('session_id', '')
+    user_message = event.get('message', '')
+    sdk.log(f"Received: session={session_id}, message={user_message}")
+
+def on_turn_complete(event, sdk):
+    """Send notification when a turn completes."""
+    session_id = event.get('session_id', '')
+    webhook_url = sdk.config.get('WEBHOOK_URL', '').strip()
+
+    if not webhook_url:
+        sdk.log("Skipped: no WEBHOOK_URL configured", level="warn")
+        return
+
+    sdk.http_request(
+        method="POST",
+        url=webhook_url,
+        json={"session_id": session_id, "event": "turn_complete"}
+    )
+
+    sdk.log(f"Turn complete notification sent for session {session_id}")
+```
+
+## Hot Reload
+
+*Introduced in v0.6.77.*
+
+During plugin development, Evonic watches your plugin files for changes and reloads them automatically — no manual restart or `evonic plugin reload` needed.
+
+### How It Works
+
+Edit any file in your plugin directory (`plugin.json`, `handler.py`, `routes.py`, or templates) and the changes take effect immediately. The hot reload watches for:
+
+- File saves (write to disk)
+- New files added to the plugin directory
+- File deletions within the plugin directory
+
+### What Gets Hot-Reloaded
+
+| File | Effect on Reload |
+|------|-----------------|
+| `plugin.json` | Manifest, events, and variables are re-read |
+| `handler.py` | Handler functions are re-registered |
+| `routes.py` | Flask routes are re-registered |
+| `templates/` | Jinja2 templates are reloaded on next render |
+
+### When to Use Manual Reload
+
+In rare cases where the hot reload doesn't detect your changes (e.g., editor saves to a temporary file and moves it), you can always fall back to the CLI:
+
+```bash
+evonic plugin reload my_plugin
+```
+
+## Export a Plugin as ZIP
+
+*Introduced in v0.2.0.*
+
+You can export any installed plugin as a ZIP archive directly from the Web UI. This is useful for:
+
+- **Sharing plugins** with other Evonic instances
+- **Backing up** your custom plugins
+- **Distributing** plugins to team members
+
+### Via Web UI
+
+1. Go to **Plugins** (`/plugins`)
+2. Find the plugin you want to export
+3. Click the **Export** button (download icon)
+4. The browser downloads a `.zip` file containing the plugin's directory
+
+### Via CLI
+
+```bash
+evonic plugin export <plugin_id> [--output ./my-plugin.zip]
+```
+
+**Example:**
+
+```bash
+evonic plugin export my_plugin --output ./backups/my_plugin_v1.zip
+```
+
+### What's Included
+
+The ZIP archive contains the full plugin directory:
+
+```
+my_plugin.zip
+├── plugin.json    # Manifest with metadata, events, and variables
+├── handler.py     # Event handler functions
+└── routes.py      # Flask route handlers (if present)
+```
+
+Plugin configuration variables and user settings are **not** exported — only the plugin code and manifest.
+
+### Importing a Plugin
+
+To install a plugin from a ZIP file:
+
+1. Go to **Plugins** → **Import** (`/plugins/import`)
+2. Upload the ZIP file
+3. The plugin is extracted to `plugins/<plugin_id>/` and registered automatically
+
+Or via CLI:
+
+```bash
+evonic plugin import ./backups/my_plugin_v1.zip
+```
+
+## Export/Import as .evop Archive
+
+*Introduced in v0.3.19.*
+
+Starting in v0.3.19, plugins can be packaged and distributed as **.evop** (Evonic Plugin) archives. This is a portable format designed specifically for sharing plugins between Evonic instances.
+
+A `.evop` file is a renamed `.zip` archive with the same internal structure, making it recognizable as an Evonic plugin package at a glance.
+
+### How It Works
+
+Exporting a plugin as `.evop` follows the same process as the ZIP export, but the file is saved with the `.evop` extension:
+
+```bash
+# Export a plugin as .evop
+evonic plugin export my_plugin --output ./dist/my_plugin.evop
+```
+
+### Importing a .evop File
+
+Import works the same as importing any plugin archive:
+
+```bash
+# Import from .evop
+evonic plugin import ./dist/my_plugin.evop
+```
+
+Or via the Web UI:
+
+1. Go to **Plugins** → **Import** (`/plugins/import`)
+2. Select and upload the `.evop` file
+3. The plugin is extracted and registered
+
+### What's in a .evop File
+
+The `.evop` archive contains the exact same structure as the ZIP export:
+
+```
+my_plugin.evop
+├── plugin.json    # Manifest with metadata, events, and variables
+├── handler.py     # Event handler functions
+└── routes.py      # Flask route handlers (if present)
+```
+
+Configuration variables and user settings are **not** included — only the plugin code and manifest.
+
+### When to Use .evop vs ZIP
+
+- **Use `.evop`** when distributing plugins to other Evonic users — the extension makes the purpose clear
+- **Use `.zip`** for general archiving or when the recipient expects a standard ZIP format
+
+Both formats are interchangeable — you can rename a `.evop` to `.zip` and it will work just as well.
+
+## Quick Links
+
+- [Plugin SDK](/plugins/sdk): Available methods and helpers
+- [Events](/system/events): All supported events
+- [Setup](/plugins/setup): Install, configure, and manage plugins
+- [Best Practices](/plugins/best-practices): Tips for writing great plugins
+- [Troubleshooting](/plugins/troubleshooting): Common issues and fixes
+

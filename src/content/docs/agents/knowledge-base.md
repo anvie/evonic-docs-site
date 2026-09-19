@@ -1,0 +1,177 @@
+---
+title: Knowledge Base
+description: Manage agent knowledge files and the built-in read tool.
+sidebar:
+  order: 3
+---
+
+## Overview
+
+Each agent has a knowledge base (KB) stored as files on the filesystem at `agents/<agent_id>/kb/`. The agent accesses these files at runtime using the built-in `read` tool: it does **not** load all files into the system prompt automatically.
+
+This design keeps the system prompt lean while giving the agent access to large reference documents on demand.
+
+## How It Works
+
+1. You upload `.md` files to the agent's KB directory
+2. The system prompt automatically includes a **file listing** so the agent knows what's available:
+   ```
+   ## Available Knowledge Files
+   You can read these files using the `read` tool:
+   - facilities.md (2.3 KB)
+   - pricing.md (1.1 KB)
+   - faq.md (4.5 KB)
+   ```
+3. During conversation, the agent calls `read("facilities.md")` when it needs that information
+4. If the file is large, the tool returns a **truncated view** showing the remaining lines count (e.g., "Showing first 100 of 450 lines") so the agent knows more content is available
+4. The tool returns the file content, which the agent uses to answer the user
+
+## The Built-in `read` Tool
+
+Every agent automatically has access to the `read` tool. It accepts a single `filename` parameter:
+
+```json
+{
+  "name": "read",
+  "description": "Read a knowledge base file.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "filename": {
+        "type": "string",
+        "description": "The filename to read (e.g. 'facilities.md')"
+      }
+    },
+    "required": ["filename"]
+  }
+}
+```
+
+### Security
+
+The `read` tool is **sandboxed** to the agent's KB directory:
+- Only bare filenames are accepted (no paths)
+- `../` traversal is rejected
+- Absolute paths are rejected
+- The resolved path must stay within `agents/<agent_id>/kb/`
+
+## Managing KB Files
+
+### Via the Web UI
+
+In the agent detail page, go to the **Knowledge** tab:
+
+- **Upload**: click "Upload" to select a `.md` or `.txt` file
+- **New File**: click "+ New File" to create an empty file and open the editor
+- **Edit**: click "Edit" on any file to modify it inline
+- **Delete**: click "Delete" to remove a file
+
+### Via the API
+
+**List files:**
+```bash
+curl http://localhost:8080/api/agents/bookstore_bot/kb
+```
+
+Response:
+```json
+{
+  "files": [
+    {"filename": "facilities.md", "size": 2345, "modified": 1712500000.0},
+    {"filename": "pricing.md", "size": 1100, "modified": 1712400000.0}
+  ]
+}
+```
+
+**Read a file:**
+```bash
+curl http://localhost:8080/api/agents/bookstore_bot/kb/facilities.md
+```
+
+**Upload (multipart):**
+```bash
+curl -X POST http://localhost:8080/api/agents/bookstore_bot/kb \
+  -F "file=@facilities.md"
+```
+
+**Create with content (JSON):**
+```bash
+curl -X POST http://localhost:8080/api/agents/bookstore_bot/kb \
+  -H 'Content-Type: application/json' \
+  -d '{"filename": "faq.md", "content": "# FAQ\n\n## Check-in time?\n14:00"}'
+```
+
+**Update:**
+```bash
+curl -X PUT http://localhost:8080/api/agents/bookstore_bot/kb/faq.md \
+  -H 'Content-Type: application/json' \
+  -d '{"content": "# FAQ\n\nUpdated content..."}'
+```
+
+**Delete:**
+```bash
+curl -X DELETE http://localhost:8080/api/agents/bookstore_bot/kb/faq.md
+```
+
+## Agent Self-Management via `/_self/`
+
+Agents can manage their own KB files at runtime using the `/_self/kb/` virtual path with any file tool (`write_file`, `read_file`, `str_replace`). This path always resolves to the agent's KB directory on the Evonic server, regardless of where the agent's workspace is located.
+
+```python
+# Agent saves a new KB file
+write_file(file_path="/_self/kb/meeting-notes.md", content="...")
+
+# Agent reads its own KB file via file tool (alternative to the built-in read tool)
+read_file(file_path="/_self/kb/meeting-notes.md")
+```
+
+This is especially useful for sandboxed agents (where the workspace is `/workspace` inside Docker) and agents using remote or tunnel [Workplaces](/agents/workplaces), where normal paths cannot reach the agent's home directory.
+
+See [Tools: The `/_self/` Virtual Path](/agents/tools#the-_self-virtual-path) for full details.
+
+
+
+## KB System v2
+
+*Introduced in v0.8.0.*
+
+KB System v2 adds three powerful capabilities to the knowledge base experience:
+
+### Graph Traversal Tool
+
+The new `graph_query` tool lets agents follow wiki-link connections between KB documents. If your KB files link to each other using `[[kb/filename]]` syntax, agents can traverse these connections to discover related information:
+
+```python
+graph_query(entity="Acme Corp", edge_type="mentions", hops=2)
+```
+
+### Enhanced Listing
+
+The KB file listing now surfaces additional metadata:
+
+- **Staleness indicators** — files not updated in a long time are flagged
+- **Graph-awareness metadata** — inbound/outbound link counts are visible
+- **Search filtering** — filter KB documents by name without scrolling
+
+### Canonical `_kb_index.md`
+
+A special `_kb_index.md` index file keeps the knowledge graph navigable. When this file exists in the KB directory, it serves as the canonical entry point for the agent, listing all available documents and their relationships.
+
+### Coaching Prompts
+
+Agents now receive automatic **coaching prompts** that instruct them to:
+- Maintain KB graph links when creating new KB files
+- Add `[[kb/...]]` wiki-links to related documents
+- Update `_kb_index.md` when adding or removing KB documents
+
+See [Tools: graph_query](/agents/tools) for the full tool reference.
+
+
+## Best Practices
+
+- **Keep files focused**: one topic per file (pricing, FAQ, policies, etc.)
+- **Use descriptive filenames**: the agent sees these names and decides which to read
+- **Include headers**: markdown structure helps the agent find relevant sections
+- **Don't duplicate system prompt content**: put static persona in the system prompt, reference data in KB files
+- **Keep files reasonable in size**: very large files consume tokens when read
+

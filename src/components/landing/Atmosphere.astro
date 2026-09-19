@@ -1,0 +1,97 @@
+---
+import { asciiWave } from '../../lib/ascii-wave';
+
+const text = asciiWave(203, 36).join('\n');
+const glints = asciiWave(203, 36, 0, true).join('\n');
+---
+
+<pre class="art" aria-hidden="true">{text}</pre>
+<pre class="glints" aria-hidden="true">{glints}</pre>
+
+<script>
+	import { asciiWave, mascotPose, RIPPLE_IMPACT } from '../../lib/ascii-wave';
+
+	const art = document.querySelector('.hero-ascii .art');
+	const glintsEl = document.querySelector('.hero-ascii .glints');
+
+	if (art && glintsEl) {
+		const motionSpeed = 1.5;
+		const preference = matchMedia('(prefers-reduced-motion: reduce)');
+		const mascot = art.closest('.hero-mascot')?.querySelector('img');
+		const system = art.closest('.hero-illustration');
+		let paused = document.documentElement.classList.contains('motion-disabled');
+		let visible = false;
+		let frame = 0;
+		let lastText = 0;
+		let elapsed = 0;
+		let previous = performance.now();
+
+		const write = (time) => {
+			art.textContent = asciiWave(203, 36, time).join('\n');
+			glintsEl.textContent = asciiWave(203, 36, time, true).join('\n');
+		};
+		const tick = (now) => {
+			elapsed += Math.min(now - previous, 100) * motionSpeed;
+			previous = now;
+			const pose = mascotPose(elapsed / 1000);
+			if (mascot) {
+				const motionScale = Math.min(1, mascot.clientWidth / 200);
+				const shift = pose.y * motionScale;
+				mascot.style.transform = `translateY(${shift}px) scale(${pose.xScale}, ${pose.yScale})`;
+				if (system) system.style.setProperty('--mascot-shift', `${shift.toFixed(2)}px`);
+			}
+			if (now - lastText >= 50) {
+				write(elapsed / 1000);
+				lastText = now;
+			}
+			frame = requestAnimationFrame(tick);
+		};
+		const sync = () => {
+			cancelAnimationFrame(frame);
+			if (paused || preference.matches) {
+				mascot?.style.removeProperty('transform');
+				system?.style.removeProperty('--mascot-shift');
+				write(RIPPLE_IMPACT + 0.9);
+			} else if (visible && !document.hidden) {
+				previous = performance.now();
+				frame = requestAnimationFrame(tick);
+			}
+		};
+		const observer = new IntersectionObserver(([entry]) => {
+			visible = entry.isIntersecting;
+			sync();
+		});
+		observer.observe(art);
+		document.addEventListener('visibilitychange', sync);
+		preference.addEventListener('change', sync);
+		window.addEventListener('evonic:motion', (event) => {
+			paused = event.detail?.paused === true;
+			sync();
+		});
+		sync();
+	}
+</script>
+
+<style>
+	pre {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		margin: 0;
+		font: max(8px, 0.9vw) / 11px monospace;
+		white-space: pre;
+		color: #2f9e4f;
+		opacity: 0.82;
+		pointer-events: none;
+		user-select: none;
+		mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 82%, transparent);
+	}
+	.glints {
+		color: #b6ffcd;
+		opacity: 0.85;
+		text-shadow: 0 0 8px #00ff4170;
+		mask-image: linear-gradient(to bottom, transparent, #000 20%, #000 75%, transparent);
+	}
+</style>
+

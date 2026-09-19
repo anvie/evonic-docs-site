@@ -1,0 +1,276 @@
+---
+import Icon from './Icon.astro';
+import snapshot from '../../lib/data/contributors.json';
+
+const contributors = snapshot;
+---
+
+<section class="contributors section-shell" id="contributors" aria-labelledby="contributors-title">
+	<div class="section-heading" data-reveal>
+		<p class="eyebrow">THE PEOPLE BEHIND EVONIC</p>
+		<h2 id="contributors-title">
+			Built in the open.<br /><span class="gradient-text">Better together.</span>
+		</h2>
+		<p>
+			Meet the contributors helping Evonic grow. Every fix, feature, and fresh perspective makes a
+			difference.
+		</p>
+	</div>
+	<div class="community-panel" data-reveal>
+		<div class="community-topline">
+			<span><Icon name="github" size={17} /> anvie / evonic</span>
+			<a href="https://github.com/anvie/evonic/graphs/contributors" target="_blank" rel="noreferrer"
+				>All contributors <Icon name="external" size={14} /></a
+			>
+		</div>
+		<ul class="contributor-grid" aria-label="GitHub contributors">
+			{
+				contributors.map((contributor) => (
+					<li>
+						<a
+							class="contributor"
+							href={`https://github.com/${contributor.login}`}
+							target="_blank"
+							rel="noreferrer"
+							aria-label={`${contributor.login} on GitHub`}
+						>
+							<div class="contributor-avatar">
+								<span aria-hidden="true">{contributor.login.slice(0, 2).toUpperCase()}</span>
+								<img
+									src={`${contributor.avatar_url}&s=160`}
+									alt=""
+									width="64"
+									height="64"
+									loading="lazy"
+									decoding="async"
+								/>
+							</div>
+							<span class="contributor-name">{contributor.login}</span>
+						</a>
+					</li>
+				))
+			}
+		</ul>
+		<div class="community-bottom">
+			<div>
+				<h3>There’s room for you, too.</h3>
+				<p>Code, docs, ideas. Help shape what comes next.</p>
+			</div>
+			<a
+				class="button button-outline"
+				href="https://github.com/anvie/evonic/issues"
+				target="_blank"
+				rel="noreferrer">Become a contributor <Icon name="arrow" size={17} /></a
+			>
+		</div>
+	</div>
+</section>
+
+<script>
+	const grid = document.querySelector('.contributor-grid');
+
+	const hideBrokenAvatar = (image) => {
+		image.style.display = 'none';
+	};
+	const wireAvatars = () => {
+		document.querySelectorAll('.contributor-avatar img').forEach((image) => {
+			image.addEventListener('error', () => hideBrokenAvatar(image));
+		});
+	};
+	wireAvatars();
+
+	// Public GitHub snapshot keeps the static page useful offline or rate-limited.
+	const controller = new AbortController();
+	const timeout = setTimeout(() => controller.abort(), 8000);
+	async function refresh() {
+		try {
+			const response = await fetch(
+				'https://api.github.com/repos/anvie/evonic/contributors?per_page=100',
+				{ signal: controller.signal, headers: { Accept: 'application/vnd.github+json' } }
+			);
+			if (!response.ok) return;
+			const data = await response.json();
+			if (!Array.isArray(data) || !grid) return;
+			const users = data.filter(
+				(user) =>
+					user?.type === 'User' &&
+					typeof user.login === 'string' &&
+					/^[a-z\d-]+$/i.test(user.login) &&
+					typeof user.avatar_url === 'string' &&
+					user.avatar_url.startsWith('https://avatars.githubusercontent.com/')
+			);
+			if (!users.length) return;
+			grid.replaceChildren(
+				...users.map((user) => {
+					const item = document.createElement('li');
+					const link = document.createElement('a');
+					link.className = 'contributor';
+					link.href = `https://github.com/${user.login}`;
+					link.target = '_blank';
+					link.rel = 'noreferrer';
+					link.setAttribute('aria-label', `${user.login} on GitHub`);
+
+					const avatar = document.createElement('div');
+					avatar.className = 'contributor-avatar';
+					const initials = document.createElement('span');
+					initials.setAttribute('aria-hidden', 'true');
+					initials.textContent = user.login.slice(0, 2).toUpperCase();
+					const image = document.createElement('img');
+					image.src = `${user.avatar_url}&s=160`;
+					image.alt = '';
+					image.width = 64;
+					image.height = 64;
+					image.loading = 'lazy';
+					image.decoding = 'async';
+					image.addEventListener('error', () => hideBrokenAvatar(image));
+					avatar.append(initials, image);
+
+					const name = document.createElement('span');
+					name.className = 'contributor-name';
+					name.textContent = user.login;
+
+					link.append(avatar, name);
+					item.append(link);
+					return item;
+				})
+			);
+		} catch {
+			// Retain the bundled contributors when GitHub is unavailable.
+		} finally {
+			clearTimeout(timeout);
+		}
+	}
+	void refresh();
+</script>
+
+<style is:global>
+	.contributors {
+		padding-top: 130px;
+	}
+	.community-panel {
+		border: 1px solid var(--line);
+		border-radius: 20px;
+		background: linear-gradient(135deg, #101a2a, #0b101b 65%);
+		overflow: hidden;
+	}
+	.community-topline {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		padding: 23px 32px;
+		border-bottom: 1px solid var(--line);
+		color: var(--muted);
+		font-size: 12px;
+	}
+	.community-topline span,
+	.community-topline a {
+		display: inline-flex;
+		align-items: center;
+		gap: 9px;
+	}
+	.community-topline a {
+		color: var(--blue);
+	}
+	.contributor-grid {
+		list-style: none;
+		margin: 0;
+		padding: 36px 28px;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
+		gap: 16px 8px;
+	}
+	.contributor-grid li {
+		min-width: 0;
+	}
+	.contributor {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 12px;
+		padding: 12px 4px;
+		border-radius: 12px;
+	}
+	.contributor:hover,
+	.contributor:focus-visible {
+		background: #96c4ff0c;
+		color: var(--blue);
+	}
+	.contributor-avatar {
+		position: relative;
+		width: 64px;
+		height: 64px;
+		border-radius: 50%;
+		background: #1b2a41;
+		border: 1px solid #96c4ff35;
+		display: grid;
+		place-items: center;
+		color: var(--blue);
+	}
+	.contributor-avatar img {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		border-radius: inherit;
+	}
+	.contributor-name {
+		font-size: 12px;
+		max-width: 100%;
+		overflow-wrap: anywhere;
+		text-align: center;
+	}
+	.community-bottom {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 24px;
+		padding: 28px 32px;
+		border-top: 1px solid var(--line);
+	}
+	.community-bottom h3 {
+		font-size: 23px;
+		letter-spacing: -0.5px;
+	}
+	.community-bottom p {
+		margin-top: 8px;
+		font-size: 13px;
+		line-height: 1.7;
+		color: var(--muted);
+	}
+	.community-bottom .button {
+		flex-shrink: 0;
+	}
+	@media (max-width: 720px) {
+		.contributors {
+			padding-top: 85px;
+		}
+		.community-topline {
+			padding: 20px 16px;
+			font-size: 11px;
+			gap: 8px;
+		}
+		.contributor-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			padding: 24px 12px;
+			gap: 12px 4px;
+		}
+		.contributor-avatar {
+			width: 56px;
+			height: 56px;
+		}
+		.contributor-name {
+			font-size: 11px;
+		}
+		.community-bottom {
+			flex-direction: column;
+			align-items: flex-start;
+			padding: 24px 20px;
+		}
+		.community-bottom .button {
+			width: 100%;
+		}
+	}
+</style>
+

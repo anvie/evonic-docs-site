@@ -1,0 +1,61 @@
+@import '@fontsource-variable/bricolage-grotesque';
+@import '@fontsource-variable/dm-sans';
+
+/* Evonic docs theme — the dark-only palette and type from the landing page. */
+:root {
+	--evonic-blue: #96c4ff;
+	--evonic-line: rgba(154, 186, 230, 0.13);
+
+	--sl-font: 'DM Sans Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+	--sl-font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+}
+
+/* The brand has a single colour scheme, so both Starlight themes share this palette. */
+:root,
+:root[data-theme='light'],
+:root[data-theme='dark'] {
+	--sl-color-accent-low: #16243a;
+	--sl-color-accent: #96c4ff;
+	--sl-color-accent-high: #d6e7ff;
+
+	--sl-color-white: #ebeff7;
+	--sl-color-gray-1: #dbe3ee;
+	--sl-color-gray-2: #b9c3d4;
+	--sl-color-gray-3: #8e99ac;
+	--sl-color-gray-4: #5c6a7e;
+	--sl-color-gray-5: #2a3444;
+	--sl-color-gray-6: #131b28;
+	--sl-color-black: #080b12;
+
+	--sl-color-bg: #080b12;
+	--sl-color-bg-nav: #090d15;
+	--sl-color-bg-sidebar: #0b1018;
+	--sl-color-bg-inline-code: #0e1622;
+	--sl-color-bg-accent: #16243a;
+
+	--sl-color-text: #ebeff7;
+	--sl-color-text-accent: #b9d8ff;
+	--sl-color-text-invert: #080b12;
+
+	--sl-color-hairline-light: rgba(154, 186, 230, 0.07);
+	--sl-color-hairline: var(--evonic-line);
+	--sl-color-hairline-shade: var(--evonic-line);
+	--sl-color-backdrop-overlay: rgba(8, 11, 18, 0.66);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.site-title,
+.sl-markdown-content :is(h1, h2, h3, h4, h5, h6) {
+	font-family: 'Bricolage Grotesque Variable', var(--sl-font);
+}
+
+/* Brand has no light scheme, so the theme switch is meaningless here. */
+starlight-theme-select {
+	display: none;
+}
+

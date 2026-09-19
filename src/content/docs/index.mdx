@@ -1,0 +1,72 @@
+---
+title: "Evonic: Local-First Agentic AI Platform for Open Models"
+description: Evonic is a local-first, agent-native platform for designing, deploying, and orchestrating AI agents. Build with custom models, tools, knowledge bases, channels, and skills — all running on open LLMs.
+---
+
+import { Card, LinkCard } from '@astrojs/starlight/components';
+
+# Evonic
+
+**Design AI agents from concept to production.** Evonic is a local-first, agent-native platform that lets you build, deploy, and orchestrate AI agents with full control over models, tools, knowledge bases, channels, and skills — all powered by open LLMs with zero vendor lock-in.
+
+<div style={{display: 'grid', gridTemplateColumns: '1fr', gap: '0.75rem', maxWidth: '720px'}}>
+  <LinkCard href="/getting-started/installation" title="Quick Start" description="Install Evonic and get your first agent running in minutes." />
+  <LinkCard href="/agents/overview" title="Agents" description="Learn about the core platform: agents, models, tools, knowledge bases, channels, and skills." />
+  <LinkCard href="/guides/use-cases" title="Use Cases" description="Explore real-world scenarios: customer service, multi-agent swarms, DevOps, AI workflows, and more." />
+  <LinkCard href="/plugins" title="Plugins" description="Extend Evonic with custom plugins, events, and an SDK for building integrations." />
+</div>
+
+---
+
+## Features
+
+<div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem', maxWidth: '720px'}}>
+  <LinkCard href="/agents/overview" title="Agents" description="Design AI agents with custom models, tools, and knowledge bases." />
+  <LinkCard href="/agents/workplaces" title="Workplaces" description="Run agents on local machines, remote servers, or tunnel devices — no SSH or public IP needed." />
+  <LinkCard href="/plugins" title="Plugins" description="Extend Evonic with custom plugins and events." />
+  <LinkCard href="/evaluation/overview" title="Evaluation" description="Measure and improve agent performance with customizable evaluators." />
+  <LinkCard href="/skills/skills" title="Skills & Tools" description="Discover and manage skills and custom tools." />
+  <LinkCard href="/security/heuristic-code-safety" title="Security" description="Heuristic mal-activity detection and agent sandboxing." />
+  <LinkCard href="/evaluation/system-prompt-hierarchy" title="System Prompt Hierarchy" description="System prompt hierarchy, use cases, and more." />
+  <LinkCard href="/cli/agents" title="CLI Reference" description="Command-line tools for managing Evonic." />
+</div>
+
+---
+
+## Three Differentiating Concepts
+
+Evonic stands apart from other agentic frameworks through three foundational design decisions:
+
+1. **Workplace** — Agents execute in isolated environments that can be local directories, remote SSH servers, or tunnel devices connected via Evonet. No public IP or complex firewall configuration needed.
+
+2. **Agent-to-Agent Communication** — Agents communicate natively as a first-class protocol. Swarm orchestration, role-based delegation, and multi-step collaboration are built into the runtime, not bolted on.
+
+3. **Heuristic Mal-activity Detection System** — Every agent action is inspected through a multi-layer safety system before execution. Dangerous patterns are caught and blocked, and suspicious behavior escalates to human approval — no silent failures.
+
+---
+
+## Resources
+
+- [GitHub](https://github.com/evonic-ai/evonic)
+- [Community](https://t.me/evonicai)
+- [Use Cases](/guides/use-cases): Explore real-world agent scenarios
+- [Update](/agents/self-update): Auto-update agents
+- [System Prompt Hierarchy](/evaluation/system-prompt-hierarchy): Organize prompts by priority
+
+## Quick Start
+
+Get up and running with a single command:
+
+```bash
+curl -fsSL https://evonic.dev/install.sh | bash
+```
+
+Then:
+
+1. **Configure**: Set your API key and model
+2. **Create an agent**: Define a system prompt and tools
+3. **Run**: Start the server and test
+
+## Next Steps
+
+Explore the [Getting Started](/getting-started/installation) guide, then dive into the [Agents](/agents/overview) section to learn about building and managing AI agents. Check out [Use Cases](/guides/use-cases) for detailed real-world examples.
