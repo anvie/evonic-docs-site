@@ -246,6 +246,12 @@ footer a:hover {
 	inherits: true;
 	initial-value: 0;
 }
+/* Hovering a node lifts it; its connector end follows through the same offset. */
+@property --lift {
+	syntax: '<length>';
+	inherits: true;
+	initial-value: 0px;
+}
 /* One slow wave drives every node and the connector end that feeds it. */
 @keyframes node-drift {
 	0%,
@@ -274,18 +280,6 @@ footer a:hover {
 	background-size: 34px 34px;
 	mask-image: linear-gradient(#0009, #0006 55%, transparent 90%);
 }
-.hero-ascii {
-	position: absolute;
-	top: calc(50% + var(--mascot-size) * 0.28);
-	left: 50%;
-	transform: translate(-50%, -50%);
-	width: 100vw;
-	max-width: none;
-	overflow: visible;
-	height: 400px;
-	pointer-events: none;
-	z-index: -1;
-}
 .hero-mascot::before {
 	content: '';
 	position: absolute;
@@ -311,7 +305,8 @@ footer a:hover {
 	content: '';
 	position: absolute;
 	z-index: -1;
-	top: -80px;
+	/* Starts at the copy, not above it, so the labels on the lowest hero nodes stay clear. */
+	top: 0;
 	bottom: -64px;
 	left: 50%;
 	width: 100vw;
@@ -359,7 +354,8 @@ footer a:hover {
 .hero-illustration {
 	--mascot-size: 150px;
 	--satellite-gap: 48px;
-	--satellite-row: 132px;
+	/* Room below the satellite band for the lowest node and its label. */
+	--satellite-row: 150px;
 	--satellite-size: 72px;
 	--node-reach: calc(var(--satellite-size) * 0.4);
 	--node-y: 0px;
@@ -402,29 +398,31 @@ footer a:hover {
 	left: 0;
 	right: 0;
 	bottom: calc(
-		var(--satellite-row) - var(--node-y) - var(--node-reach) - var(--node-drift) * var(--node-amp)
+		var(--satellite-row) - var(--node-y) - var(--node-reach) - var(--node-drift) * var(--node-amp) -
+			var(--lift)
 	);
 	width: 100%;
 	height: calc(
 		var(--mascot-size) - var(--hub-y) + var(--satellite-gap) + var(--node-y) + var(--node-reach) +
-			var(--node-drift) * var(--node-amp) - var(--mascot-shift)
+			var(--node-drift) * var(--node-amp) + var(--lift) - var(--mascot-shift)
 	);
 	z-index: calc(var(--line-layer) - var(--depth) * var(--layer-step));
 	animation: node-drift 12s ease-in-out infinite;
 	animation-delay: calc(var(--node-y) * -0.03s - 6s);
+	/* The hub end runs flat along the top edge, so the stroke and its glow must not be clipped. */
+	overflow: visible;
 	pointer-events: none;
+	transition: --lift 0.35s ease;
 }
-/* Depth sends a line further back and mutes it; its order in the stack comes from --depth. */
-.hero-connectors.depth-1 path:not(.hero-particles) {
-	stroke: #779bc7;
-}
-.hero-connectors.depth-2 path:not(.hero-particles) {
-	stroke: #556f8f;
-}
+/* Lines in front of the hub glow and carry particles; lines behind it recede into thin, dim strokes. */
 .hero-connectors path {
 	fill: none;
-	stroke: #98c7ff;
+	stroke: #a9d2ff;
 	stroke-width: 2.2;
+	filter: drop-shadow(0 0 3px #6fb2ffb3) drop-shadow(0 0 8px #4d95f566);
+	transition:
+		stroke 0.35s ease,
+		stroke-width 0.35s ease;
 }
 .hero-connectors .hero-particles {
 	stroke: #eff8ff;
@@ -444,20 +442,71 @@ footer a:hover {
 	);
 	left: var(--anchor);
 	z-index: calc(var(--node-layer) - var(--depth) * var(--layer-step));
-	transform: translate(-50%, -50%) translateY(calc(var(--node-drift) * var(--node-amp)));
+	transform: translate(-50%, -50%) translateY(calc(var(--node-drift) * var(--node-amp) + var(--lift)));
 	animation: node-drift 12s ease-in-out infinite;
 	animation-delay: calc(var(--node-y) * -0.03s - 6s);
-}
-/* A node in front of the hub clears the hub and its bloom, so it takes the band above them. */
-.hero-satellite.hero-front {
-	z-index: var(--front-layer);
-}
-.hero-satellite img {
-	display: block;
 	width: var(--node-size);
 	height: var(--node-size);
-	object-fit: contain;
-	filter: brightness(calc(1 - var(--depth) * 0.22));
+	transition: --lift 0.35s ease;
+}
+.hero-satellite img {
+	/* Every agent shares one canvas scaled to the same eye spacing, so all bodies match in size.
+	   The node box frames the body; the canvas overhangs it for accessories, centred on the eyes. */
+	position: absolute;
+	top: calc(var(--node-size) * -0.174);
+	left: 50%;
+	width: calc(var(--node-size) * 2.3125);
+	max-width: none;
+	height: auto;
+	transform: translateX(-50%);
+	pointer-events: none;
+	filter: drop-shadow(0 0 0 #6fb2ff00);
+	transition: filter 0.35s ease;
+}
+/* Hangs below the artwork without changing the node box, so connector endpoints stay put. */
+.hero-label {
+	position: absolute;
+	/* Clears the accessories that hang below the body. */
+	top: calc(100% + var(--node-size) * 0.12);
+	left: 50%;
+	padding: 3px 8px;
+	border-radius: 6px;
+	background: #080a0ecc;
+	color: #c9d8ea;
+	font-size: 12px;
+	font-weight: 500;
+	line-height: 1.2;
+	white-space: nowrap;
+	transform: translateX(-50%);
+	transition: color 0.35s ease;
+	pointer-events: none;
+}
+/* The wrapper only pairs a node with its line; it adds no box, so the shared paint order holds. */
+.hero-link {
+	display: contents;
+}
+/* A hovered node rises and lights up, and its line brightens with it. */
+@media (hover: hover) {
+	.hero-link:has(.hero-satellite:hover) > * {
+		--lift: -10px;
+	}
+	.hero-link:has(.hero-satellite:hover) .hero-satellite {
+		z-index: calc(var(--front-layer) + 1);
+	}
+	.hero-link:has(.hero-satellite:hover) .hero-satellite img {
+		filter: brightness(1.08) drop-shadow(0 0 12px #6fb2ffb3);
+	}
+	.hero-link:has(.hero-satellite:hover) .hero-connectors {
+		z-index: calc(var(--hub-layer) - 1);
+	}
+	.hero-link:has(.hero-satellite:hover) .hero-connectors path:not(.hero-particles) {
+		stroke: #d2e8ff;
+		stroke-width: 2.6;
+		filter: drop-shadow(0 0 4px #8cc4ffd9) drop-shadow(0 0 10px #4d95f599);
+	}
+	.hero-satellite:hover .hero-label {
+		color: #fff;
+	}
 }
 .hero h1 {
 	font-family: var(--heading);
@@ -1592,11 +1641,15 @@ footer {
 	}
 	.hero-illustration {
 		--mascot-size: 125px;
-		--satellite-size: 44px;
-		--satellite-row: 104px;
+		--satellite-size: 62px;
+		--satellite-row: 184px;
 		--node-amp: 3.5px;
 		width: 100%;
 		margin-bottom: 22px;
+	}
+	.hero-label {
+		padding: 2px 6px;
+		font-size: 10px;
 	}
 	.hero h1 {
 		font-size: clamp(40px, 7.4vw, 56px);
@@ -1943,7 +1996,7 @@ footer:not([data-motion-visible='true']) *,
 .lightweight *::after {
 	animation: none !important;
 }
-.lightweight .hero-particles {
+.lightweight .hero-connectors path {
 	filter: none;
 }
 .lightweight .feature-card,
