@@ -417,19 +417,19 @@ footer a:hover {
 /* Lines in front of the hub glow and carry particles; lines behind it recede into thin, dim strokes. */
 .hero-connectors path {
 	fill: none;
-	stroke: #a9d2ff;
-	stroke-width: 2.2;
-	filter: drop-shadow(0 0 3px #6fb2ffb3) drop-shadow(0 0 8px #4d95f566);
+	stroke: #7f6fc2;
+	stroke-width: 1.3;
+	filter: drop-shadow(0 0 3px #7c5fd680) drop-shadow(0 0 8px #6d48d840);
 	transition:
 		stroke 0.35s ease,
 		stroke-width 0.35s ease;
 }
 .hero-connectors .hero-particles {
-	stroke: #eff8ff;
-	stroke-width: 3.5;
+	stroke: #f5f3ff;
+	stroke-width: 2.8;
 	stroke-linecap: round;
 	stroke-dasharray: 0.1 33.233333;
-	filter: drop-shadow(0 0 3px #a9d5ff) drop-shadow(0 0 6px #75b7ff);
+	filter: drop-shadow(0 0 3px #c4b5fd) drop-shadow(0 0 6px #a78bfa);
 	animation: connector-circulate 6s linear infinite reverse;
 }
 /* Anchored by its centre so a node shrinking with depth keeps its connector endpoint attached. */
@@ -460,7 +460,7 @@ footer a:hover {
 	height: auto;
 	transform: translateX(-50%);
 	pointer-events: none;
-	filter: drop-shadow(0 0 0 #6fb2ff00);
+	filter: drop-shadow(0 0 0 #a78bfa00);
 	transition: filter 0.35s ease;
 }
 /* Hangs below the artwork without changing the node box, so connector endpoints stay put. */
@@ -494,15 +494,15 @@ footer a:hover {
 		z-index: calc(var(--front-layer) + 1);
 	}
 	.hero-link:has(.hero-satellite:hover) .hero-satellite img {
-		filter: brightness(1.08) drop-shadow(0 0 12px #6fb2ffb3);
+		filter: brightness(1.08) drop-shadow(0 0 12px #a78bfab3);
 	}
 	.hero-link:has(.hero-satellite:hover) .hero-connectors {
 		z-index: calc(var(--hub-layer) - 1);
 	}
 	.hero-link:has(.hero-satellite:hover) .hero-connectors path:not(.hero-particles) {
-		stroke: #d2e8ff;
-		stroke-width: 2.6;
-		filter: drop-shadow(0 0 4px #8cc4ffd9) drop-shadow(0 0 10px #4d95f599);
+		stroke: #ddd6fe;
+		stroke-width: 1.8;
+		filter: drop-shadow(0 0 4px #b69cffd9) drop-shadow(0 0 10px #8b5cf699);
 	}
 	.hero-satellite:hover .hero-label {
 		color: #fff;
