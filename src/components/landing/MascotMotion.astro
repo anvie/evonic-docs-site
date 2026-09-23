@@ -1,0 +1,49 @@
+<script>
+	import { mascotPose } from '../../lib/mascot-motion';
+
+	const mascot = document.querySelector<HTMLImageElement>('.hero-mascot img');
+	const system = mascot?.closest<HTMLElement>('.hero-illustration');
+
+	if (mascot) {
+		const motionSpeed = 1.5;
+		const preference = matchMedia('(prefers-reduced-motion: reduce)');
+		let paused = document.documentElement.classList.contains('motion-disabled');
+		let visible = false;
+		let frame = 0;
+		let elapsed = 0;
+		let previous = performance.now();
+
+		const tick = (now) => {
+			elapsed += Math.min(now - previous, 100) * motionSpeed;
+			previous = now;
+			const pose = mascotPose(elapsed / 1000);
+			const motionScale = Math.min(1, mascot.clientWidth / 200);
+			const shift = pose.y * motionScale;
+			mascot.style.transform = `translateY(${shift}px) scale(${pose.xScale}, ${pose.yScale})`;
+			system?.style.setProperty('--mascot-shift', `${shift.toFixed(2)}px`);
+			frame = requestAnimationFrame(tick);
+		};
+		const sync = () => {
+			cancelAnimationFrame(frame);
+			if (paused || preference.matches) {
+				mascot.style.removeProperty('transform');
+				system?.style.removeProperty('--mascot-shift');
+			} else if (visible && !document.hidden) {
+				previous = performance.now();
+				frame = requestAnimationFrame(tick);
+			}
+		};
+		const observer = new IntersectionObserver(([entry]) => {
+			visible = entry.isIntersecting;
+			sync();
+		});
+		observer.observe(mascot);
+		document.addEventListener('visibilitychange', sync);
+		preference.addEventListener('change', sync);
+		window.addEventListener('evonic:motion', (event) => {
+			paused = (event as CustomEvent).detail?.paused === true;
+			sync();
+		});
+		sync();
+	}
+</script>

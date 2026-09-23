@@ -1,5 +1,5 @@
 ---
-import Atmosphere from '../components/landing/Atmosphere.astro';
+import MascotMotion from '../components/landing/MascotMotion.astro';
 import CapabilityVisual from '../components/landing/CapabilityVisual.astro';
 import Contributors from '../components/landing/Contributors.astro';
 import Icon from '../components/landing/Icon.astro';
@@ -106,41 +106,47 @@ const systemNodes: SystemNode[] = nodeGroups.flatMap((nodes, group) =>
 	}))
 );
 // Connector endpoints in the hero illustration share the 1000-unit diagram grid.
-// Depth shrinks each node and darkens it instead of fading it, so overlapping artwork stays solid.
-// A negative depth sits in front of the hub, which is where the inner trio hugs the mascot.
+// Nodes alternate between two rows that rise towards the edges, so every label below a node
+// has a clear lane: a node's neighbours on the same row sit two steps away.
 const heroSatellites = [
-	{ label: 'Agent', x: 70, y: -150, depth: 2 },
-	{ label: 'Coding', x: 105, y: -60, depth: 1 },
-	{ label: 'Skills', x: 150, y: 30, depth: 0 },
-	{ label: 'Models', x: 210, y: -104, depth: 2 },
-	{ label: 'Research', x: 265, y: 52, depth: 0 },
-	{ label: 'Tasks', x: 320, y: -170, depth: 2 },
-	{ label: 'Tools', x: 380, y: -20, depth: 1 },
-	{ label: 'Writing', x: 412, y: -86, depth: -1 },
-	{ label: 'Sandbox', x: 500, y: -68, depth: -1 },
-	{ label: 'Knowledge', x: 450, y: 42, depth: 0 },
-	{ label: 'Chat', x: 588, y: -94, depth: -1 },
-	{ label: 'Evonet', x: 620, y: -152, depth: 2 },
-	{ label: 'Memory', x: 670, y: -40, depth: 1 },
-	{ label: 'Local', x: 720, y: 58, depth: 0 },
-	{ label: 'Triggers', x: 775, y: -96, depth: 1 },
-	{ label: 'Channels', x: 830, y: -12, depth: 1 },
-	{ label: 'Cron', x: 880, y: -140, depth: 2 },
-	{ label: 'Teams', x: 925, y: 40, depth: 0 }
+	{ label: 'Tasks', x: 55, y: -150 },
+	{ label: 'Research', x: 135, y: -55 },
+	{ label: 'Skills', x: 215, y: -120 },
+	{ label: 'Coding', x: 295, y: -10 },
+	{ label: 'Writing', x: 375, y: -80 },
+	{ label: 'Chat', x: 445, y: 45 },
+	{ label: 'Knowledge', x: 555, y: 45 },
+	{ label: 'Sandbox', x: 625, y: -80 },
+	{ label: 'Tools', x: 705, y: -10 },
+	{ label: 'Memory', x: 785, y: -120 },
+	{ label: 'Channels', x: 865, y: -55 },
+	{ label: 'Cron', x: 945, y: -150 }
 ];
-// Narrow screens get their own fan: fewer nodes, pulled onto an arc that still spans the
-// section, because the desktop spacing collapses once the artwork is this small.
+// Narrow screens get their own fan: fewer nodes, an upper row of four and a lower pair,
+// because the desktop spacing collapses once the artwork is this small.
 const narrowHeroSatellites = [
-	{ label: 'Agent', x: 88, y: -57, depth: 2 },
-	{ label: 'Coding', x: 188, y: 7, depth: 1 },
-	{ label: 'Skills', x: 373, y: 44, depth: 0 },
-	{ label: 'Writing', x: 312, y: -47, depth: -1 },
-	{ label: 'Sandbox', x: 500, y: -37, depth: -1 },
-	{ label: 'Chat', x: 688, y: -52, depth: -1 },
-	{ label: 'Teams', x: 627, y: 44, depth: 0 },
-	{ label: 'Channels', x: 812, y: 7, depth: 1 },
-	{ label: 'Cron', x: 912, y: -57, depth: 2 }
+	{ label: 'Research', x: 90, y: -45 },
+	{ label: 'Coding', x: 230, y: 96 },
+	{ label: 'Writing', x: 340, y: -10 },
+	{ label: 'Knowledge', x: 660, y: -10 },
+	{ label: 'Chat', x: 770, y: 96 },
+	{ label: 'Cron', x: 910, y: -45 }
 ];
+// Each hero node wears the accessory of the agent role closest to its label.
+const agentRoles: Record<string, string> = {
+	Tasks: 'dispatcher',
+	Research: 'detective',
+	Skills: 'scholar',
+	Coding: 'engineer',
+	Writing: 'scribe',
+	Chat: 'support',
+	Knowledge: 'scholar',
+	Sandbox: 'detective',
+	Tools: 'engineer',
+	Memory: 'scribe',
+	Channels: 'support',
+	Cron: 'scout'
+};
 const heroFans = [
 	{ key: 'desktop', nodes: heroSatellites },
 	{ key: 'narrow', nodes: narrowHeroSatellites }
@@ -204,7 +210,7 @@ const nodeConnectionPath = (node: SystemNode) =>
 					<div class="hero-content">
 						<div class="hero-illustration hero-enter">
 							<div class="hero-mascot">
-								<div class="hero-ascii" aria-hidden="true"><Atmosphere /></div>
+								<MascotMotion />
 								<img
 									src="/img/mascot.png"
 									alt="Evonic's blue jellyfish mascot"
@@ -217,31 +223,32 @@ const nodeConnectionPath = (node: SystemNode) =>
 								heroFans.map((fan) => (
 									<div class={`hero-fan hero-fan-${fan.key}`}>
 										{fan.nodes.map((satellite, i) => (
-											<svg
-												class={`hero-connectors depth-${satellite.depth}`}
-												aria-hidden="true"
-												viewBox="0 0 1000 1000"
-												preserveAspectRatio="none"
-												style={`--node-y:${satellite.y}px;--depth:${satellite.depth}`}
-											>
-												<path d={connectorPath(satellite.x)} vector-effect="non-scaling-stroke" />
-												<path
-													class="hero-particles"
-													d={connectorPath(satellite.x)}
-													pathLength="100"
-													style={`animation-delay:${-i * 1.2}s`}
-													vector-effect="non-scaling-stroke"
-												/>
-											</svg>
-										))}
-										{fan.nodes.map((satellite) => (
-											<span
-												class={`hero-satellite${satellite.depth < 0 ? ' hero-front' : ''}`}
-												aria-hidden="true"
-												style={`--anchor:${satellite.x / 10}%;--node-y:${satellite.y}px;--depth:${satellite.depth}`}
-											>
-												<img src="/img/mascot.png" alt="" width="72" height="72" />
-											</span>
+											<div class="hero-link">
+												<svg
+													class="hero-connectors"
+													aria-hidden="true"
+													viewBox="0 0 1000 1000"
+													preserveAspectRatio="none"
+													style={`--node-y:${satellite.y}px`}
+												>
+													<path d={connectorPath(satellite.x)} vector-effect="non-scaling-stroke" />
+													<path
+														class="hero-particles"
+														d={connectorPath(satellite.x)}
+														pathLength="100"
+														style={`animation-delay:${-i * 1.2}s`}
+														vector-effect="non-scaling-stroke"
+													/>
+												</svg>
+												<span
+													class="hero-satellite"
+													aria-hidden="true"
+													style={`--anchor:${satellite.x / 10}%;--node-y:${satellite.y}px`}
+												>
+													<img src={`/img/agents/${agentRoles[satellite.label]}.webp`} alt="" width="555" height="324" />
+													<span class="hero-label">{satellite.label} agent</span>
+												</span>
+											</div>
 										))}
 									</div>
 								))
