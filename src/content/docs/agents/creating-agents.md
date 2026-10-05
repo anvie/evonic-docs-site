@@ -97,6 +97,64 @@ evonic agent add dev_bot --name "Dev Bot" --skillset coder --description "Coding
 | `--model-fallback` | No | Fallback model chain (comma-separated) |
 | `--skillset` | No | Skillset template ID (pre-configures tools & prompt) |
 
+## Agent Templates
+
+*Introduced in v1.3.0.*
+
+Instead of configuring every agent from scratch, you can start from an **agent template** — a reusable blueprint that captures the full agent spec: its system prompt, tools, skills, model defaults, and knowledge-base files. Templates are the fastest way to spin up a consistent family of agents.
+
+### What a template contains
+
+A template is a JSON blueprint stored in the `agent_templates/` directory. Each template defines:
+
+| Field | Purpose |
+|---|---|
+| `id` | Stable slug for the template (e.g. `coder`, `pentester`) |
+| `name` / `description` | Human-friendly display name and summary |
+| `system_prompt` | The base prompt — can include parameterized variables |
+| `tools` | The set of tools the agent gets |
+| `skills` | Skills pre-assigned to the agent |
+| `defaults` | Default configuration values (model, capabilities, etc.) |
+| `kb_files` | Knowledge-base files bundled with the template |
+| `parameters` | Variables the user fills in when instantiating |
+
+### Two storage forms
+
+Templates can be stored in either of two shapes:
+
+- **Single-file form** — `agent_templates/<id>.json`. The canonical, writable location used when you create or edit a template from the UI.
+- **Directory form** — `agent_templates/<id>/`, holding a `meta.json` plus the prompt and knowledge-base files as separate files. This additive, opt-in form is for larger templates that bundle their own files.
+
+If both `<id>.json` and `<id>/` exist for the same id, that's a validation error (a collision) — each id must have exactly one source of truth.
+
+### Parameterized prompts
+
+A template's system prompt can include parameters. When you simulate or instantiate, you supply parameter values and the template renders the final prompt. The values you provide are never written back into the template file, so the template stays the single reusable source of truth.
+
+### Gallery, editor, and simulation
+
+- **Templates gallery** — `/templates` lists all available templates.
+- **Editor + simulation panel** — `/template/<id>` lets you edit a template and *simulate* it: an ephemeral, throwaway run through the real runtime so you can see exactly how the agent behaves before you commit. Simulations are rate-limited because they use real LLM compute.
+- **Render preview** — a "what will this look like" preview showing the resolved prompt and configuration for a given set of parameters.
+- **Instantiate** — "what will this do" → create a real agent from the template in one step.
+
+### Create from a template via API
+
+```bash
+# List templates
+curl http://localhost:8080/api/templates
+
+# Instantiate a real agent from the "coder" template
+curl -X POST http://localhost:8080/api/templates/coder/instantiate \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "params": { },
+    "overrides": { "model": "meta-llama/Llama-3-8b-Instruct" }
+  }'
+```
+
+Fill the template's declared parameters in `params`, and use `overrides` to tweak specific fields (model, capabilities) on the created agent without changing the template itself.
+
 ## Listing Agents
 
 View all agents with their status, tool count, and channel count:

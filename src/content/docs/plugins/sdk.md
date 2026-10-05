@@ -118,3 +118,44 @@ def on_message_received(event, sdk):
 
 **Returns:** Dict with session details.
 
+## Plugin Detail Tabs
+
+*Introduced in v1.3.0.*
+
+A plugin can add its own tabs to the **plugin detail page**. Drop any file named `<slug>_tab.html` into the plugin's `templates/` directory and it automatically appears as an extra tab:
+
+- `manage_tab.html` → a tab with id `manage` and label **Manage**
+- `settings_tab.html` → a tab with id `settings` and label **Settings**
+
+The HTML partial is injected into the detail page's tab area. To run setup code when the tab first opens, define a lazy initializer in the partial:
+
+```html
+<!-- plugins/myplugin/templates/manage_tab.html -->
+<div id="myplugin-manage"><!-- manage UI --></div>
+<script>
+  // Runs once, the first time the "manage" tab is opened.
+  function tabInit_manage() {
+    // wire up your manage UI here
+  }
+</script>
+```
+
+The convention is `window.tabInit_<slug>()` — the platform calls it when the tab becomes visible.
+
+## Endpoint Discovery & Pagination
+
+*Introduced in v1.3.0.*
+
+Plugin REST endpoints now support **discovery** (the platform can enumerate the endpoints a plugin exposes) and **pagination** for large result sets. When an endpoint returns a list, accept `limit` / `offset` (or equivalent) parameters so clients can page through results instead of loading everything at once.
+
+## Multiple-Choice Prompts (`ask_user`)
+
+*Introduced in v1.3.0.*
+
+The built-in `ask_user` plugin lets an agent **pause mid-turn** and ask the user one or more multiple-choice questions. Each question renders as an interactive card in the web chat, and the user's selection is returned to the agent as the tool result.
+
+- Each question needs **2–4 options** (minimum 2, maximum 4), and every option must have a `label`.
+- An option can be marked `recommended` to suggest an answer.
+- The agent waits for the answer before continuing its turn.
+
+This is ideal for clarifying ambiguous requests without flooding the user with free-text follow-ups.

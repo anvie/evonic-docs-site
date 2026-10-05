@@ -168,6 +168,29 @@ The HMADS patterns for SQLite are tuned to stay **within the `requires_approval`
 
 ---
 
+## Root Filesystem Scan Guard
+
+*Introduced in v1.3.0.*
+
+On top of the 3-layer HMADS check, `bash` runs a dedicated **performance guard** for root filesystem scans. A command like `find /` or `tree /` walks the entire filesystem from the root, which is usually slow and often a mistake — so it prompts for approval rather than running silently.
+
+- **Patterns** — `\bfind /` and `\btree /` (each weight 8 → `requires_approval`).
+- **Always prompts** — unlike most HMADS checks, the root-scan guard runs **regardless of** `is_super` or `safety_checker_enabled`, so even super agents get prompted for a full root scan.
+- **Performance, not trust** — this is a performance concern (a slow scan), not a security decision. The command is still allowed once approved.
+
+### Toggling the Guard
+
+The guard is on by default and can be turned off in two ways:
+
+| Switch | Where | Effect |
+|---|---|---|
+| **Root Filesystem Scan Guard** toggle | System → Settings (DB `root_fs_scan_guard_enabled`) | UI switch per deployment |
+| `RFS_GUARD_DISABLED=1` | environment variable | Force-disables the guard (`config.ROOT_FS_SCAN_GUARD_ENABLED`) |
+
+Turn the toggle off (or set the env var) in environments where a full root scan is expected to be fast or intentional, such as a small container.
+
+---
+
 ## Super Agent Exemption
 
 **Super agents** (`is_super: true`) bypass all HMADS checks entirely. This is because super agents own the system and are trusted to execute any command.

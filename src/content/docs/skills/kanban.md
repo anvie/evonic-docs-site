@@ -158,6 +158,14 @@ Files can also be attached to individual comments. This is useful for sharing sc
 
 The built-in AI task enhancer now outputs in English by default, helping standardize task descriptions across multi-language teams. It analyzes the task title and description to suggest a clearer, better-structured version.
 
+## Live Activity Feedback
+
+*Introduced in v1.3.0.*
+
+Every time the agent assigned to a task calls a tool, the task's **title flashes** — yellow by default, for about a second, then fading back. This gives you at-a-glance confirmation on the board that an agent is actively working on a task, without opening the task to see progress.
+
+The flash is driven by the durable `kanban` realtime (SSE) channel, so it updates live while you're viewing the board. The flash color and duration are plugin defaults (yellow, ~1 second).
+
 ## API Endpoints
 
 The Kanban plugin exposes REST endpoints for programmatic access. See the [Plugin SDK](/plugins/sdk) for details on available endpoints and request/response formats.

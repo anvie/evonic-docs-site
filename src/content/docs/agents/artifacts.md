@@ -63,7 +63,13 @@ save_artifact(
 
 ### Web UI
 
-Every artifact appears in the agent's detail page under an Artifacts tab. You can view, download, or delete artifacts directly from the browser. The viewer supports markdown rendering for text files and inline preview for images.
+Every artifact appears in the agent's detail page under an **Artifacts tab**. *Updated in v1.3.0* — the tab is now **Finder-style**, with a familiar file-browser layout:
+
+- **Icon and list views** — browse artifacts as a grid of category icons, or as a list, depending on your preference.
+- **Previews** — images render as thumbnails and open in a lightbox; text and markdown files open in an in-browser viewer with markdown rendering. You can preview a file before downloading it.
+- **Download & delete** — download any artifact, or remove one you no longer need, directly from the browser.
+- **Source cleanup** — when an agent saves an artifact from a file on disk, it can ask for the source file to be cleaned up after the artifact copy is verified, keeping the workspace tidy.
+- **Safer access controls** — artifacts are scoped per agent (cross-agent isolation), and preview/download URLs are scoped to the owning agent so other agents can't reach in.
 
 ### Via File Tools
 

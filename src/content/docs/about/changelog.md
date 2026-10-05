@@ -120,6 +120,47 @@ description: Release history and updates for Evonic.
 - Corrected workspace and tunnel file handling, including remote binary reads and virtual-path policy enforcement.
 - Corrected scheduler tidy timing, constrained Explorer cancellation, and oversized-output handling.
 
+## v1.3.0 — 2026-10-05
+
+*Agent templates, configurable image generation, a persistent realtime telemetry layer, and a Finder-style Artifacts tab.*
+
+### Agent & DX (4)
+
+- **Agent templates** — a new template layer for building agents from parameterized blueprints. Create, edit, validate, and simulate templates as JSON in two storage forms (single-file `agent_templates/<id>.json`, or a directory `agent_templates/<id>/`). A Templates gallery, a per-template editor with a live simulation panel, and one-click instantiation into a real agent are all part of the Agents interface.
+- **Configurable image generation** — generate images through Google Gemini, OpenRouter, ComfyUI, or local providers, with per-provider controls and JPEG output support.
+- **Persistent realtime delivery & telemetry** — a durable realtime layer for chat, session state, and lifecycle updates, with event replay and automatic recovery from abandoned turns.
+- **Finder-style Artifacts tab** — the agent Artifacts tab is now Finder-style, with icon and list views, image previews, source cleanup on save, and tighter per-agent access controls.
+
+### Kanban (2)
+
+- **Tool-activity title flash** — a task's title flashes (yellow, ~1s by default) every time the assigned agent calls a tool, driven by the durable `kanban` realtime (SSE) channel, so live work is visible on the board.
+- **Reliable scanner & follow-ups** — the follow-up comment scanner now schedules reliably, and attachments on comments are forwarded to follow-up runs.
+
+### Plugins (3)
+
+- **Plugin detail tabs** — plugins can ship `<slug>_tab.html` templates that appear as extra tabs on the plugin detail page, lazily initializing through `window.tabInit_<slug>()`.
+- **Endpoint discovery & pagination** — plugin REST endpoints now support discovery and paginated listings for large result sets.
+- **Interactive multiple-choice prompts** — agents can pause mid-turn and ask users multiple-choice questions rendered as interactive cards (via the `ask_user` plugin); the answer returns to the agent as the tool result.
+
+### Reliability & Security (7)
+
+- **Fallback-model retries** — shared LLM callers (task & CMP classifiers, plugin helpers, dashboard enhancements) now retry once on the configured fallback model when the primary model fails.
+- **Comment follow-up retries** — a failed follow-up classifier no longer counts as "no follow-up needed"; the comment stays unconsumed and is retried instead of being discarded.
+- **Global default model fallback** — the platform default fallback model is now `deepseek/deepseek-v4-flash`.
+- **Root filesystem scan guard** — `find /` and `tree /` now trigger a performance approval. The guard is switchable via the *Root Filesystem Scan Guard* toggle in System → Settings, or the `RFS_GUARD_DISABLED=1` env var (`config.ROOT_FS_SCAN_GUARD_ENABLED`).
+- **Authorization-block logging** — blocked authorizations are now logged for easier auditing.
+- **Tighter tool & file handling** — strengthened tool pruning, artifact tool locking, file sending, inbound attachment naming, vision file access, and sandboxed template simulation.
+- **WhatsApp reliability** — improved group approval handling, location shares, attachment viewing, and routing/session reliability.
+
+### Fixes (1)
+
+- **Chat typography** — corrected chat message size hierarchy (rem-based sizing) for consistent, readable message scaling.
+
+### Verification
+
+- `pytest unit_tests/ -v`: 2637 passed, 123 skipped, 9 subtests passed.
+- `pytest plugins/kanban/tests/ -v`: 156 passed.
+
 ## v0.8.0 — 2026
 
 
