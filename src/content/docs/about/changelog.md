@@ -5,6 +5,56 @@ description: Release history and updates for Evonic.
 
 # Changelog
 
+## v1.4.0 \u2014 2026-10-10
+
+### UI/UX Refresh (14)
+
+- **Dark Palette** \u2014 new dark theme across chat, agent, session, evaluation, dashboard, user, and settings pages.
+- **Mobile Navigation** \u2014 responsive navigation for mobile devices.
+- **Keyboard Shortcuts** \u2014 improved keyboard accessibility and navigation.
+- **Toast Notifications** \u2014 modern toast alerts for user feedback.
+- **Comboboxes** \u2014 new combobox UI components for selection.
+- **State Panels** \u2014 visual panels showing agent and session state.
+- **Generated Default Avatars** \u2014 automatic avatar generation for new agents.
+- **Admin Theme Improvements** \u2014 session state header, theme presets, refreshed Safety and Users settings.
+
+### Safety (5)
+
+- **Consolidated Config Surface** \u2014 new **System > Safety** page with persistent policy controls, provider-neutral decision-model safety guard, provider health status, and activity telemetry.
+- **DMSS Diagnostic Tester** \u2014 bounded diagnostic tester with ready-to-submit sample payloads, improved dark-mode UI, endpoint controls, failure-path handling, and KPI spacing.
+
+### New Skills & Features (2)
+
+- **Text-to-Speech (TTS)** \u2014 new skill supporting Google Gemini, OpenAI, and OpenRouter providers.
+- **Durable `/goal`** \u2014 persistent goal state visible to agents.
+- **Session Summary Compaction** \u2014 compacted session summaries for efficiency.
+- **Active Monitor Conditions** \u2014 monitor conditions visible in chat state.
+- **Proactive Context Compaction** \u2014 context compaction based on model capacity and token usage.
+- **Session State Header** \u2014 new header showing session state in admin UI.
+
+### Bug Fixes (10+)
+
+- **Pairing** \u2014 stabilized direct-channel pairing approval, increased pairing-code entropy, fixed tests.
+- **Kanban** \u2014 fixed stale task-resume handling, paused boards prevent scans.
+- **WhatsApp** \u2014 fixed bridge shutdown/restart handling, dark-mode disconnect banners.
+- **UI** \u2014 fixed structured tool-error rendering, session-summary editing, image artifact filename collisions.
+- **ComfyUI** \u2014 fixed workflow-name handling, metadata generation, added cross-platform launcher locking, Windows virtual-environment detection.
+- **Renderer** \u2014 improved tool-result dependency loading, Explorer compatibility with shell `rg` wrappers.
+- **DMSS** \u2014 improved settings and diagnostic behavior.
+
+### Image Generation (1)
+
+- **ComfyUI** \u2014 new provider with portrait/landscape sizes, workflow templates, prompt injection protection, and provider discovery.
+
+### Tests
+
+- Expanded Safety and DMSS API/UI coverage, including diagnostic timeout, HTTP error, malformed response, rate limit, and empty payload.
+- Added regression coverage for pairing, renderer tool-result helpers, theme-aware disconnect banners, and Kanban task resume behavior.
+
+### Notes
+
+- The DMSS provider endpoint remains an administrator-configured integration. The residual endpoint egress risk was reviewed and explicitly accepted for this release because changes require authenticated administrative access.
+
 ## v1.0.0 — 2026-07-17
 
 *Stable Release*
