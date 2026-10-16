@@ -213,6 +213,7 @@ New agents come with several capabilities enabled by default:
 | **Date/Time Injection** (`inject_datetime`) | Current date and time are injected into the system prompt each turn |
 | **Intermediate Responses** (`send_intermediate_responses`) | Tool results and intermediate steps are sent as visible messages to the user in real-time |
 | **Agent State** (`enable_agent_state`) | Plan/Execute mode system is active; state persists across conversation turns and summarization |
+| **Attachments** (`attachments_enabled`) | Files sent through a channel are saved and readable by the agent (default limit: 20 MB). Enabled by default for newly created agents since v1.5.0 |
 
 These capabilities can be toggled per-agent in the **General** tab.
 
@@ -270,6 +271,7 @@ When configuring a model, you can choose the **API format** the LLM client uses 
 |--------|-------------|
 | **OpenAI** | Standard OpenAI-compatible API format (default for most providers) |
 | **Anthropic** | Anthropic's native API format (for Claude models via Anthropic-compatible endpoints) |
+| **Claude CLI** | Uses the official `claude` CLI with a Claude subscription — no API key needed (v1.5.0) |
 
 The API format dropdown lets you connect **Claude and other Anthropic-compatible models natively** without needing a proxy or translation layer. The LLM client automatically handles the format translation when set to Anthropic.
 

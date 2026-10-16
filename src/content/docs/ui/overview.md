@@ -15,6 +15,7 @@ The core of the v1.0.0 experience is the **Panel UI**. Instead of a traditional 
 - **Modular Layout**: Drag and resize panels to create a workspace that fits your current task.
 - **Context Persistence**: Panels remember their state; if you were looking at a specific log file in the Log Panel, it will remain there when you switch agents.
 - **Quick-Toggle**: Use `Ctrl+K` (or `Cmd+K`) to quickly open or close panels like the State Viewer or Tool Console.
+- **Button Edit Mode** (v1.5.0): Panel action buttons can now be renamed or deleted — switch a panel into edit mode to manage the actions it shows.
 
 ### Panel UI Plugin Architecture
 

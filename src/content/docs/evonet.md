@@ -46,6 +46,19 @@ make build-windows     # Windows amd64
 make build-gui-macos   # macOS GUI app (.app bundle) — requires fyne CLI
 ```
 
+### Release archives
+
+*Introduced in v1.5.0.*
+
+The Makefile also ships **release archive targets** that package the CLI as ZIP archives (plus SHA-256 checksums) into `dist/`:
+
+```bash
+make release         # CLI archives for every platform + dist/checksums.txt
+make release-all     # everything in release, plus the macOS GUI app bundle (run on macOS)
+```
+
+Individual archives can be built on their own: `release-linux-amd64`, `release-linux-arm64`, `release-macos` (both architectures), `release-windows-amd64`, and `release-gui-macos`. Run `release-checksums` at any time to regenerate `dist/checksums.txt` for the archives already present.
+
 ## Quick Start
 
 **1. Pair with your Evonic server**

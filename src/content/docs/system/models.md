@@ -35,6 +35,7 @@ The LLM client now supports translating between **OpenAI** and **Anthropic API f
 |--------|-------------|
 | **OpenAI** | Standard chat completions format (default for most providers) |
 | **Anthropic** | Anthropic's native Messages API format |
+| **Claude CLI** | Drives the official `claude` CLI in print mode — use a Claude subscription (Pro/Max) without an API key (v1.5.0) |
 
 ### How It Works
 
@@ -56,6 +57,32 @@ This means you can connect **Claude and other Anthropic-compatible models native
 5. Configure the provider, base URL, and API key as usual
 
 The format is set **per-model**, so you can mix OpenAI-format and Anthropic-format models in the same deployment.
+
+## Claude CLI Subscription Provider
+
+*Introduced in v1.5.0.*
+
+The **Claude CLI** API format lets you use an existing Claude subscription (Pro/Max) through the official `claude` CLI — no Anthropic API key required. Evonic spawns the CLI in print mode for each request, and the Claude Code client talks to Anthropic directly.
+
+**How it works:**
+
+1. Install the official `claude` CLI on the machine running Evonic (it must be on the server's `PATH`).
+2. Log in once with `claude auth login` and complete the subscription sign-in.
+3. Create a model in **System → Models** and set its API format to **Claude CLI**.
+
+**What to know:**
+
+- **Your tokens stay yours** — Evonic never reads, copies, or refreshes the CLI's OAuth tokens.
+- **Plain LLM mode** — the CLI's built-in tools, settings, MCP servers, and session persistence are disabled, so Evonic's own tools, workplaces, and safety checks stay in charge of every action.
+- **Native image input** — images sent to a Claude CLI model are passed through as native Claude image blocks (no base64 workaround needed).
+- **Model choices** — the CLI's available Claude models are offered in the model form.
+
+### Configuration
+
+1. Go to **System → Models** (`/system/models`)
+2. Create a new model (or edit an existing one)
+3. Set **API Format** to **Claude CLI**
+4. Pick a Claude model and save — no base URL or API key needed
 
 ## Duplicating a Model
 

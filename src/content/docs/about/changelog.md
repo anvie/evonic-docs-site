@@ -5,6 +5,52 @@ description: Release history and updates for Evonic.
 
 # Changelog
 
+## v1.5.0 \u2014 2026-10-16
+
+*A provider-neutral decision-model runtime, native SystemOne and LiquidAI integrations, a Claude CLI subscription provider, and ElevenLabs text-to-speech.*
+
+### Decision-Model Runtime
+
+- **Provider-neutral runtime** \u2014 a new decision-model runtime lets any configured model serve structured decisions through a stable routing contract (`decision-models/v1`). Consumers such as safety checks and task routing call the same invocation and result format no matter which model sits behind them, so you can swap providers without touching consumer code.
+- **Endpoint-based routing** \u2014 decisions are routed to a specific provider/model endpoint. Point each decision type at the model you want it to use, and change that routing without changing the code that makes the decision.
+- **Decision profiles** \u2014 a decision profile is a named, versioned bundle that binds a decision type to its schema, primary model, and fallback behavior. Profiles are created, edited, and validated from the administration UI before they go live.
+- **Built-in profile templates** \u2014 four templates ship preconfigured: `safety.command` (command safety review), `agent.task_complexity`, `agent.path_boundary`, and `agent.goal_completion`.
+- **Activity observability** \u2014 every decision invocation is recorded with timing, fallback, and result metadata, so you can see which model answered, how long it took, and whether a fallback kicked in.
+- **Bounded Playground** \u2014 a safe, inference-only Playground lets you test a profile with sample payloads before wiring it into production. Playground runs never touch production activity or state.
+
+### New Providers & Integrations
+
+- **SystemOne** \u2014 native decision-model integration. SystemOne endpoints can now serve decision profiles directly.
+- **LiquidAI** \u2014 the LiquidAI d1-3B model ships as a built-in model (`systemone/LiquidAI-d1-3B`) that is selectable without extra connection data.
+- **DMSS \u2192 safety command profile** \u2014 DMSS migrated to the new decision-model runtime and now runs as the built-in `safety.command` profile.
+- **Claude CLI subscription provider** \u2014 a new **Claude CLI** API format drives the official `claude` CLI in print mode, so you can use an existing Claude subscription (Pro/Max) without an API key. Log in once with `claude auth login`; Evonic spawns the CLI per request and never reads or stores its OAuth tokens. Native image input is supported, and the CLI\u2019s built-in tools, MCP servers, and session persistence are disabled so Evonic stays in charge of the agent loop.
+- **ElevenLabs text-to-speech** \u2014 the text-to-speech skill now supports ElevenLabs alongside Google Gemini, OpenAI, and OpenRouter.
+
+### UI & Experience
+
+- **Panel-button edit mode** \u2014 panel buttons now support an edit mode for renaming and deleting actions.
+- **Editable evaluation model names** \u2014 evaluation model names can now be edited directly in the UI.
+- **Attachments enabled by default** \u2014 newly created agents now have attachments enabled by default (up to 20 MB), so files sent through a channel are immediately available to the agent.
+- **Improvements** \u2014 provider diagnostics, decision-profile save feedback, dark-mode contrast, session follow-up navigation, task-progress display, and restart-ready realtime chat notifications.
+
+### Evonet
+
+- **Release archive targets** \u2014 new `make release` and `make release-all` targets build per-platform release archives with checksums.
+- **Event-driven GUI log flusher** \u2014 the Evonet GUI now flushes logs on events instead of polling, reducing idle work.
+
+### Bug Fixes
+
+- **OpenCode Go & Zen session headers** \u2014 fixed OpenCode Go and Zen requests to send their session header.
+- **Coverage restored** \u2014 restored green coverage for model routing, decision-runtime paths, vision fallback settings, the Claude CLI provider, and decision-profile APIs.
+
+### Tests
+
+- Added regression coverage for decision profiles, decision runtime and routing, Claude CLI image support, vision fallback settings, panel actions, and Evonet log flushing.
+
+### Notes
+
+- The DMSS provider endpoint remains an administrator-configured integration. The previously accepted residual endpoint-egress risk remains subject to authenticated administrative access.
+
 ## v1.4.0 \u2014 2026-10-10
 
 ### UI/UX Refresh (14)
