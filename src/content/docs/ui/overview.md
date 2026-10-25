@@ -73,6 +73,28 @@ Interacting with files is now effortless. You can drag any file from your local 
 - **Context Awareness**: The agent is immediately notified of the file's name and path, allowing it to start working with the file without you having to type the path.
 - **Bulk Uploads**: Drag multiple files at once to populate a workplace quickly.
 
+## Chat, State Panel & Settings (v1.5.6)
+
+*Updated in v1.5.6.*
+
+The chat, the session state panel, and the settings pages received a set of usability improvements.
+
+### Chat & State Panel
+
+- **Workplace-switched divider** — when the active workplace changes (via the header switcher or the agent's `switch_workplace` tool), a divider marks where in the conversation the context changed.
+- **Connection notice above the composer** — a notice appears above the message input when the workplace connection needs attention.
+- **`ask_user` card docking** — `ask_user` cards now dock cleanly within the chat flow.
+- **Collapsed completed-task lists** — long lists of completed tasks collapse by default, so the chat doesn't get buried in finished work.
+- **Improved chat rendering** — general rendering improvements, including a fix for currency amounts being mangled by the math (KaTeX) pipeline.
+- **Refreshed update banner** — the update-available banner has new styling.
+
+### Settings
+
+- **Aligned headers** — the Variables and Plugin Settings headers are now aligned.
+- **Tidier rows** — the Models & Routing and Vision rows are tidier.
+- **Cleaner combobox focus ring** — comboboxes have a cleaner focus ring.
+- **Real `Other` input** — the `Other` answer in `ask_user` cards now uses a real input field.
+
 ## Quick Reference: UI Shortcuts
 
 | Shortcut | Action |

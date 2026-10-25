@@ -108,6 +108,15 @@ The Evonet GUI has been enhanced for a better user experience:
 - **Version in window title** — the Evonet version number is now displayed in the application window title, making it easy to verify which version is running
 - **macOS metadata** — a `FyneApp.toml` configuration file provides proper macOS app metadata (app name, version, icon) when building for macOS
 
+## GUI (v1.5.6)
+
+*Updated in v1.5.6.*
+
+The Evonet GUI was streamlined further:
+
+- **Single Portal card** — the GUI now shows a single Portal card with **Workplace** and **Path** panels, plus an icon per workplace kind. Instead of several cards, you see at a glance which workplace is connected and which path it maps.
+- **Lighter GUI** — removed idle polling so the GUI does no work when nothing is happening. It also cancels in-flight dials on shutdown and prevents UI stalls when switching servers.
+
 ## Configuration
 
 Config is resolved in priority order (highest wins):

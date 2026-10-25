@@ -94,6 +94,40 @@ When a Workplace is assigned:
 
 To remove a Workplace, set the dropdown back to **None (use workspace)**.
 
+## Switching Workplaces Mid-Chat
+
+*Introduced in v1.5.6.*
+
+You don't need to open the agent's settings to change where it works. The chat header has a **workplace switcher** that changes the active Workplace in one click:
+
+1. Click the workplace switcher in the chat header.
+2. Pick a Workplace from the list — the picker is **searchable**, so it stays usable even with a long list of Workplaces.
+3. The chat shows a **"Workplace switched"** divider where the context changes, and the header chip updates to the new Workplace.
+
+The switch is agent-wide: every session of the agent follows the new Workplace.
+
+### Letting the Agent Switch Itself
+
+When a task moves from one machine to another (for example, from a local repo to a remote server), you can let the agent move itself. This is opt-in:
+
+1. Open the agent's detail page → **Portals** tab
+2. In the **Workplace** card, toggle **Allow the agent to switch workplace**
+3. Choose which Workplaces the agent may use: **Any workplace**, or a specific list (the local workspace is always allowed)
+
+When enabled, the agent gets a `switch_workplace` tool:
+
+- `switch_workplace(action='list')` — shows the Workplaces the agent may use and which one is current
+- `switch_workplace(action='switch', workplace='remote-prod')` — moves the agent to a Workplace by id or exact name (`'local'` for the local workspace)
+
+The switch is agent-wide and persistent — it applies to all of the agent's sessions, and any later tool calls in the same turn run in the new Workplace. A "Workplace switched" divider appears in the chat so you can see exactly when the context changed.
+
+**Example:**
+
+```text
+agent: switch_workplace(action='switch', workplace='raspberry-pi-1')
+chat:  ── Workplace switched: raspberry-pi-1 ──
+```
+
 ## Sharing Workplaces Between Agents
 
 **Local** and **Remote** workplaces can be assigned to multiple agents simultaneously. Each agent operates in the same filesystem context, which is useful when agents collaborate on the same codebase.

@@ -62,6 +62,10 @@ Agents with the Kanban skill can use the following tools to interact with the bo
 | `kanban_update_task` | Update a task's status, assignee, title, description, or priority |
 | `kanban_delete_task` | Delete a task (super agents can delete directly; regular agents need approval) |
 
+:::note[Changed in v1.5.6]
+Tasks now **require an assignee before they can be started**. A task with no assignee can't be moved to *In Progress* — assign it to an agent (or yourself) first. This keeps the board from accumulating unowned work that silently goes in-progress.
+:::
+
 ### Comment Tools
 
 | Tool | Description |

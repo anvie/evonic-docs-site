@@ -25,6 +25,30 @@ Models are managed via:
 
 Each model has a provider (e.g., `openai`, `anthropic`, `llama.cpp`), a base URL, API key, and configuration options like max tokens, timeout, and temperature.
 
+## Model Management
+
+*Redesigned in v1.5.6.*
+
+The Models page (`/system/models`) now presents each model as a **card** with a few quality-of-life additions:
+
+- **Endpoint ping** — each model card has a one-click ping (bolt icon) that sends a short prompt through the model and reports whether it answers, with latency. A quick way to check that a provider endpoint is actually reachable before you rely on it.
+- **Provider deletion** — delete a provider together with all of its models. You see an impact preview (which models will be deleted) before confirming, and deletion is blocked while the provider still holds the global default model.
+- **AI brand marks** — the model switcher and the Models page show provider brand marks (Claude, OpenAI, Gemini, DeepSeek, Qwen, Mistral, Meta, Grok, and more), so you can tell at a glance which model you're talking to.
+
+### Per-Session Model Switching
+
+You can switch the model for a single chat session without touching the agent's configuration:
+
+1. Open the **state panel** in the chat (right side).
+2. Click the **Model** row — a dialog opens with a searchable list of your enabled models, each with its brand mark.
+3. Pick a model.
+
+The choice is stored on the **session only**. The agent's primary and fallback models (Agent settings → Model & Environment) are never touched, so you can try a different model in one conversation and fall back to the default when the session ends.
+
+**Example:**
+
+You're chatting with an agent that uses `gpt-4o` by default, but you want to test how `claude-sonnet` handles the next question. Click the Model row in the state panel, pick `claude-sonnet`, and continue the conversation — no agent settings changes, no restart.
+
 ## API Format Translation
 
 *Introduced in v0.7.0.*

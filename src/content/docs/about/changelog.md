@@ -5,6 +5,70 @@ description: Release history and updates for Evonic.
 
 # Changelog
 
+## v1.5.6 — 2026-10-24
+
+*A workplace switcher in the chat header, a redesigned model management experience, TOTP two-factor authentication, and a batch of safety, runtime, and UI improvements.*
+
+### Workplace Switcher
+
+- **Quick workplace switcher** — the chat header now includes a workplace switcher with a searchable picker, so you can jump between workplaces even when you have a long list of them. When the context changes, the chat shows a "Workplace switched" divider and the header chip follows the new workplace.
+- **`switch_workplace` tool** — an opt-in tool (agent setting `workplace_switch_enabled`) that lets an agent move itself between workplaces. `action='list'` shows the workplaces the agent may use and which one is current; `action='switch'` moves the agent to a workplace by id or exact name (`'local'` for the local workspace). The switch is persistent and applies to all of the agent's sessions, so agents switch only when the task needs that machine.
+- **Workplace-based Portals** — Portals can now be created from existing workplaces only, so SSH and Evonet portals always reuse a configured workplace instead of a standalone credential block.
+
+### Model Management
+
+- **Model cards** — the Models page now presents each model as a card with a one-click **endpoint ping** that sends a short prompt through the model and reports reachability with latency.
+- **Provider deletion** — delete a provider together with all of its models, with an impact preview before you confirm. Deletion is blocked while the provider still holds the global default model.
+- **AI brand marks** — the model switcher and the Models page show provider brand marks (Claude, OpenAI, Gemini, DeepSeek, and more), so you can tell at a glance which model you're talking to.
+- **Per-session model switching** — switch the model for a single chat session from the state panel. The choice is stored on the session only; the agent's primary and fallback models are never touched.
+
+### Safety
+
+- **Verdict provenance** — the thinking timeline now shows who decided each safety verdict: the triggering verdict, the flagged categories, and the real decision maker behind an approval (web, Telegram, WhatsApp, Discord, agent, or timeout).
+- **Endpoint connectivity test** — a one-click connectivity check beside the DMSS endpoint field tests the value exactly as typed (even an unsaved edit). The probe is diagnostic only: production decisions, telemetry, and the circuit breaker are untouched.
+- **DMSS activity detail modal** — click an activity event to see the recorded (redacted) command preview, how it was detected, and the final decision.
+- **Auto-saving configuration** — safety policy and DMSS settings now auto-save as you change them, with a redesigned HMADS and DMSS tab layout.
+
+### Runtime
+
+- **Request budget preflight** — every LLM request is planned against the model's context budget before it is sent. In `enforced` mode (the default), a request that cannot be reduced to fit fails with a clear message instead of a cryptic provider error. Modes are controlled by `REQUEST_BUDGET_MODE`: `off`, `shadow`, `canary`, or `enforced`.
+- **Active monitors in the state panel** — the session state panel now lists the session's active monitors, with a detail modal for each one.
+- **Rendered Markdown plan modal** — the plan file now opens in a modal with a rendered Markdown preview and an editable tab, so you can read and tweak the plan without leaving the chat.
+
+### Image Generation
+
+- **Portrait and landscape sizes** — all image-generator providers now support portrait (768×1024, 768×1344, 832×1248) and landscape (1024×768, 1344×768, 1248×832) sizes alongside the existing square sizes.
+
+### Evonet
+
+- **Single Portal card** — the GUI now shows a single Portal card with Workplace and Path panels, plus icons per workplace kind.
+- **Lighter GUI** — removed idle polling, cancels in-flight dials on shutdown, and prevents UI stalls when switching servers.
+
+### UI & Experience
+
+- **Chat and state panel** — workplace-switched divider, a connection notice above the composer, `ask_user` card docking, collapsed long completed-task lists, improved chat rendering, and refreshed update-banner styling.
+- **Settings** — aligned Variables and Plugin Settings headers, tidier Models & Routing and Vision rows, a cleaner combobox focus ring, and a real input field for the `Other` answer in `ask_user` cards.
+
+### Bug Fixes
+
+- **Session state** — fixed session state not loading on initial chat open.
+- **Plan command** — fixed CMP being dropped by the plan command.
+- **Slash-command hints** — fixed stale slash-command hints.
+- **Workplace header** — the header chip now follows an agent-initiated workplace switch.
+- **Currency rendering** — fixed currency amounts being mangled by the KaTeX rendering pipeline in chat.
+- **Tool errors & artifacts** — fixed structured tool-error rendering and binary artifact writes that exceeded the Evonet read limit.
+- **Kanban** — tasks now require an assignee before they can be started.
+- **Monitor probes** — monitor shell predicates now run with the agent's declared variables, so a probe that references a token (e.g. `$GITLAB_PAT`) no longer evaluates to an empty value and silently expires without firing.
+- **Environment resolution** — consolidated agent-variable environment resolution into one helper shared by the bash tool, the runpy tool, and monitor probes.
+
+### Tests
+
+- Added and stabilized coverage for the slash-command hint, session state handlers, chat-ui.js cache-busting, the ask_user card, chat-ui safety badges, safety-verdict provenance, and per-session model override.
+
+### Notes
+
+- Version 1.5.1 was never published as a separate release; its fixes are included in v1.5.6.
+
 ## v1.5.0 — 2026-10-16
 
 *A provider-neutral decision-model runtime, native SystemOne and LiquidAI integrations, a Claude CLI subscription provider, and ElevenLabs text-to-speech.*

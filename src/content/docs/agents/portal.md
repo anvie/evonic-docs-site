@@ -117,12 +117,16 @@ Portals are created, updated, and deleted through the Web UI or API:
 
 ### Creating a Portal
 
+*Updated in v1.5.6 — Portals are now created from existing workplaces.*
+
 1. Go to **Portals** in the web UI
 2. Click **+ New Portal**
 3. Enter the portal ID (a short slug like `shared_docs`)
 4. Select the backend type: Local, SSH, or Evonet
-5. Configure the backend settings
+5. For **SSH** and **Evonet** portals, select an existing workplace — the portal reuses that workplace's connection instead of a standalone credential block. **Local** portals point directly at a path.
 6. Click **Save**
+
+Creating a Portal from an existing Workplace keeps credentials in one place: the Workplace. Update the Workplace's connection and the Portal follows it, rather than maintaining a second copy of the same SSH or Evonet details.
 
 ### Deleting a Portal
 

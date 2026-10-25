@@ -154,6 +154,39 @@ The Vault Janitor — Evonic's background cleanup service — receives schedulin
 
 Task state changes are streamed live to the UI. When an agent transitions a task (e.g., starting work or completing it), the session state panel updates immediately so you can follow along in real time.
 
+## Runtime (v1.5.6)
+
+*Updated in v1.5.6.*
+
+The agent runtime and the session state panel received a set of improvements that make long sessions more predictable and easier to follow.
+
+### Request Budget Preflight
+
+Before each LLM request is sent, the runtime **plans the request against the model's context budget**. This preflight checks whether the planned payload (messages, tools, and any required tool choice) fits within the model's context window with a safety margin.
+
+- **`enforced` mode (default)** — if a request can't be reduced to fit the budget, the turn fails with a clear message ("The current request exceeds this model's safe context budget and cannot be reduced without removing required context") instead of a cryptic provider error.
+- **`shadow` / `canary` modes** — the budget is computed and reported, but not enforced. Useful for observing headroom before turning enforcement on.
+- **`off`** — preflight is disabled.
+
+The mode is controlled by the `REQUEST_BUDGET_MODE` environment variable (`off`, `shadow`, `canary`, or `enforced`), and the safety margin by `REQUEST_BUDGET_SAFETY_MARGIN` (default 512 tokens).
+
+### Active Monitors in the State Panel
+
+The session state panel now lists the session's **active monitors** — the background conditions the runtime is watching (for example, a process or a shell predicate). A **Monitors** row shows the count of active monitors, and clicking it opens a detail modal for each one.
+
+### Rendered Markdown Plan Modal
+
+The plan file now opens in a **modal** instead of being shown as raw text in the panel:
+
+- **Preview tab** — the plan rendered as Markdown, so it's readable at a glance.
+- **Edit tab** — an editable view, so you can tweak the plan directly without leaving the chat.
+
+This makes it easier to read and adjust the agent's plan mid-session.
+
+**Example:**
+
+You're watching a long-running task and want to nudge the agent. Open the plan from the state panel, switch to the Edit tab, add a note about a constraint you just discovered, and save — the agent picks it up on its next turn.
+
 ## Configuration
 
 The agent mode can be influenced by:
