@@ -16,6 +16,10 @@ HMADS uses a **scoring-based** approach — instead of simple allow/block, it ev
 | `requires_approval` | 8–14 | Halt, request user confirmation |
 | `dangerous` | 15+ | Reject immediately (no override) |
 
+:::note[Optional second opinion]
+HMADS can run alone, or behind [DMSS](/security/dmss) — a decision model that reviews `bash` and `runpy` commands first. In DMSS enforce mode, HMADS becomes the fallback and only acts as a floor when you enable it.
+:::
+
 ---
 
 ## Layer 1: Pattern Matching
@@ -170,13 +174,26 @@ The HMADS patterns for SQLite are tuned to stay **within the `requires_approval`
 
 ## Root Filesystem Scan Guard
 
-*Introduced in v1.3.0.*
+*Introduced in v1.3.0; auto-rejection added in v1.6.0.*
 
-On top of the 3-layer HMADS check, `bash` runs a dedicated **performance guard** for root filesystem scans. A command like `find /` or `tree /` walks the entire filesystem from the root, which is usually slow and often a mistake — so it prompts for approval rather than running silently.
+On top of the 3-layer HMADS check, `bash` runs a dedicated **performance guard** for root filesystem scans. A command like `find /` or `tree /` walks the entire filesystem from the root, which is usually slow and often a mistake.
 
-- **Patterns** — `\bfind /` and `\btree /` (each weight 8 → `requires_approval`).
-- **Always prompts** — unlike most HMADS checks, the root-scan guard runs **regardless of** `is_super` or `safety_checker_enabled`, so even super agents get prompted for a full root scan.
-- **Performance, not trust** — this is a performance concern (a slow scan), not a security decision. The command is still allowed once approved.
+Since v1.6.0 the scan is **rejected outright** instead of prompting for approval. An approval dialog could stall a session for as long as nobody was watching, so the guard now returns an error immediately and tells the agent how to search more narrowly.
+
+- **Patterns** — `\bfind\s+/(?:\s|$)` and `\btree\s+/(?:\s|$)`.
+- **Rejected, not reviewed** — the result is `level: dangerous` with `requires_approval: False`, so no approval prompt is ever shown.
+- **Always applies** — unlike most HMADS checks, the guard runs **regardless of** `is_super` or `safety_checker_enabled`, so even super agents are blocked.
+- **Helpful refusal** — the error suggests scoping the search to a directory (`/etc`, `$HOME`, `/var/log`), limiting depth (`find /etc -maxdepth 3`), or using `which`, `command -v`, or `locate`.
+- **One exception** — a script a human already approved re-runs with `_skip_safety`, so an approved script is not blocked mid-execution.
+
+**Example refusal:**
+
+```
+REJECTED: Root filesystem scan (`find /`, `tree /`) is not allowed —
+it walks the entire filesystem and can stall the turn.
+Do NOT retry it, it will be rejected again.
+...
+```
 
 ### Toggling the Guard
 

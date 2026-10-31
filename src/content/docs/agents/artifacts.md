@@ -83,7 +83,7 @@ read_file(file_path="/_self/artifacts/report.md")
 bash(script="ls /_self/artifacts/")
 ```
 
-This works from any execution environment: local, Docker sandbox, SSH workplace, or Evonet-connected device. See the [\_/self/ Virtual Path](/agents/tools#the-self-virtual-path) section in the Tools page for details.
+This works from any execution environment: local, Docker sandbox, SSH workplace, or Evonet-connected device. See the [\_/self/ Virtual Path](/agents/tools#the-_self-virtual-path) section in the Tools page for details.
 
 ---
 

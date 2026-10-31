@@ -36,7 +36,7 @@ evonic model get 603b799f-c203-44ad-871a-0bb7394f0aa3
 ```
 ID:          603b799f-c203-44ad-871a-0bb7394f0aa3
 Name:        Kimi-K2-Thinking
-Type:        remote
+Type:        llm
 Provider:    openrouter
 Model Name:  moonshotai/kimi-k2-thinking
 Base URL:    https://openrouter.ai/api/v1
@@ -48,6 +48,8 @@ Thinking:    yes
 Enabled:     yes
 Default:     no
 ```
+
+`Type` is `llm` or `decision`. Since v1.6.0, `remote` and `local` are no longer model types — that distinction belongs to the provider. See [Model Types](/system/models#model-types-llm-or-decision).
 
 ## `evonic model add <model_id>`
 

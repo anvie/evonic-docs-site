@@ -25,6 +25,44 @@ Models are managed via:
 
 Each model has a provider (e.g., `openai`, `anthropic`, `llama.cpp`), a base URL, API key, and configuration options like max tokens, timeout, and temperature.
 
+## Model Types: LLM or Decision
+
+*Introduced in v1.6.0.*
+
+Every model has a **Type**:
+
+| Type | What it is for | Where it appears |
+|---|---|---|
+| **LLM** | Chat. Normal conversation, tool use, sub-agents, everything an agent does. | Agent model pickers, the chat model switcher, the global default model |
+| **Decision** | Structured decisions for Decision Profiles and [DMSS](/security/dmss). | Only Decision Profiles and the DMSS model picker |
+
+A model is one or the other — never both.
+
+:::note[Replaces two older fields]
+The **Type** field replaces the descriptive Remote/Local field and the separate "Decision Models capability" checkbox. If you are looking for "Local" and "Remote", that information now lives in the provider, not the model.
+:::
+
+Decision models are hidden from agent and chat model pickers, so you can't accidentally chat with a model that only answers structured decision schemas. A decision model also cannot be the global default chat model.
+
+### What happens on upgrade
+
+Upgrading to v1.6.0 rewrites model types once:
+
+- A model that advertised decision support becomes a **Decision** model.
+- If agents also used that same model for chat, it stays an **LLM**, and a **decision copy** takes over its Decision Profile references — so profiles keep working and chat keeps working.
+- Older rows that stored `remote` or `local` in the type column are read as **LLM**.
+
+Nothing needs to be re-created by hand. Open **System › Models** after upgrading to see the resulting types.
+
+### Creating a decision model
+
+1. Go to **System › Models** and add a model as usual.
+2. Set **Type** to **Decision**.
+3. Point it at a provider that supports the decision protocol (SystemOne, or the built-in LiquidAI d1-3B model).
+4. Save, then select it in a Decision Profile or in [DMSS](/security/dmss).
+
+**Example:** keep `kimi-k2` as an **LLM** for agent chat, and add the built-in LiquidAI d1-3B model as a **Decision** model for command safety. Both can live in the same installation.
+
 ## Model Management
 
 *Redesigned in v1.5.6.*
@@ -34,6 +72,7 @@ The Models page (`/system/models`) now presents each model as a **card** with a 
 - **Endpoint ping** — each model card has a one-click ping (bolt icon) that sends a short prompt through the model and reports whether it answers, with latency. A quick way to check that a provider endpoint is actually reachable before you rely on it.
 - **Provider deletion** — delete a provider together with all of its models. You see an impact preview (which models will be deleted) before confirming, and deletion is blocked while the provider still holds the global default model.
 - **AI brand marks** — the model switcher and the Models page show provider brand marks (Claude, OpenAI, Gemini, DeepSeek, Qwen, Mistral, Meta, Grok, and more), so you can tell at a glance which model you're talking to.
+- **Click to edit** *(v1.6.0)* — clicking a model card opens its edit dialog directly, so you no longer have to hunt for the edit button.
 
 ### Per-Session Model Switching
 

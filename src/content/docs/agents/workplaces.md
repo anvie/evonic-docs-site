@@ -21,7 +21,7 @@ Without a Workplace, each agent gets an isolated local workspace directory. This
 
 Workplaces solve this:
 
-- **Remote workplaces** auto-connect via SSH using stored credentials. No more `sshc` calls to set up a session manually.
+- **Remote workplaces** auto-connect via SSH using stored credentials, so the agent never has to set up an SSH session by hand.
 - **Tunnel workplaces** use [Evonet](/evonet), a lightweight Go binary, to create a persistent outbound tunnel. The device can be behind NAT, a home router, or a corporate firewall with no configuration needed.
 - **Shared workplaces** allow multiple agents to operate in the same environment (useful for team workflows).
 
@@ -180,6 +180,34 @@ write_file(file_path="/_self/kb/notes.md", content="...")
 ```
 
 The `/_self/` prefix works with all file tools and resolves on the Evonic host regardless of where the agent's workspace is located. See [Tools: The `/_self/` Virtual Path](/agents/tools#the-_self-virtual-path) for details.
+
+## Migrating from the `sshc` tool
+
+*Changed in v1.6.0.*
+
+The `sshc` tool — and the per-session SSH connection backend behind it — has been removed. Run remote commands through a workplace instead: the connection is configured once, and the regular `bash` tool executes there.
+
+| Before (`sshc`) | Now |
+|---|---|
+| `sshc(host=..., user=..., command=...)` for each command | Create a **Remote** workplace with the host and credentials |
+| Credentials passed in the tool call | Credentials stored in the workplace (or an SSH key in `keys/`) |
+| Session set up ad hoc per call | The workplace connects automatically on use |
+| Output returned from `sshc` | `bash(command="...")` runs on the workplace and returns `stdout`, `stderr`, and `exit_code` |
+
+**Migration steps:**
+
+1. Open `/workplaces` and create a **Remote** workplace with the same host, user, and key you used with `sshc`.
+2. Assign it to the agent (or let the agent switch to it with `switch_workplace`).
+3. Replace `sshc(...)` calls in prompts and skills with `bash(command="...")`.
+4. Remove any `sshc` entries from tool assignments — the tool no longer exists.
+
+```bash
+# Before
+sshc(host="build-01", user="deploy", command="systemctl status nginx")
+
+# After — with the build-01 Remote workplace active
+bash(command="systemctl status nginx")
+```
 
 ## See Also
 

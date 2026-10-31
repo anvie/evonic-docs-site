@@ -144,6 +144,28 @@ kanban_get_comments(task_id: "183", limit: 5, offset: 0)
 kanban_get_comments(task_id: "183", limit: 5, offset: 5)
 ```
 
+## Table View
+
+*Introduced in v1.6.0.*
+
+Cards are great for a dozen tasks and painful for three hundred. The board header now has a view switch: **Board** for the familiar columns, **Table** for a dense grid of every task.
+
+The table is built for bulk work:
+
+- **Column filters** — filter by **Status** (including an *Active (no archived)* default), **Priority**, **Assignee**, and **Dependencies** (`Blocked (deps unmet)` or `No unmet deps`). **Reset filters** clears them all.
+- **Pagination** — choose 10, 25, 50, or 100 rows per page, with a summary line above the pager.
+- **Selection** — click a row's checkbox; hold <kbd>Shift</kbd> to select a range, <kbd>Ctrl</kbd>/<kbd>⌘</kbd> to add one row, or drag across checkboxes to toggle several.
+- **Bulk actions** — with rows selected, a bar appears above the table: **Move to** (Todo / In Progress / Done), **Priority**, **Assign to**, **Archive**, **Unarchive**, and **Delete**. Selection survives pagination — the bar tells you how many selected tasks sit on other pages.
+
+**Example:** reviewing a backlog after a sprint.
+
+1. Switch to **Table**.
+2. Set **Status: Active (no archived)** and **Dependencies: Blocked (deps unmet)**.
+3. Tick the tasks that are stuck, then use **Assign to** to hand them to one agent.
+4. Clear the filters and switch back to **Board** to watch the cards move.
+
+Nothing is table-only: creating, editing, and commenting on a task works the same in both views.
+
 ## Attachments
 
 *Introduced in v1.1.2.*

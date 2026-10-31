@@ -74,6 +74,34 @@ Previously, mode, plan file, and task tracking were part of the **Agent State** 
 
 This change replaced the old "Session Recap" panel with the more informative **Session State** panel.
 
+### Updating the Task List
+
+Agents manage their task list with the `update_tasks` tool. Each call takes an `action`:
+
+| Action | What it does |
+|---|---|
+| `set` | Replace the entire task list with a structured `tasks` array |
+| `add` | Add one atomic task |
+| `in_progress` | Make one task the sole active task; every other active task returns to pending |
+| `done` | Mark one task complete |
+| `replace` | Change a task's text while keeping its ID and status |
+| `update` | *New in v1.6.0.* Change only specific tasks — pass `tasks` items with `id` plus a new `text` and/or `status`; unlisted tasks are left untouched |
+| `remove` | Delete a task |
+
+`update` is the surgical option. Before v1.6.0, changing one task's wording meant replaying the whole list with `set`. Now the agent only sends what changed:
+
+```json
+{
+  "action": "update",
+  "tasks": [
+    { "id": 3, "status": "done" },
+    { "id": 5, "text": "Write the migration script" }
+  ]
+}
+```
+
+Tasks keep their IDs across updates, so statuses and references don't drift.
+
 ## Plan File
 
 When an agent is in Plan mode, it can create a **plan file** that persists across conversation turns. The plan file is stored in the agent's workspace directory and survives summarization.

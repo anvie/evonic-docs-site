@@ -20,7 +20,7 @@ Evonic is an **agentic AI platform** built for open models. It lets you create A
 - **Agent platform** — design and deploy AI agents with custom models, tools, and knowledge bases
 - **Multi-channel** — connect agents to Telegram, WhatsApp (multi-agent, shared channels, concurrent numbers), Discord, and the web
 - **Tool system** — extend agent capabilities with tools, skills, plugins, and MCP servers
-- **CMP & ATG** — Context Memory Protocol and Atomic Task Graph for structured reasoning and reliable task execution
+- **CMP** — Context Memory Protocol for structured reasoning and reliable task execution
 - **Evaluation** — test and benchmark agent performance with expanded cross-session metrics and automated regression
 - **Isolated sandbox** — safe execution in Docker or high-performance Bubblewrap (`bwrap`) environments
 - **Evonet** — mesh network for multi-device agent deployment
@@ -45,7 +45,6 @@ Evonic v1.0.0 is a **stable release** that brings major architectural upgrades a
 ### Core Architecture
 
 - **CMP (Context Memory Protocol)** — standardized agent memory management across all LLM providers, with three-tier memory: working, episodic, and semantic.
-- **ATG (Atomic Task Graph)** — complex goals are now decomposed into a DAG of atomic tasks with dependency tracking and parallel execution.
 - **Bubblewrap Sandbox** — the new `bwrap` workplace type offers near-instant, hardware-isolated sandboxes with zero daemon overhead.
 - **Plugin Lifecycle System** — formalized `init → activate → active → deactivate` lifecycle for reliable plugin management.
 

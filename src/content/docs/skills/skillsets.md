@@ -52,7 +52,7 @@ The platform ships with the following built-in skillsets:
 
 | Field | Value |
 |-------|-------|
-| **Tools** | `bash`, `read_file`, `write_file`, `str_replace`, `patch`, `runpy`, `calculator`, `sshc` (8 tools) |
+| **Tools** | `bash`, `read_file`, `write_file`, `str_replace`, `patch`, `runpy`, `calculator` (7 tools) |
 | **Skills** | None |
 
 ### pentester
@@ -79,7 +79,7 @@ The platform ships with the following built-in skillsets:
 
 | Field | Value |
 |-------|-------|
-| **Tools** | `bash`, `read_file`, `write_file`, `str_replace`, `patch`, `runpy`, `calculator`, `sshc` (8 tools) |
+| **Tools** | `bash`, `read_file`, `write_file`, `str_replace`, `patch`, `runpy`, `calculator` (7 tools) |
 | **Skills** | None |
 
 ### customer_service

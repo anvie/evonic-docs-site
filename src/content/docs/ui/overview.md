@@ -95,6 +95,41 @@ The chat, the session state panel, and the settings pages received a set of usab
 - **Cleaner combobox focus ring** — comboboxes have a cleaner focus ring.
 - **Real `Other` input** — the `Other` answer in `ask_user` cards now uses a real input field.
 
+## Questions, Approvals & Browser Notifications (v1.6.0)
+
+An agent can stop and ask you a question, and a tool call can wait for your approval. Both are now visible even when Evonic is in a background tab.
+
+### Answering a question
+
+When an agent asks something, a question card appears above the chat input. Pick an option, tick several and press **Done** for a multi-select question, or choose **Other** and type your own answer. On Telegram the same question arrives as a message with inline-keyboard buttons.
+
+There is no tool to assign: every agent has an **Ask User Questions** toggle under *Tools & capabilities*, on by default. Turning it off removes the tool and closes any question that is still open. See [`ask_user_question`](/agents/tools#ask_user_question).
+
+### Turning on browser notifications
+
+Evonic can raise a desktop notification when an agent asks a question or a tool call needs approval, so you don't have to keep watching a tab.
+
+1. Wait for a question card or an approval modal to appear.
+2. Click **Notify me in this browser** on it.
+3. Allow notifications when the browser asks.
+
+The button only shows while permission has not been requested yet. Evonic then keeps exactly one tab per browser listening for questions and approvals, even while that tab is hidden.
+
+:::note[Requirements]
+Browser notifications need a **secure context** — HTTPS or `localhost` — and at least one open Evonic tab. On a plain-HTTP deployment on another host, the browser will not deliver them.
+:::
+
+### When a notification is silenced
+
+Notifications are deliberately quiet when you are already looking at the answer:
+
+| Event | Notifies unless… |
+|---|---|
+| An agent asks a question | a focused Evonic tab is already showing that agent's chat |
+| A command needs approval | any Evonic tab is focused (the approval modal is on screen) |
+
+Each question or approval also notifies **at most once per browser**, and its notification closes automatically once it is resolved. A tab that stops reporting (closed or frozen) stops counting as focused after about 45 seconds, so a stale tab can't mute your notifications forever.
+
 ## Quick Reference: UI Shortcuts
 
 | Shortcut | Action |

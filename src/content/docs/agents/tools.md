@@ -59,6 +59,59 @@ Both tools return structured output with:
 
 ## Additional Built-in Tools
 
+### `ask_user_question`
+
+*Built in since v1.6.0 — previously a plugin.*
+
+Lets an agent pause mid-turn and ask you up to four multiple-choice questions. Each question can offer 2–4 options, and you can always answer in your own words through **Other**.
+
+```python
+ask_user_question(
+    questions=[{
+        "question": "Which database should I use?",
+        "header": "Database",
+        "multiSelect": False,
+        "options": [
+            {"label": "SQLite", "description": "Zero setup, single file"},
+            {"label": "PostgreSQL", "description": "Shared, production-grade"},
+        ],
+    }]
+)
+```
+
+**Where the answers come from:**
+
+| Channel | How you answer |
+|---|---|
+| **Web chat** | A question card appears above the chat input — click an option, tick several and press **Done** for multi-select, or type your own answer |
+| **Telegram** | Each question arrives as a message with inline-keyboard buttons: tap an option, tick several and tap **Done**, tap **Cancel**, or type a message to answer in your own words |
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `questions` | array | 1–4 questions. Each has `question`, `header` (max 12 chars), `multiSelect`, and 2–4 `options` with `label` and optional `description` |
+
+**Configuration:** every agent has an **Ask User Questions** toggle under *Tools & capabilities*, on by default. You do **not** assign this tool by hand — it follows the toggle, and unchecking it removes the tool from the agent.
+
+:::note
+Turning the toggle off closes any question that is still open. The old `ask_user` plugin's tool assignments and enable setting are removed on upgrade, and a leftover `plugins/ask_user/` folder is ignored.
+:::
+
+Question status comes back as one of `answered`, `dismissed` (the user closed the card), or `cancelled`. If it returns `unavailable`, the channel cannot ask questions — the agent should just ask in plain text.
+
+#### Limiting a tool to specific channels
+
+A tool definition can declare `"channels": ["web", "telegram"]` to be listed **only** on those channel types (`"web"` means the web chat). This is how Evonic keeps a tool that needs rich UI from appearing where it cannot work.
+
+```json
+{
+  "id": "my_rich_tool",
+  "channels": ["web", "telegram"],
+  "function": { "name": "my_rich_tool", "description": "..." }
+}
+```
+
 ### `save_artifact`
 
 *Introduced in v0.5.0.*

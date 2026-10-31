@@ -148,14 +148,18 @@ The convention is `window.tabInit_<slug>()` — the platform calls it when the t
 
 Plugin REST endpoints now support **discovery** (the platform can enumerate the endpoints a plugin exposes) and **pagination** for large result sets. When an endpoint returns a list, accept `limit` / `offset` (or equivalent) parameters so clients can page through results instead of loading everything at once.
 
-## Multiple-Choice Prompts (`ask_user`)
+## Multiple-Choice Prompts (`ask_user_question`)
 
-*Introduced in v1.3.0.*
+*Introduced in v1.3.0 as a plugin; built into Evonic since v1.6.0.*
 
-The built-in `ask_user` plugin lets an agent **pause mid-turn** and ask the user one or more multiple-choice questions. Each question renders as an interactive card in the web chat, and the user's selection is returned to the agent as the tool result.
+The `ask_user_question` tool lets an agent **pause mid-turn** and ask the user one or more multiple-choice questions. Each question renders as an interactive card in the web chat (or as inline buttons on Telegram), and the answer is returned to the agent as the tool result.
 
 - Each question needs **2–4 options** (minimum 2, maximum 4), and every option must have a `label`.
 - An option can be marked `recommended` to suggest an answer.
 - The agent waits for the answer before continuing its turn.
 
-This is ideal for clarifying ambiguous requests without flooding the user with free-text follow-ups.
+It is no longer a plugin: every agent has an **Ask User Questions** toggle under *Tools & capabilities* (on by default) and needs no tool assignment. A leftover `plugins/ask_user/` folder is ignored after upgrading.
+
+Plugin and tool definitions can declare `"channels": ["web", "telegram"]` to be listed only on those channel types — useful when a tool depends on the rich question UI.
+
+See [`ask_user_question`](/agents/tools#ask_user_question) for parameters and per-channel behaviour.

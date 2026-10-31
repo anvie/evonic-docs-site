@@ -6,6 +6,10 @@ export default defineConfig({
 	server: {
 		allowedHosts: true,
 	},
+  // The Atomic Task Graph (ATG) was removed in v1.6.0; keep old links working.
+  redirects: {
+    '/system/memory/atg/': '/system/memory/cmp/',
+  },
   integrations: [
     starlight({
       title: 'Evonic',
@@ -55,7 +59,6 @@ export default defineConfig({
             { label: 'Models', slug: 'system/models' },
             { label: 'Events', slug: 'system/events' },
             { label: 'CMP (Context Memory)', slug: 'system/memory/cmp' },
-            { label: 'ATG (Task Graph)', slug: 'system/memory/atg' },
             { label: 'MCP Client', slug: 'system/mcp/integration' },
           ],
         },

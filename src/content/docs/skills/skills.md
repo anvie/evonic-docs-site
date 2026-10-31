@@ -114,7 +114,7 @@ def execute(agent: dict, args: dict) -> dict:
     return {"result": "value"}
 ```
 
-The `agent` and `args` parameters follow the same contract as [regular tool backends](/development/creating-tools#requirements). Skill tool files can import from sibling modules in the `backend/` directory (e.g., a shared `cli_helper.py`).
+The `agent` and `args` parameters follow the same contract as [regular tool backends](/development/creating-tools#tool-structure). Skill tool files can import from sibling modules in the `backend/` directory (e.g., a shared `cli_helper.py`).
 
 ## Installing Skills
 
