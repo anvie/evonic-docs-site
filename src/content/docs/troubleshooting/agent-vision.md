@@ -102,6 +102,32 @@ Use this checklist to make sure nothing is missed:
 
 ---
 
+## How a Vision-Capable Model Receives Images
+
+When the agent's model has **Vision Supported** enabled **and** the agent has **Vision enabled** switched on, Evonic attaches recent images to the request itself: the image is sent to the model as an `image_url` content part on a copy of the conversation. The model therefore sees the picture directly, in the same turn, and the attachment note does not ask it to call `describe_image`. The stored conversation keeps only the textual attachment note (`Attachment ID: N`), so history stays text-only.
+
+Both switches must be on. Native image input is used only when:
+
+- the selected model's **Vision Supported** flag is set in **System › Models**, and
+- the agent's **Vision enabled** setting is on in the agent detail page, and
+- the image belongs to one of the last three user turns.
+
+The `describe_image` tool is the fallback for every other case:
+
+- **The model does not support vision.** The image bytes are never sent, the attachment note asks the model to call `describe_image`, and that tool forwards the image to a vision model and returns a text description.
+- **The agent's Vision enabled setting is off.** Native image input is skipped even when the model could see images, so no image part is attached. Any image part that still reaches the request is replaced by a note telling the model that image processing is disabled for this agent. `describe_image` is gated by the same flag and returns an error.
+- **The image is older than the last three user turns.** Only recent images are attached inline; call `describe_image` again for an older attachment.
+
+If a vision-capable model answers as if it never received the image, check both **Vision Supported** on the model and **Vision enabled** on the agent — native attachment needs both.
+
+### The `image_input_mode` agent variable
+
+Earlier releases also honoured an `image_input_mode` agent variable that could force the `describe_image` path (`image_input_mode=describe`) even for a vision-capable model. That variable was never exposed in the Variables editor and has been removed: the model's **Vision Supported** flag together with the agent's **Vision enabled** setting now fully decide how an image is delivered. A leftover `image_input_mode` entry in an agent's variables has no effect.
+
+If a vision-capable model reports that it cannot see an image, make sure the agent's **Vision enabled** setting is on; that flag is checked before any image is attached.
+
+---
+
 ## Vision Pipeline Fallbacks
 
 *Introduced in v1.1.0.*
