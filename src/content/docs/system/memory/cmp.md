@@ -1,11 +1,11 @@
 ---
-title: Context Memory Protocol (CMP)
+title: Context Memory Path (CMP)
 description: Understanding the standardization of agent memory state.
 ---
 
-# Context Memory Protocol (CMP)
+# Context Memory Path (CMP)
 
-The **Context Memory Protocol (CMP)** is Evonic's standardized approach to managing agent memory. It ensures that no matter which LLM provider is used, the way context is injected, stored, and recalled remains consistent.
+The **Context Memory Path (CMP)** is Evonic's standardized approach to managing agent memory. It ensures that no matter which LLM provider is used, the way context is injected, stored, and recalled remains consistent.
 
 ## Why CMP?
 

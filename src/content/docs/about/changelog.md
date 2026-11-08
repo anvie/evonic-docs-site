@@ -256,7 +256,7 @@ v1.6.0 removes `evonic backup --encrypt`, the Atomic Task Graph (ATG), and the `
 
 ### Core Architecture (4)
 
-- **CMP (Context Memory Protocol)** — a standardized protocol for managing agent memory state, enabling consistent context injection and structured recall across diverse LLM providers.
+- **CMP (Context Memory Path)** — a standardized protocol for managing agent memory state, enabling consistent context injection and structured recall across diverse LLM providers.
 - **ATG (Atomic Task Graph)** — a new way to represent complex goals as a DAG of atomic tasks, allowing agents to reason about dependencies, parallelize execution, and track granular progress.
 - **Bubblewrap Sandbox** — integrated `bwrap` (Bubblewrap) as a first-class workplace type, providing high-performance, hardware-isolated sandboxes with precise filesystem and network controls.
 - **Plugin Lifecycle System** — a formalized system for plugin initialization, runtime management, and graceful shutdown, ensuring stability and resource cleanup.
