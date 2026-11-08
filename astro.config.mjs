@@ -57,6 +57,7 @@ export default defineConfig({
             { label: 'Plugins', slug: 'system/plugins' },
             { label: 'Plugin Lifecycle', slug: 'system/plugins-lifecycle' },
             { label: 'Models', slug: 'system/models' },
+            { label: 'Decision Models', slug: 'system/decision-models' },
             { label: 'Events', slug: 'system/events' },
             { label: 'CMP (Context Memory)', slug: 'system/memory/cmp' },
             { label: 'MCP Client', slug: 'system/mcp/integration' },
