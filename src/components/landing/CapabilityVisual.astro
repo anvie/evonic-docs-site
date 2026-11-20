@@ -6,271 +6,88 @@ interface Props {
 const { kind } = Astro.props;
 ---
 
+<!-- Engraved in ink on the page's parchment: Evomem as scrolls and tomes bound to an open book, Evonet as a laptop, a
+     server and an edge chip joined to a central linked medallion by routes (the maroon signal still runs along the main one). -->
 <svg class="capability-art" viewBox="0 0 500 270" fill="none" aria-hidden="true">
 	<defs>
-		<radialGradient id={`${kind}-halo`}>
-			<stop stop-color="#76adff" stop-opacity="0.16" />
-			<stop offset="1" stop-color="#76adff" stop-opacity="0" />
-		</radialGradient>
-		<linearGradient id={`${kind}-glass`} x1="0" y1="0" x2="1" y2="1">
-			<stop stop-color="#2b4260" /><stop offset="1" stop-color="#111c2d" />
-		</linearGradient>
-		<linearGradient id={`${kind}-edge`} x1="0" y1="0" x2="1" y2="1">
-			<stop stop-color="#c0ddff" stop-opacity="0.85" /><stop
-				offset="1"
-				stop-color="#6791cc"
-				stop-opacity="0.2"
-			/>
-		</linearGradient>
-		<linearGradient id={`${kind}-beam`}>
-			<stop stop-color="#729edb" stop-opacity="0.15" /><stop
-				offset="0.5"
-				stop-color="#afd4ff"
-				stop-opacity="0.7"
-			/><stop offset="1" stop-color="#729edb" stop-opacity="0.15" />
-		</linearGradient>
-		<filter id={`${kind}-glow`} x="-100%" y="-100%" width="300%" height="300%">
-			<feGaussianBlur stdDeviation="3" />
-		</filter>
+		<pattern id={`${kind}-hatch`} width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+			<line x1="0" y1="0" x2="0" y2="4" stroke="#6e4c26" stroke-opacity="0.55" stroke-width="0.8" />
+		</pattern>
 	</defs>
-	<ellipse cx="250" cy="140" rx="210" ry="122" fill={`url(#${kind}-halo)`} />
 	{
 		kind === 'memory' ? (
-			<>
-				<ellipse
-					cx="250"
-					cy="151"
-					rx="154"
-					ry="69"
-					stroke="#7eabeb"
-					stroke-opacity="0.09"
-					transform="rotate(-13 250 151)"
-				/>
-				<g stroke={`url(#${kind}-beam)`} stroke-width="1.4">
-					<path d="M124 102C171 102 167 128 211 128M371 95C325 95 341 134 292 134M153 196C206 196 187 168 226 159M363 188C315 188 324 164 282 157" />
-				</g>
-				<g transform="translate(63 51) rotate(-11 35 43)">
-					<rect
-						x="7"
-						y="7"
-						width="63"
-						height="80"
-						rx="10"
-						fill="#111d2c"
-						stroke="#6d94c3"
-						stroke-opacity="0.23"
-					/>
-					<rect
-						width="63"
-						height="80"
-						rx="10"
-						fill={`url(#${kind}-glass)`}
-						stroke={`url(#${kind}-edge)`}
-					/>
-					<path
-						d="M15 20h17M15 34h33M15 44h33M15 54h22"
-						stroke="#90b3df"
-						stroke-opacity="0.6"
-						stroke-width="2"
-						stroke-linecap="round"
-					/>
-				</g>
-				<g transform="translate(355 55) rotate(10 29 35)">
-					<rect
-						width="58"
-						height="72"
-						rx="10"
-						fill={`url(#${kind}-glass)`}
-						stroke="#7fa6dc"
-						stroke-opacity="0.38"
-					/>
-					<path
-						d="M14 18h15M14 32h30M14 42h30M14 52h20"
-						stroke="#8bafd9"
-						stroke-opacity="0.5"
-						stroke-width="2"
-						stroke-linecap="round"
-					/>
-				</g>
-				<g transform="translate(113 176) rotate(8 24 24)">
-					<rect width="48" height="48" rx="10" fill="#18273b" stroke="#7fa6dc" stroke-opacity="0.35" />
-					<path
-						d="M13 17h22M13 25h22M13 33h13"
-						stroke="#90b3df"
-						stroke-opacity="0.55"
-						stroke-width="2"
-						stroke-linecap="round"
-					/>
-				</g>
-				<g transform="translate(351 169) rotate(-8 23 23)">
-					<rect width="46" height="46" rx="10" fill="#18273b" stroke="#7fa6dc" stroke-opacity="0.3" />
-					<path
-						d="m14 18 9-5 9 5-9 5-9-5Zm0 8 9 5 9-5"
-						stroke="#a5c8f5"
-						stroke-opacity="0.7"
-						stroke-width="1.5"
-						stroke-linejoin="round"
-					/>
-				</g>
-				<path
-					d="m250 114 72 40-72 42-72-42 72-40Z"
-					fill="#122034"
-					stroke="#729edb"
-					stroke-opacity="0.4"
-				/>
-				<path
-					d="m178 145 72 41 72-41"
-					stroke="#a4d0ff"
-					stroke-opacity="0.4"
-					filter={`url(#${kind}-glow)`}
-					stroke-width="5"
-				/>
-				<path
-					d="m250 94 72 40-72 42-72-42 72-40Z"
-					fill={`url(#${kind}-glass)`}
-					stroke={`url(#${kind}-edge)`}
-				/>
-				<path
-					d="m250 73 72 40-72 42-72-42 72-40Z"
-					fill={`url(#${kind}-glass)`}
-					stroke={`url(#${kind}-edge)`}
-					stroke-width="1.5"
-				/>
-				<path
-					d="m250 96 29 16-29 17-29-17 29-16Z"
-					fill="#a8d2ff"
-					fill-opacity="0.1"
-					stroke="#b9d9ff"
-					stroke-opacity="0.75"
-				/>
-				<path d="M250 129v26" stroke="#9fcaff" stroke-opacity="0.35" />
-				<g fill="#c5e1ff">
-					<circle cx="163" cy="112" r="2.5" /><circle cx="329" cy="122" r="2.5" /><circle
-						cx="196"
-						cy="181"
-						r="2"
-					/>
-				</g>
-			</>
+			<Fragment set:html={`<ellipse cx="250" cy="142" rx="196" ry="100" stroke="#6e4c26" stroke-opacity=".35" stroke-dasharray="2 5"/>
+<ellipse cx="250" cy="142" rx="150" ry="74" stroke="#6e4c26" stroke-opacity=".2"/>
+<g class="flow" stroke="#6e4c26" stroke-opacity=".7" stroke-width="1.1" fill="none">
+  <path pathLength="1" d="M140,92 C166,96 172,122 186,128"/><path pathLength="1" d="M362,86 C338,92 328,118 314,126"/>
+  <path pathLength="1" d="M150,196 C168,188 176,172 190,166"/><path pathLength="1" d="M356,192 C340,184 330,172 312,166"/>
+</g><path class="signal" style="animation-delay:-0.0s" d="M140,92 C166,96 172,122 186,128" stroke="#8a231d" stroke-width="3" pathLength="100"/><path class="signal" style="animation-delay:-0.8s" d="M362,86 C338,92 328,118 314,126" stroke="#8a231d" stroke-width="3" pathLength="100"/><path class="signal" style="animation-delay:-1.6s" d="M150,196 C168,188 176,172 190,166" stroke="#8a231d" stroke-width="3" pathLength="100"/><path class="signal" style="animation-delay:-2.4s" d="M356,192 C340,184 330,172 312,166" stroke="#8a231d" stroke-width="3" pathLength="100"/>
+
+<g transform="translate(72 62) rotate(-9 35.0 20.0)">
+  <rect x="0" y="2" width="70" height="36" fill="#efe1b9" stroke="#3d2716" stroke-width="1.2"/>
+  <rect x="0" y="2" width="70" height="36" fill="url(#memory-hatch)" opacity="0.35"/>
+  <rect x="-5" y="0" width="7" height="40" rx="3.5" fill="#e4d0a0" stroke="#3d2716" stroke-width="1.2"/>
+  <rect x="68" y="0" width="7" height="40" rx="3.5" fill="#e4d0a0" stroke="#3d2716" stroke-width="1.2"/>
+  <path d="M8,10 L62,10" stroke="#6e4c26" stroke-opacity="0.55" stroke-width="1"/><path d="M8,17 L52,17" stroke="#6e4c26" stroke-opacity="0.55" stroke-width="1"/><path d="M8,24 L62,24" stroke="#6e4c26" stroke-opacity="0.55" stroke-width="1"/></g>
+<g transform="translate(364 54) rotate(8 36.0 21.0)">
+  <rect x="0" y="2" width="72" height="38" fill="#efe1b9" stroke="#3d2716" stroke-width="1.2"/>
+  <rect x="0" y="2" width="72" height="38" fill="url(#memory-hatch)" opacity="0.35"/>
+  <rect x="-5" y="0" width="7" height="42" rx="3.5" fill="#e4d0a0" stroke="#3d2716" stroke-width="1.2"/>
+  <rect x="70" y="0" width="7" height="42" rx="3.5" fill="#e4d0a0" stroke="#3d2716" stroke-width="1.2"/>
+  <path d="M8,10 L64,10" stroke="#6e4c26" stroke-opacity="0.55" stroke-width="1"/><path d="M8,17 L54,17" stroke="#6e4c26" stroke-opacity="0.55" stroke-width="1"/><path d="M8,24 L64,24" stroke="#6e4c26" stroke-opacity="0.55" stroke-width="1"/><path d="M8,31 L54,31" stroke="#6e4c26" stroke-opacity="0.55" stroke-width="1"/><circle cx="58" cy="31" r="5.5" fill="#8a231d" stroke="#3d2716" stroke-width=".8"/><path d="M58,28 L60.5,31 L58,34 L55.5,31 Z" fill="#efe1b9"/></g>
+<g transform="translate(84 180) rotate(-7 30 22)">
+  <rect x="0" y="0" width="60" height="44" fill="#8a231d" stroke="#3d2716" stroke-width="1.2"/>
+  <rect x="4" y="4" width="52" height="36" fill="none" stroke="#efe1b9" stroke-opacity="0.7" stroke-width="0.8"/>
+  <path d="M30,16 L36,22 L30,28 L24,22 Z" fill="#efe1b9" /><path d="M30,19 L33,22 L30,25 L27,22 Z" fill="#8a231d" />
+  <path d="M60,8 L66,8 L66,36 L60,36" fill="#e4d0a0" stroke="#3d2716" stroke-width="1"/>
+  <path d="M62,12 L66,12 M62,18 L66,18 M62,24 L66,24 M62,30 L66,30" stroke="#6e4c26" stroke-width=".7"/></g>
+<rect x="354" y="212" width="64" height="12" fill="#e4d0a0" stroke="#3d2716" stroke-width="1.1"/><path d="M360,212 L360,224 M412,212 L412,224" stroke="#3d2716" stroke-opacity=".6" stroke-width=".8"/><rect x="358" y="199" width="58" height="12" fill="#8a231d" stroke="#3d2716" stroke-width="1.1"/><path d="M364,199 L364,211 M410,199 L410,211" stroke="#efe1b9" stroke-opacity=".6" stroke-width=".8"/><rect x="354" y="186" width="62" height="12" fill="#e4d0a0" stroke="#3d2716" stroke-width="1.1"/><path d="M360,186 L360,198 M410,186 L410,198" stroke="#3d2716" stroke-opacity=".6" stroke-width=".8"/>
+<g>
+  <path d="M180,121 L180,180 C208,174 236,174 250,183 C264,174 292,174 320,180 L320,121 Z" fill="#8a231d" stroke="#3d2716" stroke-width="1.3"/>
+  <path d="M250,118 C231,109 206,110 186,116 L186,171 C206,165 231,165 250,174 Z" fill="#efe1b9" stroke="#3d2716" stroke-width="1.2"/>
+  <path d="M250,118 C269,109 294,110 314,116 L314,171 C294,165 269,165 250,174 Z" fill="#efe1b9" stroke="#3d2716" stroke-width="1.2"/>
+  <path d="M250,118 C269,109 294,110 314,116 L314,171 C294,165 269,165 250,174 Z" fill="url(#memory-hatch)" opacity=".25"/>
+  <path d="M196,127 C212,123 228,123 242,127" stroke="#6e4c26" stroke-opacity=".6" stroke-width="1"/><path d="M196,135 C212,131 228,131 242,135" stroke="#6e4c26" stroke-opacity=".6" stroke-width="1"/><path d="M196,143 C212,139 228,139 242,143" stroke="#6e4c26" stroke-opacity=".6" stroke-width="1"/><path d="M196,151 C212,147 228,147 242,151" stroke="#6e4c26" stroke-opacity=".6" stroke-width="1"/><path d="M196,159 C212,155 228,155 242,159" stroke="#6e4c26" stroke-opacity=".6" stroke-width="1"/>
+  <path d="M258,127 C272,123 288,123 304,127" stroke="#6e4c26" stroke-opacity=".6" stroke-width="1"/><path d="M258,135 C272,131 288,131 304,135" stroke="#6e4c26" stroke-opacity=".6" stroke-width="1"/><path d="M258,143 C272,139 288,139 304,143" stroke="#6e4c26" stroke-opacity=".6" stroke-width="1"/><path d="M258,151 C272,147 288,147 304,151" stroke="#6e4c26" stroke-opacity=".6" stroke-width="1"/><path d="M258,159 C272,155 288,155 304,159" stroke="#6e4c26" stroke-opacity=".6" stroke-width="1"/>
+  <path d="M250,118 L250,174" stroke="#3d2716" stroke-width="1.1"/>
+  <path d="M266,170 L266,196 L271,190 L276,196 L276,168" fill="#8a231d" stroke="#3d2716" stroke-width=".8"/>
+</g>
+<path d="M250,84 L253,95 L264,98 L253,101 L250,112 L247,101 L236,98 L247,95 Z" fill="#8a231d" opacity=".9"/>`} />
 		) : (
-			<>
-				<g stroke={`url(#${kind}-beam)`} stroke-width="1.6">
-					<path d="M106 162C167 162 167 132 250 132S329 94 394 94" />
-					<path d="M250 132C309 132 284 212 343 212" />
-				</g>
-				<path
-					class="signal"
-					d="M106 162C167 162 167 132 250 132S329 94 394 94"
-					stroke="#d0e8ff"
-					stroke-width="3"
-					stroke-linecap="round"
-					pathLength="100"
-				/>
-				<circle cx="250" cy="132" r="62" stroke="#8bb5f1" stroke-opacity="0.08" />
-				<circle
-					cx="250"
-					cy="132"
-					r="47"
-					fill={`url(#${kind}-glass)`}
-					stroke={`url(#${kind}-edge)`}
-					stroke-width="1.5"
-				/>
-				<circle
-					cx="250"
-					cy="132"
-					r="47"
-					stroke="#9fcaff"
-					stroke-opacity="0.3"
-					stroke-width="3"
-					filter={`url(#${kind}-glow)`}
-				/>
-				<path
-					d="m245 140-5 5a11 11 0 0 1-16-16l12-12a11 11 0 0 1 16 0m3 7 5-5a11 11 0 0 1 16 16l-12 12a11 11 0 0 1-16 0m-8-7 20-20"
-					stroke="#c5e1ff"
-					stroke-width="2.5"
-					stroke-linecap="round"
-				/>
-				<g transform="translate(39 116) rotate(-5 53 36)">
-					<rect
-						width="106"
-						height="71"
-						rx="8"
-						fill={`url(#${kind}-glass)`}
-						stroke={`url(#${kind}-edge)`}
-						stroke-width="1.5"
-					/>
-					<rect
-						x="8"
-						y="8"
-						width="90"
-						height="55"
-						rx="3"
-						fill="#0f1928"
-						stroke="#83ade4"
-						stroke-opacity="0.16"
-					/>
-					<path
-						d="m27 26 10 9-10 9m20 0h22"
-						stroke="#aed2ff"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-					/>
-					<path d="M-9 74h124l-8 7H-1l-8-7Z" fill="#23374f" stroke="#7ba6df" stroke-opacity="0.65" />
-				</g>
-				<g transform="translate(365 46) rotate(6 35 50)">
-					<rect
-						width="69"
-						height="106"
-						rx="11"
-						fill={`url(#${kind}-glass)`}
-						stroke={`url(#${kind}-edge)`}
-					/>
-					{[13, 40, 67].map((y) => (
-						<>
-							<rect
-								x="10"
-								y={y}
-								width="49"
-								height="20"
-								rx="4"
-								fill="#101c2d"
-								stroke="#719ad0"
-								stroke-opacity="0.3"
-							/>
-							<path d={`M18 ${y + 10}h17`} stroke="#849fc3" stroke-opacity="0.5" stroke-linecap="round" />
-							<circle cx="49" cy={y + 10} r="2" fill="#b4d9ff" />
-						</>
-					))}
-				</g>
-				<g transform="translate(319 188) rotate(-9 24 24)">
-					<path
-						d="M12 0v-6M24 0v-6M36 0v-6M12 48v6M24 48v6M36 48v6M0 12h-6M0 24h-6M0 36h-6M48 12h6M48 24h6M48 36h6"
-						stroke="#8cb2e5"
-						stroke-opacity="0.4"
-						stroke-width="2"
-					/>
-					<rect
-						width="48"
-						height="48"
-						rx="9"
-						fill={`url(#${kind}-glass)`}
-						stroke="#86afe9"
-						stroke-opacity="0.6"
-					/>
-					<rect
-						x="12"
-						y="12"
-						width="24"
-						height="24"
-						rx="5"
-						fill="#a8cfff"
-						fill-opacity="0.08"
-						stroke="#a8cfff"
-						stroke-opacity="0.5"
-					/>
-				</g>
-			</>
+			<Fragment set:html={`<g class="flow" stroke="#6e4c26" stroke-opacity=".75" stroke-width="1.2" fill="none">
+  <path pathLength="1" d="M171,148.5 C188,149 195,136 204,134"/>
+  <path pathLength="1" d="M296,128 C330,124 340,104 364,100"/>
+  <path pathLength="1" d="M268,175 C282,196 300,202 318,204"/>
+</g>
+<path class="signal" style="animation-delay:-0.00s" d="M171,148.5 C188,149 195,136 204,134" stroke="#8a231d" pathLength="100"/><path class="signal" style="animation-delay:-1.05s" d="M296,128 C330,124 340,104 364,100" stroke="#8a231d" pathLength="100"/><path class="signal" style="animation-delay:-2.10s" d="M268,175 C282,196 300,202 318,204" stroke="#8a231d" pathLength="100"/>
+
+<g transform="translate(62 118) rotate(-4 60 45)">
+  <rect x="10" y="0" width="100" height="68" fill="#efe1b9" stroke="#3d2716" stroke-width="1.4"/>
+  <rect x="10" y="0" width="50" height="68" fill="url(#network-hatch)" opacity=".4"/>
+  <rect x="18" y="8" width="84" height="52" fill="#e4d0a0" stroke="#3d2716" stroke-width="1"/>
+  <path d="M30,26 L40,34 L30,42" stroke="#8a231d" stroke-width="2.4" fill="none"/><path d="M46,44 L62,44" stroke="#8a231d" stroke-width="2.4"/>
+  <path d="M0,74 L120,74 L112,84 L8,84 Z" fill="#e4d0a0" stroke="#3d2716" stroke-width="1.3"/>
+  <path d="M10,68 L0,74 M110,68 L120,74" stroke="#3d2716" stroke-width="1.2"/>
+  <path d="M50,79 L70,79" stroke="#6e4c26" stroke-width="1"/></g>
+<g transform="translate(364 40) rotate(6 34 52)">
+  <rect x="0" y="0" width="68" height="104" fill="#efe1b9" stroke="#3d2716" stroke-width="1.4"/>
+  <rect x="0" y="0" width="34" height="104" fill="url(#network-hatch)" opacity=".4"/>
+  <rect x="6" y="8" width="56" height="24" fill="#e4d0a0" stroke="#3d2716" stroke-width="1.1"/>
+  <path d="M14,20 L36,20" stroke="#3d2716" stroke-width="1.4"/><circle cx="50" cy="20" r="2.6" fill="#8a231d"/><rect x="6" y="38" width="56" height="24" fill="#e4d0a0" stroke="#3d2716" stroke-width="1.1"/>
+  <path d="M14,50 L36,50" stroke="#3d2716" stroke-width="1.4"/><circle cx="50" cy="50" r="2.6" fill="#8a231d"/><rect x="6" y="68" width="56" height="24" fill="#e4d0a0" stroke="#3d2716" stroke-width="1.1"/>
+  <path d="M14,80 L36,80" stroke="#3d2716" stroke-width="1.4"/><circle cx="50" cy="80" r="2.6" fill="#8a231d"/></g>
+<g transform="translate(320 180) rotate(-5 23 23)">
+  <path d="M10,0 L10,-7 M10,46 L10,53 M0,10 L-7,10 M46,10 L53,10" stroke="#3d2716" stroke-width="1.2"/><path d="M19,0 L19,-7 M19,46 L19,53 M0,19 L-7,19 M46,19 L53,19" stroke="#3d2716" stroke-width="1.2"/><path d="M28,0 L28,-7 M28,46 L28,53 M0,28 L-7,28 M46,28 L53,28" stroke="#3d2716" stroke-width="1.2"/><path d="M37,0 L37,-7 M37,46 L37,53 M0,37 L-7,37 M46,37 L53,37" stroke="#3d2716" stroke-width="1.2"/>
+  <rect x="0" y="0" width="46" height="46" fill="#efe1b9" stroke="#3d2716" stroke-width="1.4"/>
+  <rect x="0" y="0" width="23" height="46" fill="url(#network-hatch)" opacity=".4"/>
+  <rect x="11" y="11" width="24" height="24" fill="#e4d0a0" stroke="#3d2716" stroke-width="1"/><path d="M23,19 L27,23 L23,27 L19,23 Z" fill="#8a231d" /></g>
+<circle cx="250" cy="132" r="54" stroke="#6e4c26" stroke-opacity=".3"/>
+<circle cx="250" cy="132" r="46" fill="#efe1b9" stroke="#3d2716" stroke-width="1.3"/>
+<circle cx="250" cy="132" r="46" fill="url(#network-hatch)" opacity=".22"/>
+<path d="M250,86 L250,94" stroke="#3d2716" stroke-width="1" transform="rotate(0 250 132)"/><path d="M250,86 L250,91" stroke="#3d2716" stroke-width="0.6" transform="rotate(15 250 132)"/><path d="M250,86 L250,91" stroke="#3d2716" stroke-width="0.6" transform="rotate(30 250 132)"/><path d="M250,86 L250,94" stroke="#3d2716" stroke-width="1" transform="rotate(45 250 132)"/><path d="M250,86 L250,91" stroke="#3d2716" stroke-width="0.6" transform="rotate(60 250 132)"/><path d="M250,86 L250,91" stroke="#3d2716" stroke-width="0.6" transform="rotate(75 250 132)"/><path d="M250,86 L250,94" stroke="#3d2716" stroke-width="1" transform="rotate(90 250 132)"/><path d="M250,86 L250,91" stroke="#3d2716" stroke-width="0.6" transform="rotate(105 250 132)"/><path d="M250,86 L250,91" stroke="#3d2716" stroke-width="0.6" transform="rotate(120 250 132)"/><path d="M250,86 L250,94" stroke="#3d2716" stroke-width="1" transform="rotate(135 250 132)"/><path d="M250,86 L250,91" stroke="#3d2716" stroke-width="0.6" transform="rotate(150 250 132)"/><path d="M250,86 L250,91" stroke="#3d2716" stroke-width="0.6" transform="rotate(165 250 132)"/><path d="M250,86 L250,94" stroke="#3d2716" stroke-width="1" transform="rotate(180 250 132)"/><path d="M250,86 L250,91" stroke="#3d2716" stroke-width="0.6" transform="rotate(195 250 132)"/><path d="M250,86 L250,91" stroke="#3d2716" stroke-width="0.6" transform="rotate(210 250 132)"/><path d="M250,86 L250,94" stroke="#3d2716" stroke-width="1" transform="rotate(225 250 132)"/><path d="M250,86 L250,91" stroke="#3d2716" stroke-width="0.6" transform="rotate(240 250 132)"/><path d="M250,86 L250,91" stroke="#3d2716" stroke-width="0.6" transform="rotate(255 250 132)"/><path d="M250,86 L250,94" stroke="#3d2716" stroke-width="1" transform="rotate(270 250 132)"/><path d="M250,86 L250,91" stroke="#3d2716" stroke-width="0.6" transform="rotate(285 250 132)"/><path d="M250,86 L250,91" stroke="#3d2716" stroke-width="0.6" transform="rotate(300 250 132)"/><path d="M250,86 L250,94" stroke="#3d2716" stroke-width="1" transform="rotate(315 250 132)"/><path d="M250,86 L250,91" stroke="#3d2716" stroke-width="0.6" transform="rotate(330 250 132)"/><path d="M250,86 L250,91" stroke="#3d2716" stroke-width="0.6" transform="rotate(345 250 132)"/>
+<circle cx="250" cy="132" r="34" fill="#efe1b9" stroke="#3d2716" stroke-width=".9"/>
+<g transform="rotate(-35 250 132)" fill="none" stroke="#8a231d" stroke-width="5" stroke-linecap="round">
+  <rect x="222" y="122" width="34" height="20" rx="10"/><rect x="244" y="122" width="34" height="20" rx="10"/></g>`} />
 		)
 	}
 </svg>
@@ -281,14 +98,34 @@ const { kind } = Astro.props;
 		height: 100%;
 		overflow: visible;
 	}
-	.signal {
-		stroke-dasharray: 0.1 33.233333;
-		animation: signal-travel 5s linear infinite;
+	/* the routes: ink dashes that keep marching, and a maroon pulse running along each one in turn */
+	/* (the routes drawn as the connected system's links: smooth maroon curves) */
+	.capability-art :global(.flow) :global(path) {
+		stroke: #8a231d;
+		stroke-opacity: 0.85;
+		stroke-width: 1.8;
+		stroke-linecap: round;
+	}
+	.capability-art :global(.signal) {
+		stroke-width: 6.5;
+		stroke-linecap: round;
+		stroke-dasharray: 0.01 99.99;
+		animation: signal-travel 3.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+	}
+	@keyframes route-march {
+		to {
+			stroke-dashoffset: -12;
+		}
 	}
 	@keyframes signal-travel {
 		to {
 			stroke-dashoffset: -100;
 		}
 	}
+	@media (prefers-reduced-motion: reduce) {
+		.capability-art :global(.signal),
+		.capability-art :global(.flow) :global(path) {
+			animation: none;
+		}
+	}
 </style>
-

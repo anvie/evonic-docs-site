@@ -52,7 +52,7 @@ export function startDesktopMotion(
 	root.dataset.scrollMode = smoothScroll ? 'smooth' : 'native';
 
 	const context = gsap.context(() => {
-		if (animateHero) {
+		if (animateHero && root.querySelector('.hero-enter')) {
 			gsap.from('.hero-enter', {
 				y: 24,
 				opacity: 0,
