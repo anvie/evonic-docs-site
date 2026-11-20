@@ -48,10 +48,21 @@ export function initSoundNote(tourApi: TourApi) {
 		showOnce(at: number) {
 			// (an upright phone or tablet: the tour stays silent there, so there is nothing to turn on)
 			if (matchMedia('(max-width: 699px), (max-width: 1099px) and (max-aspect-ratio: 10/9)').matches) return;
-			window.setTimeout(() => {
-				if (note && !tourApi()?.sound?.()) note.classList.add('show');
-			}, at);
-			window.setTimeout(() => note?.classList.remove('show'), at + 5000);
+			// (it waits for the tour to exist, up to 15 s: on a slow network the tour comes after the gate, on a device that
+			// shows the still there is no sound to invite to until the visitor starts the tour)
+			const start = performance.now();
+			const tryShow = () => {
+				const api = tourApi();
+				if (api?.sound) {
+					if (!api.sound()) {
+						note?.classList.add('show');
+						window.setTimeout(() => note?.classList.remove('show'), 5000);
+					}
+					return;
+				}
+				if (performance.now() - start < 15000) window.setTimeout(tryShow, 500);
+			};
+			window.setTimeout(tryShow, at);
 		}
 	};
 }

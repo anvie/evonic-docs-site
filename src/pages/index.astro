@@ -209,22 +209,36 @@ const nodeConnectionPath = (node: SystemNode) =>
 					     drifting up slower than the page (parallax). -->
 					<div class="hero-pin">
 					<div class="hero-stage">
-						<!-- A still of the tour stands in until the live one has loaded; phones get the subject alone. -->
+						<!-- A still of the tour stands in until the live one has loaded: the scene alone, rendered from the tour itself
+						     (the overview at rest), one for wide windows and one for phones. -->
 						<picture>
-							<source media="(min-width: 721px)" srcset="/img/ev8-tour-dune.webp" width="1600" height="936" />
+							<source media="(min-width: 721px)" srcset="/img/ev8-tour-dune.webp?v=2" width="1600" height="936" />
 							<img
 								class="hero-poster"
-								src="/img/ev8-dune.webp"
+								src="/img/ev8-dune.webp?v=2"
 								alt=""
-								width="1440"
-								height="820"
+								width="780"
+								height="1688"
 								fetchpriority="high"
 							/>
 						</picture>
+						<!-- Where the live tour does not run (a weak device), the still comes with the tour's own swim in: the bell comes
+						     up out of the haze to its place, played as the gate's leaves part (a short video, only where it is wanted). -->
+						<video
+							class="hero-swim"
+							muted
+							playsinline
+							preload="none"
+							aria-hidden="true"
+							tabindex="-1"
+							disablepictureinpicture
+							data-wide="/img/ev8-swim-wide.mp4?v=1"
+							data-tall="/img/ev8-swim-tall.mp4?v=1"
+						></video>
 						<iframe class="hero-live" title="Evonic EV-8 interactive tour" data-src={heroScene} allow="fullscreen; autoplay" hidden
 						></iframe>
 						<div class="hero-fog" aria-hidden="true"></div>
-						<button class="hero-play" type="button" hidden>Play the tour</button>
+						<button class="hero-play" type="button" hidden><i class="hp-ring" aria-hidden="true"></i><i class="hp-tri" aria-hidden="true"></i>Play the tour</button>
 					</div>
 					<div class="hero-veil" aria-hidden="true"></div>
 					<a class="hero-hint" href="#why-evonic" aria-hidden="true" tabindex="-1">Scroll <span></span></a>
@@ -888,14 +902,44 @@ const nodeConnectionPath = (node: SystemNode) =>
 			window.addEventListener('resize', fitHero);
 			document.fonts?.ready.then(fitHero);
 			heroLive?.addEventListener('load', fitHero);
+			// Is this device one the live tour should not start on by itself (the still and the play button instead)? Judged
+			// on evidence, never on a spec that merely sounds modest: a phone that can run the tour must get the tour.
+			//   - the visitor asked to save data;
+			//   - no hardware-accelerated WebGL (the browser's own answer: software rendering is refused);
+			//   - a device that is plainly the weakest sort: two cores or fewer, or 2 GB or less (not Apple's: Safari
+			//     reports small numbers there whatever the chip);
+			// and for every device the measured frame rate has the last word (watchPace: two slow windows in a row).
 			const saveData = navigator.connection?.saveData === true;
 			const device = navigator as Navigator & { deviceMemory?: number };
-			// a weak device keeps the still; the play button starts the tour there
-			const weak =
-				saveData ||
-				(navigator.hardwareConcurrency > 0 && navigator.hardwareConcurrency <= 4) ||
-				(device.deviceMemory !== undefined && device.deviceMemory <= 4);
+			const apple = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+			const hardwareGl = (() => {
+				try {
+					const c = document.createElement('canvas');
+					const gl = c.getContext('webgl2', { failIfMajorPerformanceCaveat: true }) ?? c.getContext('webgl', { failIfMajorPerformanceCaveat: true });
+					gl?.getExtension('WEBGL_lose_context')?.loseContext();
+					return !!gl;
+				} catch {
+					return false;
+				}
+			})();
+			const plainlyWeak = !apple && ((navigator.hardwareConcurrency > 0 && navigator.hardwareConcurrency <= 2) || (device.deviceMemory !== undefined && device.deviceMemory <= 2));
+			const weak = saveData || !hardwareGl || plainlyWeak;
 			const heroPlay = document.querySelector('.hero-play');
+			// the still's swim in: only where the still is what the visitor gets from the start (a weak device), with motion
+			// allowed and no data to save; it is fetched while the gate is shut and shown (its first frame) behind it
+			const swim = document.querySelector<HTMLVideoElement>('.hero-swim');
+			const swimWanted = !!swim && weak && !saveData && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+			if (swim && swimWanted) {
+				swim.src = (matchMedia('(min-width: 721px)').matches ? swim.dataset.wide : swim.dataset.tall) ?? '';
+				swim.preload = 'auto';
+				swim.addEventListener('loadeddata', () => swim.classList.add('ready'), { once: true });
+				swim.load();
+			}
+			const playSwim = () => {
+				if (!swim || !swim.classList.contains('ready')) return;
+				// (autoplay refused, as on a phone in low-power mode: the still stays, as it always did)
+				swim.play().catch(() => swim.classList.remove('ready'));
+			};
 			let heroAsked = false;
 			heroPlay?.addEventListener('click', () => {
 				heroAsked = true;
@@ -946,6 +990,8 @@ const nodeConnectionPath = (node: SystemNode) =>
 				requestAnimationFrame(step);
 			};
 			let gateOpen = false;
+			let gateWaiting = false;
+			const GATE_MIN = 1500;
 			// the tour's story starts as the gate's leaves part (it waits on its first frame till then); a tour that loads
 			// only after that starts as soon as it is ready
 			let tourReleased = false;
@@ -987,14 +1033,22 @@ const nodeConnectionPath = (node: SystemNode) =>
 				document.documentElement.classList.toggle('poster-on', (weak && !heroAsked) || motionPaused || heroFailed || (heroLite && !heroAsked));
 				// (the gate opened before the tour was ready, a slow network: the still stands in until the tour has drawn)
 				document.documentElement.classList.toggle('poster-wait', gateDue && !(on && heroReady));
-				// the gate: closed over the whole screen while the tour is summoned; it opens once (the tour has drawn, or the
-				// still stands in instead: a weak device, motion paused, a failed load: then at once)
+				// the gate: closed over the whole screen while the tour is summoned, in every case; it opens once the tour has
+				// drawn, or the still stands in instead (a weak device, motion paused, a failed load), but never before the seal
+				// has been on screen for a moment: GATE_MIN ms from the page's start
 				const posterOn = (weak && !heroAsked) || motionPaused || heroFailed || (heroLite && !heroAsked);
 				if (!gateOpen && ((on && heroReady) || posterOn || gateDue)) {
-					gateOpen = true;
-					openGate({ instant: posterOn, onPart: releaseTour });
-					// (the sound invitation shows once, under the menu, as the doors finish)
-					sound.showOnce(posterOn ? 600 : 3600);
+					const wait = GATE_MIN - performance.now();
+					if (wait > 40) {
+						if (!gateWaiting) (gateWaiting = true), window.setTimeout(() => ((gateWaiting = false), syncHero()), wait);
+					} else {
+						gateOpen = true;
+						// (a weak device: the same doors, with a lighter dust; no motion wanted: the leaves only fade)
+						const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+						openGate({ calm, light: posterOn, onPart: () => (releaseTour(), playSwim()) });
+						// (the sound invitation shows once, under the menu, as the doors finish)
+						sound.showOnce(calm ? 600 : 3600);
+					}
 				}
 				// the drifting motes behind the page run while the hero is out of view
 				ambient?.classList.toggle('on', !heroVisible && !document.hidden && !motionPaused && !weak);

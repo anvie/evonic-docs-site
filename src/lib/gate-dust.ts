@@ -85,7 +85,8 @@ function gapHalf(t: number, W: number) {
 	return Math.min(W / 2, (W / 2) * (1 - Math.cos(a)) + (W / 2) * slide);
 }
 
-export function gateDust(host: HTMLElement = document.body) {
+/** `density` scales every count (1 the full dust; a device that shows the still, 0.4). */
+export function gateDust(density = 1, host: HTMLElement = document.body) {
 	if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 	const W = innerWidth, H = innerHeight, cx = W / 2;
 	const dpr = Math.min(devicePixelRatio || 1, 1.5);
@@ -117,7 +118,7 @@ export function gateDust(host: HTMLElement = document.body) {
 	// (the shutter: a fast particle is drawn over the path it covers in this long)
 	const SHUTTER = 1 / 40;
 	// (a phone has less screen to fill: fewer particles)
-	const n = (k: number) => Math.round(k * Math.min(1, Math.max(0.45, (W * H) / (1440 * 900))));
+	const n = (k: number) => Math.round(k * density * Math.min(1, Math.max(0.45, (W * H) / (1440 * 900))));
 	const ps: P[] = [];
 	const side = () => (Math.random() < 0.5 ? -1 : 1);
 

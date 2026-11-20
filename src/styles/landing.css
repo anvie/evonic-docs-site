@@ -2019,9 +2019,6 @@ footer a:hover {
 		gate-crack 0.42s cubic-bezier(0.23, 1, 0.32, 1) forwards,
 		gate-crack-out 0.3s ease 0.6s forwards;
 }
-.gate-instant .gate {
-	display: none;
-}
 /* ---- fallbacks. If the page's script never runs, the leaves fade and the gate hides itself after 12 s; if it is slow,
    an inline guard in the page adds .gate-late at 4 s and the gate gives way to the still ---- */
 .gate {
@@ -2044,7 +2041,7 @@ footer a:hover {
 .gate-late:not(.tour-on) .hero-poster {
 	opacity: 1;
 }
-/* ---- no animation wanted: nothing turns, glows or shakes, and the leaves simply fade ---- */
+/* ---- no animation wanted: nothing turns, glows, cracks or shakes, and the leaves simply fade ---- */
 @media (prefers-reduced-motion: reduce) {
 	.seal-astro b i,
 	.seal-dots i {
@@ -2052,7 +2049,8 @@ footer a:hover {
 	}
 	.gate-open .gate,
 	.gate-open .hero-stage,
-	.gate-open header {
+	.gate-open header,
+	.gate-open .gate-crack {
 		animation: none;
 	}
 	.gate-open .gate-face,
@@ -2130,6 +2128,24 @@ footer a:hover {
 .tour-on .hero-poster {
 	opacity: 0;
 }
+/* the still's swim in (a video of the tour's own swim, ending on the still): over the still once it is ready, and it
+   stays on its last frame; it gives way to the live tour as the still does */
+.hero-swim {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.9s ease;
+}
+.poster-on .hero-swim.ready {
+	opacity: 1;
+}
+.tour-on .hero-swim {
+	opacity: 0;
+}
 /* The scene's foot thins into the page's paper: a plain gradient laid over it (a mask on the moving scene would be
    recomposited every frame). */
 .hero-fog {
@@ -2160,12 +2176,20 @@ footer a:hover {
 	position: absolute;
 	z-index: 2;
 	left: 50%;
-	top: 44%;
+	/* well below the jellyfish's face (its eyes sit in the upper half of the still), among the tentacles */
+	top: 74%;
 	display: inline-flex;
 	align-items: center;
 	gap: 10px;
 	padding: 10px 18px;
+	cursor: pointer;
 	transform: translateX(-50%);
+	/* at rest it floats a little, never taking the eye (transform and opacity only; the float uses the separate
+	   translate property, as the centring above uses transform) */
+	animation: play-float 4.4s ease-in-out infinite;
+	transition:
+		box-shadow 0.2s ease-out,
+		scale 0.16s cubic-bezier(0.23, 1, 0.32, 1);
 	border: 1px solid var(--rule);
 	border-radius: 3px;
 	background: linear-gradient(180deg, #f5ebd2, #e3d0a2);
@@ -2181,13 +2205,80 @@ footer a:hover {
 .hero-play[hidden] {
 	display: none;
 }
-.hero-play::before {
-	content: '';
+/* (real elements, not pseudo-elements: the page's lightweight profile switches every pseudo-element's animation off) */
+.hp-tri {
 	width: 0;
 	height: 0;
 	border-left: 8px solid var(--accent);
 	border-top: 5px solid transparent;
 	border-bottom: 5px solid transparent;
+	/* the triangle leans forward and back, as an invitation */
+	animation: play-nudge 2.2s ease-in-out infinite;
+}
+/* a thin ring that goes out from the plate and fades, now and then */
+.hp-ring {
+	position: absolute;
+	inset: -1px;
+	border: 1px solid var(--accent);
+	border-radius: 3px;
+	opacity: 0;
+	pointer-events: none;
+	animation: play-ring 4.4s ease-out infinite;
+}
+@media (hover: hover) {
+	.hero-play:hover {
+		box-shadow:
+			inset 0 1px 0 rgba(255, 251, 238, 0.9),
+			0 10px 20px -10px var(--drop);
+		animation-play-state: paused;
+	}
+}
+.hero-play:active {
+	scale: 0.97;
+}
+.hero-play:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 3px;
+}
+@keyframes play-float {
+	0%,
+	100% {
+		translate: 0 0;
+	}
+	50% {
+		translate: 0 -4px;
+	}
+}
+@keyframes play-nudge {
+	0%,
+	55%,
+	100% {
+		translate: 0 0;
+	}
+	75% {
+		translate: 2.5px 0;
+	}
+}
+@keyframes play-ring {
+	0%,
+	45% {
+		opacity: 0;
+		scale: 1;
+	}
+	52% {
+		opacity: 0.5;
+	}
+	100% {
+		opacity: 0;
+		scale: 1.22 1.75;
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	.hero-play,
+	.hp-tri,
+	.hp-ring {
+		animation: none;
+	}
 }
 /* The pitch: its own block under the scene, on the plain paper. */
 .hero-brief {

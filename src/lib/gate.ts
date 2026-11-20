@@ -27,14 +27,13 @@ export function swingLeaves(delay = LEAF_DELAY) {
 	});
 }
 
-/** Opens the gate. `instant` (the still stands in) just drops it; otherwise: crack, dust, swing and shake.
- *  `onPart` runs as the leaves start to move (at once when instant): the tour's story starts on it. */
-export function openGate({ instant, onPart }: { instant: boolean; onPart?: () => void }) {
+/** Opens the gate, in every case: crack, dust, swing and shake. `light` (a device that shows the still): a lighter
+ *  dust. `calm` (no motion wanted): none of that, the leaves only fade (styles: "The gate"). `onPart` runs as the leaves
+ *  start to move (at once when calm): the tour's story starts on it. */
+export function openGate({ calm = false, light = false, onPart }: { calm?: boolean; light?: boolean; onPart?: () => void }) {
 	const html = document.documentElement;
-	html.classList.toggle('gate-instant', instant);
-	const moves = !instant && !matchMedia('(prefers-reduced-motion: reduce)').matches;
-	if (!instant) gateDust();
-	if (moves) swingLeaves(LEAF_DELAY);
+	if (!calm) gateDust(light ? 0.4 : 1);
+	if (!calm) swingLeaves(LEAF_DELAY);
 	html.classList.add('gate-open');
-	if (onPart) moves ? window.setTimeout(onPart, LEAF_DELAY) : onPart();
+	if (onPart) calm ? onPart() : window.setTimeout(onPart, LEAF_DELAY);
 }
