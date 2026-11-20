@@ -1,0 +1,70 @@
+/* Dune: the parchment theme of the Evonic EV-8 tour (public/ev8), shared by every page.
+   Tokens, the paper textures, and the parchment surface used by cards and panels. */
+@import '@fontsource/cinzel/500.css';
+@import '@fontsource/cinzel/600.css';
+@import '@fontsource/cinzel/700.css';
+@import '@fontsource-variable/inter';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/600.css';
+@import '@fontsource/cormorant-garamond/500.css';
+@import '@fontsource/cormorant-garamond/600.css';
+
+:root {
+	--paper: #e6d5a8;
+	--paper-edge: #c4a574;
+	--cream: #f4e9cc;
+	--ink: #24170e;
+	--mid: #6b5a45;
+	--dim: #8d7a5e;
+	--accent: #8a231d;
+	--accent-deep: #63170f;
+	--brand-blue: #4f8ff2;
+	--oxblood: #7a1a17;
+	--line: rgba(110, 76, 38, 0.32);
+	--rule: rgba(110, 76, 38, 0.5);
+	--drop: rgba(70, 45, 18, 0.42);
+	--heading: 'Cinzel', 'Marcellus SC', Georgia, 'Times New Roman', serif;
+	--body: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+	/* prose under the Cinzel titles: the descriptions and the section intros */
+	--prose: 'Cormorant Garamond', Garamond, Georgia, serif;
+	--mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	/* Inline SVG tiles: fibre grain, soft stains, dust along a panel's top edge, the corner diamond. */
+	--grain: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22180%22 height=%22180%22 viewBox=%220 0 180 180%22%3E%3Cfilter id=%22g%22 x=%220%22 y=%220%22 width=%22100%25%22 height=%22100%25%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%22.85%22 numOctaves=%222%22 seed=%223%22 stitchTiles=%22stitch%22/%3E%3CfeColorMatrix values=%220 0 0 0 .38 0 0 0 0 .26 0 0 0 0 .13 .6 0 0 0 -.24%22/%3E%3C/filter%3E%3Crect width=%22180%22 height=%22180%22 filter=%22url%28%23g%29%22/%3E%3C/svg%3E");
+	--stain: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22360%22 height=%22240%22 viewBox=%220 0 360 240%22%3E%3Cfilter id=%22s%22 x=%220%22 y=%220%22 width=%22100%25%22 height=%22100%25%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%22.011 .017%22 numOctaves=%223%22 seed=%227%22 stitchTiles=%22stitch%22/%3E%3CfeColorMatrix values=%220 0 0 0 .46 0 0 0 0 .31 0 0 0 0 .14 .75 0 0 0 -.33%22/%3E%3C/filter%3E%3Crect width=%22360%22 height=%22240%22 filter=%22url%28%23s%29%22/%3E%3C/svg%3E");
+	--dust: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22150%22 height=%2212%22 viewBox=%220 0 150 12%22%3E%3Cdefs%3E%3ClinearGradient id=%22f%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23fff%22/%3E%3Cstop offset=%221%22 stop-color=%22%23fff%22 stop-opacity=%220%22/%3E%3C/linearGradient%3E%3Cmask id=%22m%22%3E%3Crect width=%22150%22 height=%2212%22 fill=%22url%28%23f%29%22/%3E%3C/mask%3E%3Cfilter id=%22d%22 x=%220%22 y=%220%22 width=%22100%25%22 height=%22100%25%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.3%22 numOctaves=%221%22 seed=%2211%22 stitchTiles=%22stitch%22/%3E%3CfeColorMatrix values=%220 0 0 0 .4 0 0 0 0 .28 0 0 0 0 .15 4.2 0 0 0 -2.55%22/%3E%3C/filter%3E%3C/defs%3E%3Crect width=%22150%22 height=%2212%22 filter=%22url%28%23d%29%22 mask=%22url%28%23m%29%22/%3E%3C/svg%3E");
+	--dia: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%229%22 height=%229%22%3E%3Cpath d=%22M4.5.5 8.5 4.5 4.5 8.5.5 4.5Z%22 fill=%22%236e4c26%22 fill-opacity=%22.85%22/%3E%3Cpath d=%22M4.5 2.8 6.2 4.5 4.5 6.2 2.8 4.5Z%22 fill=%22%23f1e4c0%22/%3E%3C/svg%3E");
+	/* the page's sand (not the tour's): fine grain, sparse darker grains, a few large soft stains */
+	--sand-grain: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22260%22 height=%22260%22 viewBox=%220 0 260 260%22%3E%3Cfilter id=%22g%22 x=%220%22 y=%220%22 width=%22100%25%22 height=%22100%25%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%22.95%22 numOctaves=%222%22 seed=%224%22 stitchTiles=%22stitch%22/%3E%3CfeColorMatrix values=%220 0 0 0 .36 0 0 0 0 .25 0 0 0 0 .12 0 0 0 1 -.35%22/%3E%3C/filter%3E%3Crect width=%22260%22 height=%22260%22 filter=%22url%28%23g%29%22 opacity=%22.16%22/%3E%3C/svg%3E");
+	--sand-specks: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22420%22 height=%22420%22 viewBox=%220 0 420 420%22%3E%3Cfilter id=%22s%22 x=%220%22 y=%220%22 width=%22100%25%22 height=%22100%25%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%22.7%22 numOctaves=%221%22 seed=%229%22 stitchTiles=%22stitch%22/%3E%3CfeColorMatrix values=%220 0 0 0 .33 0 0 0 0 .22 0 0 0 0 .1 0 0 0 16 -11.2%22/%3E%3C/filter%3E%3Crect width=%22420%22 height=%22420%22 filter=%22url%28%23s%29%22 opacity=%22.5%22/%3E%3C/svg%3E");
+	--sand-dirt: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%221100%22 height=%22800%22 viewBox=%220 0 1100 800%22%3E%3Cfilter id=%22d%22 x=%220%22 y=%220%22 width=%22100%25%22 height=%22100%25%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%22.0026 .0038%22 numOctaves=%224%22 seed=%2221%22 stitchTiles=%22stitch%22/%3E%3CfeColorMatrix values=%220 0 0 0 .42 0 0 0 0 .29 0 0 0 0 .13 0 0 0 5 -3.1%22/%3E%3CfeGaussianBlur stdDeviation=%228%22/%3E%3C/filter%3E%3Crect width=%221100%22 height=%22800%22 filter=%22url%28%23d%29%22 opacity=%22.22%22/%3E%3C/svg%3E");
+	--sand:
+		var(--sand-specks) 0 0 / 420px 420px, var(--sand-grain) 0 0 / 260px 260px, var(--sand-dirt) 0 0 / 1100px 800px;
+	/* The parchment surface, top layer first: corner diamonds, dust, aged corners, stains, grain, the cream wash. */
+	--parch:
+		var(--dia) left top / 9px 9px no-repeat border-box, var(--dia) right top / 9px 9px no-repeat border-box,
+		var(--dia) left bottom / 9px 9px no-repeat border-box,
+		var(--dia) right bottom / 9px 9px no-repeat border-box,
+		var(--dust) left 1px / 150px 12px repeat-x border-box,
+		radial-gradient(130% 150% at 50% 30%, rgba(120, 80, 35, 0) 58%, rgba(120, 80, 35, 0.17) 100%) border-box,
+		var(--stain) 0 0 / 360px 240px border-box, var(--grain) 0 0 / 180px 180px border-box,
+		linear-gradient(
+				180deg,
+				rgba(246, 237, 212, 0.86),
+				rgba(238, 225, 191, 0.82) 60%,
+				rgba(229, 212, 170, 0.8) 80%,
+				rgba(219, 200, 156, 0.82)
+			)
+			border-box;
+}
+
+/* A sheet of parchment: double brown rule, diamonds at the corners, a warm drop shadow. */
+.parchment {
+	background: var(--parch);
+	border: 1px solid var(--rule);
+	border-radius: 3px;
+	outline: 1px solid rgba(110, 76, 38, 0.3);
+	outline-offset: -4px;
+	box-shadow:
+		inset 0 1px 0 rgba(255, 249, 232, 0.55),
+		0 8px 22px -16px rgba(70, 45, 18, 0.6);
+}

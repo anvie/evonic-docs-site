@@ -1,61 +1,510 @@
-@import '@fontsource-variable/bricolage-grotesque';
-@import '@fontsource-variable/dm-sans';
+@import './dune.css';
 
-/* Evonic docs theme — the dark-only palette and type from the landing page. */
+/* Evonic docs theme: the Dune parchment of the landing page and the EV-8 tour. In order:
+   the palette and fonts, the paper, small-caps titles, the wordmark, the sidebar, paper tabs (search, buttons, cards),
+   prose, code frames and the search dialog, the reference pages' tidy-ups (tables, Previous / Next), and last the
+   phones (Previous / Next side by side, the header's badges, table cells that break only between words). */
 :root {
-	--evonic-blue: #96c4ff;
-	--evonic-line: rgba(154, 186, 230, 0.13);
+	--evonic-line: var(--line);
 
-	--sl-font: 'DM Sans Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
-	--sl-font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+	--sl-font: var(--body);
+	--sl-font-mono: var(--mono);
 }
 
-/* The brand has a single colour scheme, so both Starlight themes share this palette. */
+/* The brand has a single colour scheme, so both Starlight themes share this palette. It is a light
+   one: Starlight's "white" is the darkest ink, "black" the page, and the greys run dark to light. */
 :root,
 :root[data-theme='light'],
 :root[data-theme='dark'] {
-	--sl-color-accent-low: #16243a;
-	--sl-color-accent: #96c4ff;
-	--sl-color-accent-high: #d6e7ff;
+	color-scheme: light;
 
-	--sl-color-white: #ebeff7;
-	--sl-color-gray-1: #dbe3ee;
-	--sl-color-gray-2: #b9c3d4;
-	--sl-color-gray-3: #8e99ac;
-	--sl-color-gray-4: #5c6a7e;
-	--sl-color-gray-5: #2a3444;
-	--sl-color-gray-6: #131b28;
-	--sl-color-black: #080b12;
+	--sl-color-accent-low: #ecd3b0;
+	--sl-color-accent: #8a231d;
+	--sl-color-accent-high: #5e130f;
 
-	--sl-color-bg: #080b12;
-	--sl-color-bg-nav: #090d15;
-	--sl-color-bg-sidebar: #0b1018;
-	--sl-color-bg-inline-code: #0e1622;
-	--sl-color-bg-accent: #16243a;
+	--sl-color-white: #24170e;
+	--sl-color-gray-1: #33241a;
+	--sl-color-gray-2: #4c3d2d;
+	--sl-color-gray-3: #6b5a45;
+	--sl-color-gray-4: #8d7a5e;
+	--sl-color-gray-5: #c4a574;
+	--sl-color-gray-6: #dccb9c;
+	--sl-color-gray-7: #eadbb3;
+	--sl-color-black: #e6d5a8;
 
-	--sl-color-text: #ebeff7;
-	--sl-color-text-accent: #b9d8ff;
-	--sl-color-text-invert: #080b12;
+	--sl-color-bg: #e6d5a8;
+	--sl-color-bg-nav: #e6d5a8;
+	--sl-color-bg-sidebar: #e2d0a1;
+	--sl-color-bg-inline-code: #d9c594;
+	--sl-color-bg-accent: #8a231d;
 
-	--sl-color-hairline-light: rgba(154, 186, 230, 0.07);
-	--sl-color-hairline: var(--evonic-line);
-	--sl-color-hairline-shade: var(--evonic-line);
-	--sl-color-backdrop-overlay: rgba(8, 11, 18, 0.66);
+	--sl-color-text: #33241a;
+	--sl-color-text-accent: #8a231d;
+	--sl-color-text-invert: #f6ecd2;
+
+	--sl-color-hairline-light: rgba(110, 76, 38, 0.18);
+	--sl-color-hairline: var(--line);
+	--sl-color-hairline-shade: var(--rule);
+	--sl-color-backdrop-overlay: rgba(36, 23, 14, 0.55);
+
+	--sl-shadow-sm: 0 1px 1.5px rgba(70, 45, 18, 0.22);
+	--sl-shadow-md: 0 8px 22px -16px rgba(70, 45, 18, 0.6);
+	--sl-shadow-lg: 0 14px 34px -18px rgba(70, 45, 18, 0.6);
+
+	/* Asides, tinted in earth tones rather than Starlight's brights. */
+	--sl-color-blue-low: #dde0cf;
+	--sl-color-blue: #2f5d8a;
+	--sl-color-blue-high: #1f4468;
+	--sl-color-green-low: #dfdcb2;
+	--sl-color-green: #5c6b34;
+	--sl-color-green-high: #3f4a22;
+	--sl-color-orange-low: #ecd5a6;
+	--sl-color-orange: #a8691f;
+	--sl-color-orange-high: #6f4412;
+	--sl-color-purple-low: #e3d0c0;
+	--sl-color-purple: #6b3a5c;
+	--sl-color-purple-high: #4a2740;
+	--sl-color-red-low: #ecd0b4;
+	--sl-color-red: #8a231d;
+	--sl-color-red-high: #5e130f;
 }
 
+/* Plain paper under every page, the header and the sidebars included, as in the landing page's hero. */
+body {
+	background: radial-gradient(120% 80% at 50% 0%, rgba(246, 237, 212, 0.35), rgba(246, 237, 212, 0) 60%), var(--sand), var(--paper);
+}
+header.header,
+.sidebar-pane,
+.right-sidebar,
+mobile-starlight-toc nav {
+	background: var(--paper);
+}
+header.header {
+	border-bottom-color: var(--rule);
+}
+.sidebar-pane {
+	border-inline-end-color: var(--rule);
+}
+.right-sidebar {
+	border-inline-start-color: var(--rule);
+}
+
+/* Small caps for the titles, as on the tour's panels. */
 h1,
 h2,
 h3,
+.sl-markdown-content :is(h1, h2, h3) {
+	font-family: var(--heading);
+	font-weight: 600;
+	letter-spacing: 0.005em;
+}
 h4,
 h5,
 h6,
-.site-title,
-.sl-markdown-content :is(h1, h2, h3, h4, h5, h6) {
-	font-family: 'Bricolage Grotesque Variable', var(--sl-font);
+.sl-markdown-content :is(h4, h5, h6) {
+	font-family: var(--body);
+	font-weight: 700;
+}
+/* The wordmark stays Evonic's own: heavy sans, lowercase. */
+.site-title {
+	font-family: var(--body);
+	font-weight: 800;
+	letter-spacing: -0.4px;
+	color: var(--ink);
 }
 
-/* Brand has no light scheme, so the theme switch is meaningless here. */
+/* Sidebar: group labels in small caps, the current page as an inked stamp. */
+.sidebar-content .large,
+.sidebar-content summary .large,
+.right-sidebar h2,
+starlight-toc h2 {
+	font-family: var(--heading);
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	color: var(--ink);
+}
+.sidebar-content a[aria-current='page'],
+.sidebar-content a[aria-current='page']:hover,
+.sidebar-content a[aria-current='page']:focus {
+	border-radius: 0;
+	background: rgba(138, 35, 29, 0.07);
+	box-shadow: inset 2px 0 0 var(--accent);
+	color: var(--accent);
+	font-weight: 600;
+}
+
+/* Paper tabs: search, buttons, cards. */
+site-search button[data-open-modal],
+.sl-link-button.secondary,
+.sl-link-button.minimal {
+	border: 1px solid var(--rule);
+	border-radius: 3px;
+	background: linear-gradient(180deg, #f5ebd2, #e3d0a2);
+	color: var(--ink);
+	box-shadow:
+		inset 0 1px 0 rgba(255, 251, 238, 0.9),
+		0 1px 1.5px rgba(70, 45, 18, 0.22);
+}
+.sl-link-button {
+	border-radius: 3px;
+	font-family: var(--heading);
+	font-weight: 700;
+	letter-spacing: 0.05em;
+}
+.sl-link-button.primary {
+	border-color: var(--accent-deep);
+	background:
+		var(--grain) 0 0 / 180px 180px,
+		linear-gradient(180deg, #9a2f26, #74201b);
+	color: #f6ecd2;
+}
+.card,
+.sl-link-card,
+.pagination-links a {
+	background: var(--parch);
+	border: 1px solid var(--rule);
+	border-radius: 3px;
+	outline: 1px solid rgba(110, 76, 38, 0.3);
+	outline-offset: -4px;
+	box-shadow:
+		inset 0 1px 0 rgba(255, 249, 232, 0.55),
+		0 8px 22px -16px rgba(70, 45, 18, 0.6);
+}
+.sl-link-card:hover,
+.pagination-links a:hover {
+	border-color: rgba(110, 76, 38, 0.78);
+	background: var(--parch);
+}
+.card .title,
+.sl-link-card .title,
+.pagination-links .link-title {
+	font-family: var(--heading);
+	font-weight: 700;
+}
+
+/* Prose furniture. */
+.sl-markdown-content :is(h2, h3):not(:where(.not-content *)) {
+	color: var(--ink);
+}
+.sl-markdown-content a:not(:where(.not-content *)) {
+	text-decoration-color: rgba(138, 35, 29, 0.45);
+	text-underline-offset: 3px;
+}
+.sl-markdown-content code:not(:where(.not-content *)) {
+	border: 1px solid rgba(110, 76, 38, 0.24);
+	border-radius: 3px;
+	background: rgba(246, 237, 212, 0.75);
+	color: var(--ink);
+}
+.sl-markdown-content table:not(:where(.not-content *)) {
+	border: 1px solid var(--rule);
+	border-radius: 3px;
+	background: rgba(246, 237, 212, 0.5);
+}
+.sl-markdown-content th:not(:where(.not-content *)) {
+	border-bottom-color: var(--rule);
+	background: rgba(110, 76, 38, 0.1);
+	font-family: var(--heading);
+	font-weight: 700;
+	color: var(--ink);
+}
+.sl-markdown-content :is(th, td):not(:where(.not-content *)) {
+	border-bottom-color: var(--line);
+}
+.sl-markdown-content blockquote:not(:where(.not-content *)) {
+	border-inline-start-color: var(--accent);
+	color: var(--mid);
+}
+.sl-markdown-content hr:not(:where(.not-content *)) {
+	border-color: var(--rule);
+}
+.starlight-aside {
+	border-radius: 3px;
+}
+.starlight-aside__title {
+	font-family: var(--heading);
+	font-weight: 700;
+	letter-spacing: 0.06em;
+}
+/* Code frames: a cream sheet with a warm drop shadow. */
+.expressive-code .frame {
+	border-radius: 3px;
+	box-shadow: 0 8px 22px -16px rgba(70, 45, 18, 0.6);
+}
+dialog[aria-label='Search'],
+site-search dialog {
+	background: var(--grain) 0 0 / 180px 180px, var(--paper);
+	border-color: var(--rule);
+}
+
+/* The search, classical: the field an engraved plate (a maroon rule when focused), the count and Cancel in small
+   capitals, each result a framed sheet (the page in Cinzel capitals, its sections in small Cinzel, the excerpt in
+   Cormorant, the words found underlined in maroon); on desktop the dialog a double-ruled sheet. */
+@media (min-width: 50rem) {
+	site-search dialog { border: 1px solid var(--rule); outline: 1px solid rgba(110, 76, 38, 0.3); outline-offset: -6px; border-radius: 3px; box-shadow: 0 30px 70px -30px rgba(50, 28, 10, 0.65); }
+}
+#starlight__search { --sl-search-corners: 0px; }
+#starlight__search .pagefind-ui__search-input {
+	border-radius: 3px; border: 1px solid var(--rule); outline: none;
+	background: linear-gradient(180deg, #f3e7c6, #e9d9ae);
+	box-shadow: inset 0 0 0 3px #f1e4c0, inset 0 0 0 4px rgba(110, 76, 38, 0.22);
+	font: 500 19px/1 'Cormorant Garamond', Garamond, Georgia, serif; color: var(--ink);
+}
+#starlight__search .pagefind-ui__search-input::placeholder { font-style: italic; color: #8d7a5e; opacity: 1; }
+#starlight__search .pagefind-ui__search-input:focus { border-color: #8a231d; box-shadow: inset 0 0 0 3px #f1e4c0, inset 0 0 0 4px rgba(138, 35, 29, 0.38); }
+#starlight__search .pagefind-ui__form::before { background-color: #8a231d; }
+#starlight__search .pagefind-ui__search-clear { background: none; color: #8a231d; }
+#starlight__search .pagefind-ui__search-clear::before { background-color: #8a231d; }
+site-search button[data-close-modal] { font: 700 11px/1 var(--heading); letter-spacing: 0.14em; text-transform: uppercase; color: #8a231d; }
+#starlight__search .pagefind-ui__message { display: flex; align-items: center; gap: 12px; font: 700 10.5px/1 var(--heading); letter-spacing: 0.2em; text-transform: uppercase; color: #8d7a5e; }
+#starlight__search .pagefind-ui__message::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(110, 76, 38, 0.4), rgba(110, 76, 38, 0)); }
+#starlight__search .pagefind-ui__result-title:not(:where(.pagefind-ui__result-nested *)),
+#starlight__search .pagefind-ui__result-nested { background: rgba(241, 228, 192, 0.6); }
+#starlight__search .pagefind-ui__result-inner { border: 1px solid rgba(110, 76, 38, 0.38); outline: 1px solid rgba(110, 76, 38, 0.18); outline-offset: -4px; gap: 0; }
+#starlight__search .pagefind-ui__result-nested { border-top: 1px solid rgba(110, 76, 38, 0.16); }
+#starlight__search .pagefind-ui__result-title:not(:where(.pagefind-ui__result-nested *)):hover,
+#starlight__search .pagefind-ui__result-nested:hover,
+#starlight__search .pagefind-ui__result-title:not(:where(.pagefind-ui__result-nested *)):focus-within,
+#starlight__search .pagefind-ui__result-nested:focus-within { outline: 1px solid rgba(138, 35, 29, 0.55); background: #f3e7c6; }
+#starlight__search .pagefind-ui__result-inner > .pagefind-ui__result-title .pagefind-ui__result-link { font: 700 14.5px/1.25 var(--heading); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); }
+#starlight__search .pagefind-ui__result-nested .pagefind-ui__result-link { font: 700 12.5px/1.3 var(--heading); letter-spacing: 0.04em; color: #5a4128; }
+#starlight__search .pagefind-ui__result-excerpt { font: 500 16.5px/1.4 'Cormorant Garamond', Garamond, Georgia, serif; color: #4a3a28; }
+#starlight__search mark { color: #8a231d; font-weight: 500; background: linear-gradient(transparent 86%, rgba(138, 35, 29, 0.42) 86%); }
+#starlight__search .pagefind-ui__result-inner > .pagefind-ui__result-title::before { background: #8a231d; }
+#starlight__search .pagefind-ui__result-nested::before { background: rgba(110, 76, 38, 0.5); }
+#starlight__search .pagefind-ui__button { border-radius: 3px; border: 1px solid var(--rule); background: linear-gradient(180deg, #f3e7c6, #e7d6aa); box-shadow: inset 0 0 0 3px #f1e4c0, inset 0 0 0 4px rgba(110, 76, 38, 0.22); font: 700 11px/1 var(--heading); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); }
+::selection {
+	background: var(--accent);
+	color: #f6ecd2;
+}
+
+/* Brand has no second scheme, so the theme switch is meaningless here. */
 starlight-theme-select {
 	display: none;
 }
 
+/* ---------------------------------------------------------------------------------------------
+   Tidy-ups for the reference pages (looks only; the content is untouched)
+   --------------------------------------------------------------------------------------------- */
+/* the wordmark as on the landing page: lowercase, a maroon dot */
+.site-title span {
+	/* (inline-flex: the label's own surrounding spaces drop, so the dot sits on the word) */
+	display: inline-flex;
+	text-transform: lowercase;
+}
+.site-title span::after {
+	content: '.';
+	color: var(--accent);
+}
+/* tables: room inside the cells; on wider screens the table spans its frame, its headers stay on one line, and code
+   in a cell is not split mid word (phones: see the end, cells break only between words, a wide table scrolls) */
+.sl-markdown-content :is(th, td):not(:where(.not-content *)) {
+	padding: 0.6rem 0.9rem;
+	vertical-align: top;
+}
+.sl-markdown-content th:not(:where(.not-content *)) {
+	font-size: 0.78em;
+	letter-spacing: 0.06em;
+	line-height: 1.3;
+	vertical-align: bottom;
+}
+@media (min-width: 50rem) {
+	.sl-markdown-content table:not(:where(.not-content *)) {
+		display: table;
+		width: 100%;
+		border-collapse: collapse;
+	}
+	/* (a word or a code value breaks only when it can no longer fit its column; never just to narrow one) */
+	.sl-markdown-content :is(th, td):not(:where(.not-content *)) {
+		overflow-wrap: break-word;
+		word-break: normal;
+	}
+	/* (code in a cell never breaks; a table too wide for the page scrolls sideways in its frame instead) */
+	.sl-markdown-content :is(th, td) code:not(:where(.not-content *)) {
+		white-space: nowrap;
+	}
+}
+/* a heading that is code (the SDK's method names): sized with the other headings, no box */
+.sl-markdown-content :is(h2, h3, h4) code:not(:where(.not-content *)) {
+	font-size: 0.8em;
+	padding: 0;
+	border: 0;
+	background: none;
+	color: inherit;
+}
+
+.sl-markdown-content .table-wrap {
+	max-width: 100%;
+	overflow-x: auto;
+	margin-block: 1rem;
+}
+.sl-markdown-content .table-wrap > table {
+	margin: 0;
+}
+
+/* ---- Previous / Next: an engraved plate (one hairline, a maroon diamond on the top edge), a small-caps label, the
+   page title in two lines at most; maroon and a nudged arrow on hover, a small give on press ---- */
+.pagination-links a {
+	position: relative;
+	padding: 0.85rem 1.1rem;
+	border: 1px solid rgba(74, 53, 36, 0.55);
+	border-radius: 0;
+	outline: 0;
+	background: rgba(241, 228, 192, 0.55);
+	box-shadow: none;
+	font-size: 0.72rem;
+	font-family: var(--heading);
+	font-weight: 600;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--mid);
+	transition:
+		border-color 180ms ease,
+		color 180ms ease,
+		transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.pagination-links a::before {
+	content: '';
+	position: absolute;
+	left: 50%;
+	top: -5px;
+	width: 9px;
+	height: 9px;
+	background: var(--accent);
+	transform: translateX(-50%) rotate(45deg);
+	box-shadow: 0 0 0 3px var(--paper);
+}
+.pagination-links .link-title {
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	margin-top: 0.2rem;
+	font-family: var(--heading);
+	font-weight: 600;
+	font-size: 1.05rem;
+	line-height: 1.3;
+	letter-spacing: 0.02em;
+	text-transform: none;
+	color: var(--ink);
+	transition: color 180ms ease;
+}
+.pagination-links a > svg {
+	transition: transform 180ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+@media (hover: hover) and (pointer: fine) {
+	.pagination-links a:hover {
+		border-color: var(--accent);
+		background: rgba(241, 228, 192, 0.55);
+		color: var(--accent);
+	}
+	.pagination-links a:hover .link-title {
+		color: var(--accent);
+	}
+	.pagination-links a[rel='prev']:hover > svg {
+		transform: translateX(-3px);
+	}
+	.pagination-links a[rel='next']:hover > svg {
+		transform: translateX(3px);
+	}
+}
+.pagination-links a:active {
+	transform: scale(0.98);
+}
+
+/* the wordmark's mark: the trimmed mascot, as tall as the word, close to it */
+.site-title {
+	gap: 0.5rem;
+}
+.site-title img {
+	height: 1.9rem;
+	width: auto;
+}
+
+/* ---------------------------------------------------------------------------------------------
+   Phones (under 50rem): the narrow screens last, so they win over everything above
+   --------------------------------------------------------------------------------------------- */
+/* Phones: Previous and Next side by side (Starlight stacks them under 2 x 18rem), the page's name a little smaller so
+   it fits, whole words only; a page with one link keeps it on its own side. */
+@media (max-width: 50rem) {
+	.pagination-links {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+		gap: 0.75rem;
+	}
+	.pagination-links a[rel='next'] {
+		grid-column: 2;
+	}
+	.pagination-links a {
+		padding: 0.9rem 0.8rem;
+		gap: 0.5rem;
+	}
+	.pagination-links a > span {
+		min-width: 0;
+	}
+	.pagination-links .link-title {
+		font-size: 0.86rem;
+		line-height: 1.25;
+		letter-spacing: 0.02em;
+		overflow-wrap: normal;
+		word-break: normal;
+		hyphens: none;
+	}
+	.pagination-links a > svg {
+		flex: none;
+		width: 1.1rem;
+	}
+}
+/* (the narrowest phones: a long name such as "Configuration" still fits its half) */
+@media (max-width: 380px) {
+	.pagination-links a {
+		padding: 0.8rem 0.6rem;
+		gap: 0.4rem;
+	}
+	.pagination-links .link-title {
+		font-size: 0.78rem;
+		letter-spacing: 0;
+	}
+}
+
+/* Phones: the header's buttons as the landing's parchment badge (40 px, a double brown rule, diamonds at the corners,
+   maroon marks: three tapered strokes for the menu, a cross when it is open), and "On this page" as an engraved plate.
+   (Starlight places the menu button from its own 2rem size: its top follows the 40 px one here.) */
+@media (max-width: 50rem) {
+	starlight-menu-button button, site-search button[data-open-modal] {
+	  width: 40px; height: 40px; padding: 0; border-radius: 3px; color: #8a231d;
+	  border: 1px solid var(--rule); outline: 1px solid rgba(110, 76, 38, 0.34); outline-offset: -4px;
+	  background: var(--dia) 1px 1px / 6px 6px no-repeat, var(--dia) calc(100% - 1px) 1px / 6px 6px no-repeat,
+	    var(--dia) 1px calc(100% - 1px) / 6px 6px no-repeat, var(--dia) calc(100% - 1px) calc(100% - 1px) / 6px 6px no-repeat,
+	    radial-gradient(120% 120% at 50% 35%, rgba(120, 80, 35, 0) 55%, rgba(120, 80, 35, 0.16) 100%),
+	    var(--grain) 0 0 / 180px 180px, linear-gradient(180deg, #f3e7c6, #e7d6aa 70%, #dcc795);
+	  box-shadow: inset 0 1px 0 rgba(255, 249, 232, 0.6), 0 1px 2px rgba(70, 45, 18, 0.28);
+	  display: grid; place-items: center;
+	}
+	starlight-menu-button button { top: calc((var(--sl-nav-height) - 40px) / 2); }
+	starlight-menu-button button svg { display: none; }
+	starlight-menu-button button::before { content: ''; width: 24px; height: 24px; background: currentColor; -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%3E%3Cpath%20d%3D'M3.5%207Q12%204.9%2020.5%207Q12%209.1%203.5%207Z'%2F%3E%3Cpath%20d%3D'M3.5%2012Q9%2010.2%2014.6%2012Q9%2013.8%203.5%2012Z'%2F%3E%3Cpath%20d%3D'M18.1%209.7%2020.5%2012%2018.1%2014.3%2015.8%2012Z'%2F%3E%3Cpath%20d%3D'M3.5%2017Q12%2014.9%2020.5%2017Q12%2019.1%203.5%2017Z'%2F%3E%3C%2Fsvg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%3E%3Cpath%20d%3D'M3.5%207Q12%204.9%2020.5%207Q12%209.1%203.5%207Z'%2F%3E%3Cpath%20d%3D'M3.5%2012Q9%2010.2%2014.6%2012Q9%2013.8%203.5%2012Z'%2F%3E%3Cpath%20d%3D'M18.1%209.7%2020.5%2012%2018.1%2014.3%2015.8%2012Z'%2F%3E%3Cpath%20d%3D'M3.5%2017Q12%2014.9%2020.5%2017Q12%2019.1%203.5%2017Z'%2F%3E%3C%2Fsvg%3E") center / contain no-repeat; }
+	starlight-menu-button[aria-expanded='true'] button::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%3E%3Cpath%20transform%3D'rotate(45%2012%2012)'%20d%3D'M3.5%2012Q12%209.9%2020.5%2012Q12%2014.1%203.5%2012Z'%2F%3E%3Cpath%20transform%3D'rotate(-45%2012%2012)'%20d%3D'M3.5%2012Q12%209.9%2020.5%2012Q12%2014.1%203.5%2012Z'%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%3E%3Cpath%20transform%3D'rotate(45%2012%2012)'%20d%3D'M3.5%2012Q12%209.9%2020.5%2012Q12%2014.1%203.5%2012Z'%2F%3E%3Cpath%20transform%3D'rotate(-45%2012%2012)'%20d%3D'M3.5%2012Q12%209.9%2020.5%2012Q12%2014.1%203.5%2012Z'%2F%3E%3C%2Fsvg%3E"); }
+	site-search button[data-open-modal] svg { width: 19px; height: 19px; }
+	mobile-starlight-toc .toggle {
+	  border-radius: 3px; border: 1px solid var(--rule); outline: 1px solid rgba(110, 76, 38, 0.3); outline-offset: -4px;
+	  background: var(--grain) 0 0 / 180px 180px, linear-gradient(180deg, #f3e7c6, #e7d6aa);
+	  box-shadow: inset 0 1px 0 rgba(255, 249, 232, 0.6), 0 1px 2px rgba(70, 45, 18, 0.22);
+	  padding: 0.55rem 0.6rem 0.55rem 0.8rem; gap: 0.7rem;
+	  font: 700 10.5px/1 'Cinzel', serif; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink);
+	}
+	mobile-starlight-toc .toggle .caret { color: #8a231d; }
+	mobile-starlight-toc details[open] .toggle { border-color: #8a231d; color: var(--ink); }
+	mobile-starlight-toc .display-current { font: italic 500 17px/1.2 'Cormorant Garamond', Georgia, serif; color: #5a4128; }
+}
+
+/* Phones: a table cell breaks only between words (a word, code or not, is never split; a hyphenated word may turn at
+   its hyphen); a table that still cannot fit scrolls sideways in its frame, as the wide diagrams do. */
+@media (max-width: 50rem) {
+	.sl-markdown-content :is(th, td):not(:where(.not-content *)),
+	.sl-markdown-content :is(th, td) code:not(:where(.not-content *)) {
+		overflow-wrap: normal;
+		word-break: normal;
+		white-space: normal;
+		hyphens: manual;
+	}
+}

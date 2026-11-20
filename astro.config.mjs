@@ -2,6 +2,8 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
 export default defineConfig({
+	// (the dev toolbar sat over the hero's controls at the screen's foot; dev only, the site never shows it)
+	devToolbar: { enabled: false },
 	site: 'https://evonic.dev',
 	server: {
 		allowedHosts: true,
@@ -14,11 +16,40 @@ export default defineConfig({
     starlight({
       title: 'Evonic',
       description: 'Documentation for Evonic \u2014 Local-first agentic AI for open models',
-      logo: { src: './src/assets/mascot.png', alt: 'Evonic' },
+      logo: { src: './src/assets/mascot-mark.png', alt: 'Evonic' },
       customCss: ['./src/styles/custom.css'],
+      // Dune is a light, single-scheme theme: code frames are cream sheets with a light syntax theme.
+      expressiveCode: {
+        themes: ['github-light'],
+        useStarlightUiThemeColors: false,
+        styleOverrides: {
+          borderRadius: '3px',
+          borderColor: 'rgba(110, 76, 38, 0.5)',
+          codeBackground: '#f6edd4',
+          frames: {
+            editorBackground: '#f6edd4',
+            terminalBackground: '#f6edd4',
+            editorTabBarBackground: '#ead9ae',
+            editorActiveTabBackground: '#f6edd4',
+            editorTabBarBorderBottomColor: 'rgba(110, 76, 38, 0.32)',
+            editorActiveTabIndicatorTopColor: '#8a231d',
+            editorActiveTabIndicatorBottomColor: 'transparent',
+            terminalTitlebarBackground: '#ead9ae',
+            terminalTitlebarBorderBottomColor: 'rgba(110, 76, 38, 0.32)',
+            terminalTitlebarDotsForeground: '#8d7a5e',
+            frameBoxShadowCssValue: 'none',
+          },
+        },
+      },
       favicon: '/favicon.svg',
       social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/anvie/evonic' }],
       head: [
+        // each table in a frame that scrolls sideways only when the table is wider than the page (code never breaks)
+        {
+          tag: 'script',
+          content:
+            "document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('.sl-markdown-content table').forEach((t)=>{if(t.parentElement.classList.contains('table-wrap'))return;const w=document.createElement('div');w.className='table-wrap';t.before(w);w.append(t);});});",
+        },
         {
           tag: 'meta',
           attrs: { property: 'og:image', content: 'https://evonic.dev/img/evonic-thumb-wide.jpg' },

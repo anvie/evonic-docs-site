@@ -1,5 +1,4 @@
 ---
-import MascotMotion from '../components/landing/MascotMotion.astro';
 import CapabilityVisual from '../components/landing/CapabilityVisual.astro';
 import Contributors from '../components/landing/Contributors.astro';
 import Icon from '../components/landing/Icon.astro';
@@ -105,53 +104,11 @@ const systemNodes: SystemNode[] = nodeGroups.flatMap((nodes, group) =>
 		position: ['a', 'b', 'c', 'd'][index]
 	}))
 );
-// Connector endpoints in the hero illustration share the 1000-unit diagram grid.
-// Nodes alternate between two rows that rise towards the edges, so every label below a node
-// has a clear lane: a node's neighbours on the same row sit two steps away.
-const heroSatellites = [
-	{ label: 'Tasks', x: 55, y: -150 },
-	{ label: 'Research', x: 135, y: -55 },
-	{ label: 'Skills', x: 215, y: -120 },
-	{ label: 'Coding', x: 295, y: -10 },
-	{ label: 'Writing', x: 375, y: -80 },
-	{ label: 'Chat', x: 445, y: 45 },
-	{ label: 'Knowledge', x: 555, y: 45 },
-	{ label: 'Sandbox', x: 625, y: -80 },
-	{ label: 'Tools', x: 705, y: -10 },
-	{ label: 'Memory', x: 785, y: -120 },
-	{ label: 'Channels', x: 865, y: -55 },
-	{ label: 'Cron', x: 945, y: -150 }
-];
-// Narrow screens get their own fan: fewer nodes, an upper row of four and a lower pair,
-// because the desktop spacing collapses once the artwork is this small.
-const narrowHeroSatellites = [
-	{ label: 'Research', x: 90, y: -45 },
-	{ label: 'Coding', x: 230, y: 96 },
-	{ label: 'Writing', x: 340, y: -10 },
-	{ label: 'Knowledge', x: 660, y: -10 },
-	{ label: 'Chat', x: 770, y: 96 },
-	{ label: 'Cron', x: 910, y: -45 }
-];
-// Each hero node wears the accessory of the agent role closest to its label.
-const agentRoles: Record<string, string> = {
-	Tasks: 'dispatcher',
-	Research: 'detective',
-	Skills: 'scholar',
-	Coding: 'engineer',
-	Writing: 'scribe',
-	Chat: 'support',
-	Knowledge: 'scholar',
-	Sandbox: 'detective',
-	Tools: 'engineer',
-	Memory: 'scribe',
-	Channels: 'support',
-	Cron: 'scout'
-};
-const heroFans = [
-	{ key: 'desktop', nodes: heroSatellites },
-	{ key: 'narrow', nodes: narrowHeroSatellites }
-];
-const connectorPath = (x: number) => `M${x} 1000 C${x} 580 ${500 + (x - 500) * 0.35} 250 500 0`;
+// The hero is the EV-8 tour itself (public/ev8, built from the tour's source by evonic-tour/build.sh), in its
+// presentation mode: the film plays through the chapters on its own, without its orbit guides, and sound stays off
+// until the visitor turns it on. With ?embed it shows only the section cards, the feature dots and the hints.
+// (hold: the story waits on its first frame until the gate's leaves part; the page then calls evSite.go)
+const heroScene = '/ev8/index.html?embed&present&auto=1&marker=0&start=overview&accenthud=red&hide=orbit&sfx=1&music=1&hold';
 const nodeConnectionPath = (node: SystemNode) =>
 	node.side === 'left'
 		? `M${node.x * 10} ${node.y * 10} C390 ${node.y * 10} 400 500 500 500`
@@ -168,7 +125,7 @@ const nodeConnectionPath = (node: SystemNode) =>
 			name="description"
 			content="Transform your organization with agentic AI, making every workflow faster, smarter, and sharper at scale."
 		/>
-		<meta name="theme-color" content="#080b12" />
+		<meta name="theme-color" content="#e6d5a8" />
 		<meta property="og:title" content="Evonic — The home your agents deserve" />
 		<meta
 			property="og:description"
@@ -181,12 +138,46 @@ const nodeConnectionPath = (node: SystemNode) =>
 	<body>
 		<div id="top">
 			<a class="skip-link" href="#main">Skip to content</a>
+		<!-- The gate: two thick doors of the page's paper close the whole screen while the tour is summoned; the seal is
+		     split down the seam and each half rides on its door as they open -->
+		<!-- (a slow network: whatever the page's own script is doing, 4 s after the first paint the gate gives way to the
+		     still; the script, once in, opens it the usual way if it gets there first) -->
+		<script is:inline>
+			setTimeout(function () {
+				var d = document.documentElement;
+				if (!d.classList.contains('gate-open')) d.classList.add('gate-late');
+			}, 4000);
+		</script>
+		<div class="gate" aria-hidden="true">
+			<i class="gate-crack"></i>
+			<div class="gate-door gate-l"><div class="gate-face"><div class="gate-seal"><div class="seal-ring"><span class="seal-astro"><b><i></i></b><b><i></i></b><b><i></i></b></span><span class="seal-mark"><i></i><i></i><i></i></span></div><p class="seal-text">Summoning Evonic<span class="seal-dots"><i></i><i></i><i></i></span></p></div></div><i class="gate-edge"></i></div>
+			<div class="gate-door gate-r"><div class="gate-face"><div class="gate-seal"><div class="seal-ring"><span class="seal-astro"><b><i></i></b><b><i></i></b><b><i></i></b></span><span class="seal-mark"><i></i><i></i><i></i></span></div><p class="seal-text">Summoning Evonic<span class="seal-dots"><i></i><i></i><i></i></span></p></div></div><i class="gate-edge"></i></div>
+		</div>
+			<div class="ambient" aria-hidden="true">
+				<i style="--x:8%;--y:22%;--s:3px;--d:19s;--w:0s;--dx:70px"></i>
+				<i style="--x:17%;--y:64%;--s:2px;--d:23s;--w:-6s;--dx:50px"></i>
+				<i style="--x:26%;--y:38%;--s:3px;--d:17s;--w:-11s;--dx:80px"></i>
+				<i style="--x:39%;--y:78%;--s:2px;--d:21s;--w:-3s;--dx:60px"></i>
+				<i style="--x:51%;--y:18%;--s:3px;--d:25s;--w:-14s;--dx:40px"></i>
+				<i style="--x:62%;--y:55%;--s:2px;--d:18s;--w:-8s;--dx:90px"></i>
+				<i style="--x:71%;--y:84%;--s:3px;--d:22s;--w:-17s;--dx:55px"></i>
+				<i style="--x:83%;--y:30%;--s:2px;--d:20s;--w:-5s;--dx:75px"></i>
+				<i style="--x:91%;--y:68%;--s:3px;--d:24s;--w:-12s;--dx:45px"></i>
+				<i style="--x:46%;--y:46%;--s:2px;--d:19s;--w:-9s;--dx:65px"></i>
+				<b style="--y:18%;--d:38s;--w:-4s"></b>
+				<b style="--y:58%;--d:46s;--w:-22s"></b>
+			</div>
 			<header>
 				<div class="nav-wrap">
 					<a class="brand" href="#top" aria-label="Evonic home"
-						><img src="/img/mascot.png" alt="" width="38" height="38" />evonic<span class="brand-dot"
+						><img src="/img/mascot-mark.png" alt="" width="34" height="38" />evonic<span class="brand-dot"
 							>.</span
 						></a
+					>
+					<button class="sound-note" type="button" aria-keyshortcuts="M" hidden
+						><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"
+							><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z" /><path class="sn-on" d="M15.5 9a4.5 4.5 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11" /><path class="sn-off" d="m16 9.5 5 5m0-5-5 5" /></svg
+						><span>Mute sound</span><kbd>M</kbd></button
 					>
 					<nav aria-label="Main navigation" id="main-nav">
 						<a href="#why-evonic">Why Evonic</a>
@@ -198,83 +189,58 @@ const nodeConnectionPath = (node: SystemNode) =>
 						>Get started <span class="button-icon"><Icon name="arrow" size={16} /></span></a
 					>
 					<button class="menu-toggle" aria-label="Open navigation" aria-expanded="false" aria-controls="main-nav">
-						<span class="menu-open"><Icon name="menu" /></span>
-						<span class="menu-close" hidden><Icon name="close" /></span>
+						<!-- Three ink strokes tapered at both ends, the middle one shorter with a diamond; open, the outer two cross. -->
+						<svg class="menu-glyph" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+							<path class="mg-top" d="M3.5 7Q12 4.9 20.5 7Q12 9.1 3.5 7Z" />
+							<g class="mg-mid">
+								<path d="M3.5 12Q9 10.2 14.6 12Q9 13.8 3.5 12Z" />
+								<path d="M18.1 9.7 20.5 12 18.1 14.3 15.8 12Z" />
+							</g>
+							<path class="mg-bot" d="M3.5 17Q12 14.9 20.5 17Q12 19.1 3.5 17Z" />
+						</svg>
 					</button>
 				</div>
 			</header>
 
 			<main id="main">
 				<section class="hero" aria-labelledby="hero-title">
-					<div class="hero-grid" aria-hidden="true"></div>
-					<div class="hero-content">
-						<div class="hero-illustration hero-enter">
-							<div class="hero-mascot">
-								<MascotMotion />
-								<img
-									src="/img/mascot.png"
-									alt="Evonic's blue jellyfish mascot"
-									width="150"
-									height="150"
-									fetchpriority="high"
-								/>
-							</div>
-							{
-								heroFans.map((fan) => (
-									<div class={`hero-fan hero-fan-${fan.key}`}>
-										{fan.nodes.map((satellite, i) => (
-											<div class="hero-link">
-												<svg
-													class="hero-connectors"
-													aria-hidden="true"
-													viewBox="0 0 1000 1000"
-													preserveAspectRatio="none"
-													style={`--node-y:${satellite.y}px`}
-												>
-													<path d={connectorPath(satellite.x)} vector-effect="non-scaling-stroke" />
-													<path
-														class="hero-particles"
-														d={connectorPath(satellite.x)}
-														pathLength="100"
-														style={`animation-delay:${-i * 1.2}s`}
-														vector-effect="non-scaling-stroke"
-													/>
-												</svg>
-												<span
-													class="hero-satellite"
-													aria-hidden="true"
-													style={`--anchor:${satellite.x / 10}%;--node-y:${satellite.y}px`}
-												>
-													<img src={`/img/agents/${agentRoles[satellite.label]}.webp`} alt="" width="555" height="324" />
-													<span class="hero-label">{satellite.label} agent</span>
-												</span>
-											</div>
-										))}
-									</div>
-								))
-							}
-						</div>
-						<div class="hero-copy">
-							<h1 id="hero-title" class="hero-enter">
-								Agentic Infrastructure<br /><span class="gradient-text">for Organization</span>
-							</h1>
-							<p class="hero-description hero-enter">
-								Transform your organization with agentic AI, making every workflow faster, smarter, and sharper at scale.
-							</p>
-							<div class="hero-actions hero-enter">
-								<a class="button" href={docs}
-									>Build your first agent <span class="button-icon"><Icon name="arrow" size={18} /></span></a
-								>
-								<a class="button button-outline" href={github}
-									>Explore GitHub <Icon name="github" size={16} /></a
-								>
-							</div>
+					<!-- The first screen is the scene alone; the pitch sits under it and rises in as the page scrolls, the scene
+					     drifting up slower than the page (parallax). -->
+					<div class="hero-pin">
+					<div class="hero-stage">
+						<!-- A still of the tour stands in until the live one has loaded; phones get the subject alone. -->
+						<picture>
+							<source media="(min-width: 721px)" srcset="/img/ev8-tour-dune.webp" width="1600" height="936" />
+							<img
+								class="hero-poster"
+								src="/img/ev8-dune.webp"
+								alt=""
+								width="1440"
+								height="820"
+								fetchpriority="high"
+							/>
+						</picture>
+						<iframe class="hero-live" title="Evonic EV-8 interactive tour" data-src={heroScene} allow="fullscreen; autoplay" hidden
+						></iframe>
+						<div class="hero-fog" aria-hidden="true"></div>
+						<button class="hero-play" type="button" hidden>Play the tour</button>
+					</div>
+					<div class="hero-veil" aria-hidden="true"></div>
+					<a class="hero-hint" href="#why-evonic" aria-hidden="true" tabindex="-1">Scroll <span></span></a>
+					<div class="hero-brief">
+						<h1 id="hero-title" class="hero-title">Agentic Infrastructure for Organization</h1>
+						<p class="hero-description">
+							Transform your organization with agentic AI, making every workflow faster, smarter, and sharper at scale.
+						</p>
+						<div class="hero-actions">
+							<a class="button" href={docs}
+								>Build your first agent <span class="button-icon"><Icon name="arrow" size={18} /></span></a
+							>
+							<a class="button button-outline" href={github}
+								>Explore GitHub <Icon name="github" size={16} /></a
+							>
 						</div>
 					</div>
-					<div class="hero-bottom">
-						<span><span class="little-cross">✧</span> Your Models. Your Rules. Your Swarm.</span><a
-							href="#why-evonic">Scroll to explore <span class="scroll-icon">↓</span></a
-						>
 					</div>
 				</section>
 
@@ -625,7 +591,7 @@ const nodeConnectionPath = (node: SystemNode) =>
 				<div class="footer-top">
 					<div>
 						<a class="brand" href="#top"
-							><img src="/img/mascot.png" alt="" width="34" height="34" />evonic<span class="brand-dot"
+							><img src="/img/mascot-mark.png" alt="" width="30" height="34" />evonic<span class="brand-dot"
 								>.</span
 							></a
 						>
@@ -654,13 +620,15 @@ const nodeConnectionPath = (node: SystemNode) =>
 
 		<script>
 			import { prefersLightweightMotion } from '../lib/motion-profile';
+			import { swapText } from '../lib/text-swap';
+			import { openGate } from '../lib/gate';
+			import { initSoundNote } from '../lib/sound-note';
+			import { startReveals } from '../lib/reveal';
 
 			const root = document.getElementById('top');
 			const header = document.querySelector('header');
 			const toggle = document.querySelector('.menu-toggle');
 			const nav = document.getElementById('main-nav');
-			const menuOpenIcon = document.querySelector('.menu-toggle .menu-open');
-			const menuCloseIcon = document.querySelector('.menu-toggle .menu-close');
 			const motionToggle = document.querySelector('.motion-toggle');
 			const motionLabel = document.querySelector('.motion-label');
 			const motionIndicator = document.querySelector('.motion-indicator');
@@ -688,8 +656,6 @@ const nodeConnectionPath = (node: SystemNode) =>
 			const setMenu = (open) => {
 				menuOpen = open;
 				nav?.classList.toggle('open', open);
-				menuOpenIcon?.toggleAttribute('hidden', open);
-				menuCloseIcon?.toggleAttribute('hidden', !open);
 				toggle?.setAttribute('aria-expanded', String(open));
 				toggle?.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
 			};
@@ -738,9 +704,12 @@ const nodeConnectionPath = (node: SystemNode) =>
 					button.classList.toggle('active', index === step);
 					button.setAttribute('aria-pressed', String(index === step));
 				});
-				if (stageLabel && stageDetail && stepCopy[step]) {
-					stageLabel.textContent = stepCopy[step].label;
-					stageDetail.textContent = stepCopy[step].detail;
+				if (stageLabel && stageDetail && stepCopy[step] && stageLabel.textContent !== stepCopy[step].label) {
+					const next = stepCopy[step];
+					swapText([stageLabel, stageDetail], () => {
+						stageLabel.textContent = next.label;
+						stageDetail.textContent = next.detail;
+					});
 				}
 			};
 			systemNodes.forEach((node) => {
@@ -755,6 +724,17 @@ const nodeConnectionPath = (node: SystemNode) =>
 			stepButtons.forEach((button) => button.addEventListener('click', () => setStep(Number(button.dataset.index))));
 
 			const installTabs = [...document.querySelectorAll('.install-tabs button')];
+			// the active tab's marker slides between the tabs (its place and width from the active tab)
+			const tabBar = document.querySelector('.install-tabs');
+			const placeTabMarker = () => {
+				const on = installTabs.find((tab) => tab.classList.contains('active'));
+				if (!tabBar || !on) return;
+				tabBar.style.setProperty('--tx', `${on.offsetLeft}px`);
+				tabBar.style.setProperty('--tw', `${on.offsetWidth}px`);
+			};
+			placeTabMarker();
+			document.fonts?.ready.then(placeTabMarker);
+			window.addEventListener('resize', placeTabMarker);
 			const installNote = document.querySelector('.install-content > p');
 			const commandLine = document.querySelector('.command-line code');
 			const copyButton = document.querySelector('.copy-install');
@@ -762,8 +742,12 @@ const nodeConnectionPath = (node: SystemNode) =>
 			const copyIconPath = document.querySelector('.copy-install svg path');
 
 			const updateCopyState = () => {
-				if (copyLabel) copyLabel.textContent = copied ? 'Copied' : 'Copy';
-				copyIconPath?.setAttribute('d', copied ? iconPaths.check : iconPaths.copy);
+				const label = copied ? 'Copied' : 'Copy';
+				if (copyLabel?.textContent === label) return;
+				swapText([copyLabel, copyButton?.querySelector('svg')], () => {
+					if (copyLabel) copyLabel.textContent = label;
+					copyIconPath?.setAttribute('d', copied ? iconPaths.check : iconPaths.copy);
+				});
 			};
 			const setInstallMode = (mode) => {
 				installMode = mode;
@@ -773,16 +757,19 @@ const nodeConnectionPath = (node: SystemNode) =>
 					tab.classList.toggle('active', on);
 					tab.setAttribute('aria-selected', String(on));
 				});
-				if (installNote) {
-					installNote.textContent =
-						mode === 'one-liner' ? 'Install everything in one command.' : 'Clone the repository to begin.';
-				}
-				if (commandLine) {
-					const prompt = document.createElement('span');
-					prompt.textContent = '$';
-					commandLine.replaceChildren(prompt, document.createTextNode(` ${installCommands[mode]}`));
-				}
-				updateCopyState();
+				placeTabMarker();
+				swapText([installNote, commandLine], () => {
+					if (installNote) {
+						installNote.textContent =
+							mode === 'one-liner' ? 'Install everything in one command.' : 'Clone the repository to begin.';
+					}
+					if (commandLine) {
+						const prompt = document.createElement('span');
+						prompt.textContent = '$';
+						commandLine.replaceChildren(prompt, document.createTextNode(` ${installCommands[mode]}`));
+					}
+					updateCopyState();
+				});
 			};
 			installTabs.forEach((tab) => tab.addEventListener('click', () => setInstallMode(tab.dataset.mode)));
 			copyButton?.addEventListener('click', async () => {
@@ -824,7 +811,210 @@ const nodeConnectionPath = (node: SystemNode) =>
 			};
 			workspaceTabs.forEach((tab, i) => tab.addEventListener('click', () => setWorkspaceTab(i)));
 
-			const onScroll = () => header?.classList.toggle('scrolled', window.scrollY > 30);
+			// The hero is a heavy WebGL page: a still stands in until it has loaded, and again whenever the hero
+			// is off screen, the tab is hidden, or motion is paused.
+			const heroSection = document.querySelector('.hero');
+			// The pitch under the scene scales with the tour (the tour lays itself out on a 1600-wide frame, or a 900-high
+			// one in windows wider than 16:9); on phones the stage leaves room for it instead.
+			const heroStageEl = document.querySelector('.hero-stage');
+			const heroBrief = document.querySelector('.hero-brief');
+			const heroLive = document.querySelector('.hero-live');
+			// the tour's own bridge (public/ev8, site.js): where the title starts, pause, busy
+			// (a frame that failed to load is a foreign error page: reading it throws, so it simply has no bridge)
+			const tourApi = () => {
+				try {
+					return heroLive?.contentWindow?.evSite;
+				} catch {
+					return undefined;
+				}
+			};
+			const fitHero = () => {
+				if (!heroSection || !heroStageEl || !heroBrief) return;
+				const w = heroStageEl.clientWidth;
+				const h = heroStageEl.clientHeight;
+				const scale = w / Math.max(1, h) >= 16 / 9 ? h / 900 : w / 1600;
+				heroSection.style.setProperty('--hero-s', scale.toFixed(4));
+				heroSection.style.setProperty('--brief-s', Math.min(scale, 1.1).toFixed(4));
+				heroSection.style.setProperty('--brief-h', `${heroBrief.offsetHeight}px`);
+				// the header over the full-screen scene lines up with the tour's section cards: the left column's left edge
+				// (89 of the tour's 1600-wide frame) and the right column's right edge (1511), as the tour scales and centres
+				// that frame for this window (main.js fit)
+				const wide = w / Math.max(1, h) >= 16 / 9;
+				const fx = wide ? (w / scale - 1600) / 2 : 0;
+				header?.style.setProperty('--hx-l', `${Math.round((89 + fx) * scale)}px`);
+				header?.style.setProperty('--hx-r', `${Math.round(w - (1511 + fx) * scale)}px`);
+				// the header's foot and the title's top in the tour's layout px: its section cards centre, and its cameras
+				// frame, between the two
+				const title = heroBrief.querySelector('.hero-title');
+				const api = tourApi();
+				if (api && title) {
+					const top0 = heroStageEl.getBoundingClientRect().top;
+					// (an upright phone or tablet: the tour lays itself out in CSS px, not on the 1600-wide frame; main.js fit)
+					const k = w < 700 || (w < 1100 && h > w * 0.9) ? 1 : scale;
+					api.top(((header?.getBoundingClientRect().bottom ?? 58) - top0) / k);
+					// pinned (the pitch comes in later, over the scene): the scene has its full height to itself
+					// (the pitch sits under the scene: the scene has its full height to itself)
+					api.titleTop((h - 56) / k);
+				}
+				revealHero();
+			};
+			// The scroll under the hero: the scene drifts up at 0.65 of the page's speed (--py holds it back), the scroll hint
+			// fades (--p), and the pitch fades and rises in as it comes up into view (--e). Phones, upright tablets and
+			// reduced motion: the pitch simply shows (--e 1), no drift.
+			const stacked = matchMedia('(max-width: 860px), (max-width: 1099px) and (orientation: portrait), (prefers-reduced-motion: reduce)');
+			let revealFrame = 0;
+			function revealHero() {
+				cancelAnimationFrame(revealFrame);
+				revealFrame = requestAnimationFrame(() => {
+					if (!heroSection || !heroStageEl || !heroBrief) return;
+					const stageH = heroStageEl.offsetHeight;
+					const y = Math.max(0, Math.min(stageH, window.scrollY));
+					const still = stacked.matches;
+					// (it rests just under the first screen's foot: it comes in over the first third of the scroll)
+					const x = still ? 1 : Math.min(1, Math.max(0, (window.scrollY - 30) / (stageH * 0.32)));
+					const e = x * x * (3 - 2 * x);
+					heroSection.style.setProperty('--py', `${still ? 0 : (y * 0.35).toFixed(1)}px`);
+					heroSection.style.setProperty('--p', Math.min(1, y / (stageH * 0.3)).toFixed(4));
+					// the foot's fog: on as soon as the page moves (the scene's edge never shows), off at rest
+					heroSection.style.setProperty('--fog', window.scrollY > 2 || still ? '1' : '0');
+					heroSection.style.setProperty('--e', e.toFixed(4));
+					heroSection.classList.toggle('brief-on', e > 0.5);
+				});
+			}
+			window.addEventListener('scroll', revealHero, { passive: true });
+			stacked.addEventListener('change', fitHero);
+			fitHero();
+			window.addEventListener('resize', fitHero);
+			document.fonts?.ready.then(fitHero);
+			heroLive?.addEventListener('load', fitHero);
+			const saveData = navigator.connection?.saveData === true;
+			const device = navigator as Navigator & { deviceMemory?: number };
+			// a weak device keeps the still; the play button starts the tour there
+			const weak =
+				saveData ||
+				(navigator.hardwareConcurrency > 0 && navigator.hardwareConcurrency <= 4) ||
+				(device.deviceMemory !== undefined && device.deviceMemory <= 4);
+			const heroPlay = document.querySelector('.hero-play');
+			let heroAsked = false;
+			heroPlay?.addEventListener('click', () => {
+				heroAsked = true;
+				heroWanted = true;
+				heroPlay.hidden = true;
+				syncHero();
+			});
+			let heroVisible = true;
+			let heroWanted = false;
+			let heroLoaded = false;
+			let heroReady = false;
+			let heroFailed = false;
+			// (a slow network: the gate opens 4 s after the page is ready at the latest, the still in its place meanwhile)
+			let gateDue = false;
+			const armGate = () => window.setTimeout(() => ((gateDue = true), syncHero()), Math.max(0, 4000 - performance.now()));
+			if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', armGate, { once: true });
+			else armGate();
+			// (a device that turns out too slow for the live tour, under 30 page frames a second over its first 3 s:
+			// the still and the play button instead; the visitor can still start it)
+			let heroLite = false;
+			const watchPace = () => {
+				let n = 0;
+				const t0 = performance.now();
+				const step = () => {
+					n++;
+					const el = performance.now() - t0;
+					if (el < 3000) return void requestAnimationFrame(step);
+					const fpsNow = (n * 1000) / el;
+					if (fpsNow < 30 && !heroAsked) {
+						heroLite = true;
+						if (heroPlay) heroPlay.hidden = false;
+						syncHero();
+					}
+				};
+				requestAnimationFrame(step);
+			};
+			let gateOpen = false;
+			// the tour's story starts as the gate's leaves part (it waits on its first frame till then); a tour that loads
+			// only after that starts as soon as it is ready
+			let tourReleased = false;
+			const releaseTour = () => ((tourReleased = true), tourApi()?.go?.());
+			const syncHero = () => {
+				if (!heroLive) return;
+				const on = heroWanted && heroVisible && !document.hidden && !(heroLite && !heroAsked);
+				if (on && !heroLoaded) {
+					heroLoaded = true;
+					heroLive.addEventListener(
+						'load',
+						() =>
+							window.setTimeout(() => {
+								if (tourReleased) tourApi()?.go?.();
+								heroReady = true;
+								syncHero();
+								window.setTimeout(watchPace, 4000);
+							}, 1200),
+						{ once: true }
+					);
+					heroLive.src = heroLive.dataset.src ?? '';
+					// (a tour that has not drawn within 9 s: the still comes back)
+					window.setTimeout(() => {
+						if (!heroReady) (heroFailed = true), syncHero();
+					}, 9000);
+				}
+				// (once loaded, the frame is only made invisible, never display:none: a frame set aside reports a zero
+				// size in some browsers and its scene lays out for nothing)
+				if (!heroLoaded) heroLive.hidden = !on;
+				else (heroLive.hidden = false), (heroLive.style.visibility = on ? '' : 'hidden');
+				// off screen or hidden: the tour draws nothing at all
+				tourApi()?.pause(!on);
+				// The still steps aside once the live tour has drawn its first frames.
+				document.documentElement.classList.toggle('tour-on', on && heroReady);
+				// the still shows only where the tour does not run (a weak device not asked, motion paused, a failed load):
+				// elsewhere the paper stays clear and the tour fades in on its own, never over an old picture
+				document.documentElement.classList.toggle('poster-on', (weak && !heroAsked) || motionPaused || heroFailed || (heroLite && !heroAsked));
+				// (the gate opened before the tour was ready, a slow network: the still stands in until the tour has drawn)
+				document.documentElement.classList.toggle('poster-wait', gateDue && !(on && heroReady));
+				// the gate: closed over the whole screen while the tour is summoned; it opens once (the tour has drawn, or the
+				// still stands in instead: a weak device, motion paused, a failed load: then at once)
+				const posterOn = (weak && !heroAsked) || motionPaused || heroFailed || (heroLite && !heroAsked);
+				if (!gateOpen && ((on && heroReady) || posterOn || gateDue)) {
+					gateOpen = true;
+					openGate({ instant: posterOn, onPart: releaseTour });
+					// (the sound invitation shows once, under the menu, as the doors finish)
+					sound.showOnce(posterOn ? 600 : 3600);
+				}
+				// the drifting motes behind the page run while the hero is out of view
+				ambient?.classList.toggle('on', !heroVisible && !document.hidden && !motionPaused && !weak);
+			};
+			const ambient = document.querySelector('.ambient');
+			if (heroSection) {
+				new IntersectionObserver(([entry]) => {
+					heroVisible = entry.isIntersecting;
+					syncHero();
+				}).observe(heroSection);
+				// while the page scrolls, the tour draws at its idle rate
+				window.addEventListener('scroll', () => heroVisible && tourApi()?.busy(), { passive: true });
+			}
+			document.addEventListener('visibilitychange', syncHero);
+			window.addEventListener('evonic:motion', (event) => {
+				heroWanted = (heroAsked || !weak) && event.detail?.paused !== true;
+				if (heroPlay) heroPlay.hidden = heroAsked || !weak || event.detail?.paused === true;
+				// Let the page settle before the scene starts downloading.
+				if (heroLoaded || !heroWanted) syncHero();
+				else if (document.readyState === 'complete') window.setTimeout(syncHero, 200);
+				else window.addEventListener('load', () => window.setTimeout(syncHero, 200), { once: true });
+			});
+
+			// the sound invitation, the shortcuts (A, P, M) and the first-gesture audio wake: src/lib/sound-note.ts
+			const sound = initSoundNote(tourApi);
+
+			// over the hero the header has no paper of its own; past it, a frosted bar
+			const onScroll = () => {
+				const heroEnd = heroSection ? heroSection.offsetTop + heroSection.offsetHeight : 0;
+				// (no paper of its own only while the scene rests under it; once the page moves, the frosted bar keeps the
+				// scene drifting under it off the links. One switch for both: the paper, the edges and the wordmark's size
+				// change together)
+				const over = window.scrollY < 24 && window.scrollY + (header?.offsetHeight ?? 58) < heroEnd - 8;
+				header?.classList.toggle('over-hero', over);
+				header?.classList.toggle('scrolled', !over);
+			};
 			window.addEventListener('scroll', onScroll, { passive: true });
 			onScroll();
 
@@ -847,52 +1037,30 @@ const nodeConnectionPath = (node: SystemNode) =>
 			motionPaused = preference.matches;
 			let stopDesktopMotion;
 			let generation = 0;
-			let revealObserver;
+			let stopReveals: (() => void) | undefined;
 			let motionObserver;
-			let reveals = [];
 
 			const setup = async (paused) => {
 				const currentGeneration = ++generation;
-				const smoothScroll = desktopPointer.matches;
+				// Native scrolling: it stays smooth while the hero's tour (same page, same thread) is busy drawing.
+				const smoothScroll = false;
 				document.documentElement.classList.toggle('motion-disabled', paused);
 				root?.classList.toggle('motion-paused', paused);
 				root?.classList.toggle('lightweight', lightweight);
 				stopDesktopMotion?.();
 				stopDesktopMotion = undefined;
 				if (root) delete root.dataset.desktopMotion;
-				revealObserver?.disconnect();
+				stopReveals?.();
+				stopReveals = undefined;
 				motionObserver?.disconnect();
-				reveals.forEach((animation) => animation.cancel());
-				reveals = [];
 				motionToggle?.setAttribute('aria-pressed', String(paused));
 				motionIndicator?.classList.toggle('paused', paused);
 				if (motionLabel) motionLabel.textContent = paused ? 'Enable motion' : 'Pause motion';
 				window.dispatchEvent(new CustomEvent('evonic:motion', { detail: { paused } }));
 				if (paused) return;
 
-				// One-shot reveals need no scroll listener and leave no permanent GPU layer.
-				revealObserver = new IntersectionObserver(
-					(entries, observer) => {
-						entries.forEach((entry) => {
-							if (!entry.isIntersecting) return;
-							observer.unobserve(entry.target);
-							const animation = entry.target.animate(
-								[
-									{ opacity: 0, transform: `translateY(${lightweight ? 8 : 28}px)` },
-									{ opacity: 1, transform: 'none' }
-								],
-								{ duration: lightweight ? 260 : 650, easing: 'cubic-bezier(.22,1,.36,1)' }
-							);
-							reveals.push(animation);
-							animation.onfinish = () => {
-								const index = reveals.indexOf(animation);
-								if (index >= 0) reveals.splice(index, 1);
-							};
-						});
-					},
-					{ threshold: 0.08 }
-				);
-				root?.querySelectorAll('[data-reveal]').forEach((el) => revealObserver?.observe(el));
+				// Scroll reveals: src/lib/reveal.ts (one-shot, no scroll listener, nothing left on the compositor).
+				stopReveals = startReveals(root, lightweight);
 
 				// Preserve the same marquee on every profile; defer its library on lighter devices.
 				const loadMotion = async () => {
