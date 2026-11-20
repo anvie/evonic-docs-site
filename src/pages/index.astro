@@ -991,7 +991,9 @@ const nodeConnectionPath = (node: SystemNode) =>
 			};
 			let gateOpen = false;
 			let gateWaiting = false;
-			const GATE_MIN = 1500;
+			const GATE_MIN = 1200;
+			const scriptStart = performance.now();
+			const shownAt = () => performance.getEntriesByName('first-paint')[0]?.startTime ?? scriptStart;
 			// the tour's story starts as the gate's leaves part (it waits on its first frame till then); a tour that loads
 			// only after that starts as soon as it is ready
 			let tourReleased = false;
@@ -1035,10 +1037,12 @@ const nodeConnectionPath = (node: SystemNode) =>
 				document.documentElement.classList.toggle('poster-wait', gateDue && !(on && heroReady));
 				// the gate: closed over the whole screen while the tour is summoned, in every case; it opens once the tour has
 				// drawn, or the still stands in instead (a weak device, motion paused, a failed load), but never before the seal
-				// has been on screen for a moment: GATE_MIN ms from the page's start
+				// has been on screen for a moment: GATE_MIN ms from its first paint
 				const posterOn = (weak && !heroAsked) || motionPaused || heroFailed || (heroLite && !heroAsked);
 				if (!gateOpen && ((on && heroReady) || posterOn || gateDue)) {
-					const wait = GATE_MIN - performance.now();
+					// (counted from the gate's first paint, not from the navigation's start: on a real network the seal only
+					// reaches the screen after the page has come)
+					const wait = GATE_MIN - (performance.now() - shownAt());
 					if (wait > 40) {
 						if (!gateWaiting) (gateWaiting = true), window.setTimeout(() => ((gateWaiting = false), syncHero()), wait);
 					} else {
