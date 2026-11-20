@@ -2208,6 +2208,11 @@ footer a:hover {
 .hero:not(.brief-on) .hero-actions {
 	pointer-events: none;
 }
+/* (until the pitch has come in it is invisible, and it reaches 40 px up over the scene's foot: it must not take the clicks
+   meant for the tour's own buttons there, the sound, Auto / Manual and Play) */
+.hero:not(.brief-on) .hero-brief {
+	pointer-events: none;
+}
 .hero .hero-title {
 	max-width: 760px;
 	font-size: clamp(30px, 2.7vw, 46px);

@@ -107,8 +107,9 @@ const systemNodes: SystemNode[] = nodeGroups.flatMap((nodes, group) =>
 // The hero is the EV-8 tour itself (public/ev8, built from the tour's source by evonic-tour/build.sh), in its
 // presentation mode: the film plays through the chapters on its own, without its orbit guides, and sound stays off
 // until the visitor turns it on. With ?embed it shows only the section cards, the feature dots and the hints.
-// (hold: the story waits on its first frame until the gate's leaves part; the page then calls evSite.go)
-const heroScene = '/ev8/index.html?embed&present&auto=1&marker=0&start=overview&accenthud=red&hide=orbit&sfx=1&music=1&hold';
+// (hold: the story waits on its first frame until the gate's leaves part; the page then calls evSite.go. sfx=0&music=0:
+// the tour is silent until the visitor turns the sound on)
+const heroScene = '/ev8/index.html?embed&present&auto=1&marker=0&start=overview&accenthud=red&hide=orbit&sfx=0&music=0&hold';
 const nodeConnectionPath = (node: SystemNode) =>
 	node.side === 'left'
 		? `M${node.x * 10} ${node.y * 10} C390 ${node.y * 10} 400 500 500 500`

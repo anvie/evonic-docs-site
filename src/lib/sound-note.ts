@@ -1,7 +1,8 @@
 /**
  * The hero's sound: the one-time "Turn on sound for a great experience" line under the menu, the keyboard shortcuts that
- * work wherever the focus is (A the mode, P play / pause, M the sound), and waking the audio on the first gesture
- * (browsers keep a page silent until the visitor has touched it; an upright phone stays silent). `tourApi` gives the tour's same-origin bridge
+ * work wherever the focus is (A the mode, P play / pause, M the sound), and keeping the audio awake after a gesture
+ * (browsers keep a page silent until the visitor has touched it). The sound is never started by itself: only the
+ * switch, the M key or this invitation turn it on; an upright phone stays silent. `tourApi` gives the tour's same-origin bridge
  * (public/ev8, "window.evSite"), which is not there until the tour has loaded.
  */
 type TourApi = () => any;
@@ -22,23 +23,10 @@ export function initSoundNote(tourApi: TourApi) {
 	};
 	window.setInterval(sync, 400);
 
-	// the gesture that wakes the audio turns the sound on; the same gesture must not then turn it off again
-	let justWoke = 0;
-	let woken = false;
-	const wake = () => {
-		const api = tourApi();
-		if (!api?.unlock) return;
-		// (only the very first gesture turns the sound on; later ones only keep the audio awake)
-		if (!woken) {
-			woken = true;
-			if (!api.sound?.()) justWoke = performance.now();
-		}
-		api.unlock();
-	};
-	const flip = () => {
-		if (performance.now() - justWoke < 400) return;
-		tourApi()?.mute?.();
-	};
+	// a gesture keeps the audio awake (browsers start it only after one); it never turns the sound on, that is the
+	// visitor's own choice: the switch, the M key or this invitation
+	const wake = () => tourApi()?.unlock?.();
+	const flip = () => tourApi()?.mute?.();
 	for (const e of ['pointerdown', 'keydown', 'touchstart']) window.addEventListener(e, wake, { capture: true, passive: true });
 
 	note?.addEventListener('click', () => (flip(), note.classList.remove('show'), window.setTimeout(sync, 60)));
