@@ -912,22 +912,35 @@ const nodeConnectionPath = (node: SystemNode) =>
 			const armGate = () => window.setTimeout(() => ((gateDue = true), syncHero()), Math.max(0, 4000 - performance.now()));
 			if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', armGate, { once: true });
 			else armGate();
-			// (a device that turns out too slow for the live tour, under 30 page frames a second over its first 3 s:
-			// the still and the play button instead; the visitor can still start it)
+			// (a device that turns out too slow for the live tour: the still and the play button instead; the visitor can
+			// still start it. Measured only when it means something: after the gate's doors and dust are done, with the tab
+			// shown, the window in focus and the hero on screen; a long gap between frames is the browser holding the page
+			// back, not the device, so it is left out; and it takes two slow windows in a row, under 30 frames a second)
 			let heroLite = false;
-			const watchPace = () => {
+			let partedAt = 0;
+			const watchPace = (slowSoFar = 0, tries = 0) => {
+				const fair = () => !document.hidden && document.hasFocus() && heroVisible;
+				if (heroAsked || heroLite || tries > 8) return;
+				// (not yet: the doors and the dust still busy, or the page not in view; look again in a second)
+				if (!partedAt || performance.now() - partedAt < 4500 || !fair()) return void window.setTimeout(() => watchPace(slowSoFar, tries + 1), 1000);
 				let n = 0;
-				const t0 = performance.now();
-				const step = () => {
-					n++;
-					const el = performance.now() - t0;
+				let busy = 0;
+				let last = performance.now();
+				const t0 = last;
+				const step = (now) => {
+					const gap = now - last;
+					last = now;
+					if (gap > 250) busy += gap;
+					else n++;
+					if (!fair()) return void window.setTimeout(() => watchPace(slowSoFar, tries + 1), 1000);
+					const el = now - t0 - busy;
 					if (el < 3000) return void requestAnimationFrame(step);
-					const fpsNow = (n * 1000) / el;
-					if (fpsNow < 30 && !heroAsked) {
-						heroLite = true;
-						if (heroPlay) heroPlay.hidden = false;
-						syncHero();
-					}
+					const slow = (n * 1000) / el < 30;
+					if (!slow) return;
+					if (slowSoFar < 1) return void window.setTimeout(() => watchPace(1, tries + 1), 500);
+					heroLite = true;
+					if (heroPlay) heroPlay.hidden = false;
+					syncHero();
 				};
 				requestAnimationFrame(step);
 			};
@@ -935,7 +948,7 @@ const nodeConnectionPath = (node: SystemNode) =>
 			// the tour's story starts as the gate's leaves part (it waits on its first frame till then); a tour that loads
 			// only after that starts as soon as it is ready
 			let tourReleased = false;
-			const releaseTour = () => ((tourReleased = true), tourApi()?.go?.());
+			const releaseTour = () => ((tourReleased = true), (partedAt = performance.now()), tourApi()?.go?.());
 			const syncHero = () => {
 				if (!heroLive) return;
 				const on = heroWanted && heroVisible && !document.hidden && !(heroLite && !heroAsked);
@@ -947,6 +960,8 @@ const nodeConnectionPath = (node: SystemNode) =>
 							window.setTimeout(() => {
 								if (tourReleased) tourApi()?.go?.();
 								heroReady = true;
+								// (a slow tour that was given up on after 9 s, and has drawn after all: the still steps aside for it)
+								heroFailed = false;
 								syncHero();
 								window.setTimeout(watchPace, 4000);
 							}, 1200),
